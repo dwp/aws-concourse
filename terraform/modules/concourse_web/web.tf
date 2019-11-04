@@ -1,0 +1,119 @@
+resource "aws_instance" "web" {
+  count = var.web.count
+
+  ami                    = data.aws_ami.ami.id
+  instance_type          = var.web.instance_type
+  subnet_id              = var.vpc.aws_subnets_private[count.index].id
+  iam_instance_profile   = aws_iam_instance_profile.web.id
+  user_data_base64       = data.template_cloudinit_config.web_bootstrap.rendered
+  vpc_security_group_ids = [aws_security_group.web.id]
+  tags                   = merge(var.tags, { Name = "${local.name}-${data.aws_availability_zones.current.names[count.index]}" })
+}
+
+locals {
+  logger_bootstrap_file = file("${path.module}/files/logger_bootstrap.sh")
+  logger_systemd_file   = file("${path.module}/files/logger_systemd")
+
+  logger_conf_file = templatefile(
+    "${path.module}/templates/journald-cloudwatch-logs.conf",
+    {
+      cloudwatch_log_group = var.log_group.name
+    }
+  )
+
+  web_systemd_file = templatefile(
+    "${path.module}/templates/web_systemd",
+    {
+      environment_vars = merge(
+        {
+          CONCOURSE_ADD_LOCAL_USER       = "${data.aws_ssm_parameter.concourse_user.value}:${data.aws_ssm_parameter.concourse_password.value}"
+          CONCOURSE_CLUSTER_NAME         = var.name
+          CONCOURSE_EXTERNAL_URL         = "https://${var.loadbalancer.fqdn}"
+          CONCOURSE_MAIN_TEAM_LOCAL_USER = data.aws_ssm_parameter.concourse_user.value
+          CONCOURSE_PEER_ADDRESS         = "%H"
+          CONCOURSE_POSTGRES_DATABASE    = var.database.database_name
+          CONCOURSE_POSTGRES_HOST        = var.database.endpoint
+          CONCOURSE_POSTGRES_PASSWORD    = data.aws_ssm_parameter.database_password.value
+          CONCOURSE_POSTGRES_USER        = data.aws_ssm_parameter.database_user.value
+          CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
+          CONCOURSE_PROMETHEUS_BIND_PORT = 8081
+          CONCOURSE_SESSION_SIGNING_KEY  = "/etc/concourse/session_signing_key"
+          CONCOURSE_TSA_AUTHORIZED_KEYS  = "/etc/concourse/authorized_worker_keys"
+          CONCOURSE_TSA_HOST_KEY         = "/etc/concourse/host_key"
+          // TODO: Github SSO
+          // CONCOURSE_GITHUB_CLIENT_ID=${data.aws_ssm_parameter.concourse_github_client_id.value}
+          // CONCOURSE_GITHUB_CLIENT_SECRET=${data.aws_ssm_parameter.concourse_github_client_secret.value}
+          // CONCOURSE_MAIN_TEAM_GITHUB_TEAM = ""
+        },
+        var.web.environment_override
+      )
+    }
+  )
+
+  web_bootstrap_file = templatefile(
+    "${path.module}/templates/web_bootstrap.sh",
+    {
+      authorized_worker_keys_ssm_id = var.concourse_keys.authorized_worker_keys
+      aws_default_region            = data.aws_region.current.name
+      concourse_version             = var.concourse.version
+      session_signing_key_ssm_id    = var.concourse_keys.session_signing_key
+      tsa_host_key_ssm_id           = var.concourse_keys.tsa_host_key
+    }
+  )
+}
+
+data "template_cloudinit_config" "web_bootstrap" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    content_type = "text/cloud-config"
+    content      = "package_update: true"
+  }
+
+  part {
+    content_type = "text/cloud-config"
+    content      = "package_upgrade: true"
+  }
+
+  part {
+    content_type = "text/cloud-config"
+    content      = <<EOF
+packages:
+  - awscli
+  - jq
+EOF
+  }
+
+  part {
+    content_type = "text/cloud-config"
+    content      = <<EOF
+write_files:
+  - encoding: b64
+    content: ${base64encode(local.web_systemd_file)}
+    owner: root:root
+    path: /etc/systemd/system/concourse_web.service
+    permissions: '0755'
+  - encoding: b64
+    content: ${base64encode(local.logger_conf_file)}
+    owner: root:root
+    path: /opt/journald-cloudwatch-logs/journald-cloudwatch-logs.conf
+    permissions: '0755'
+  - encoding: b64
+    content: ${base64encode(local.logger_systemd_file)}
+    owner: root:root
+    path: /etc/systemd/system/journald_cloudwatch_logs.service
+    permissions: '0755'
+EOF
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = local.web_bootstrap_file
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = local.logger_bootstrap_file
+  }
+}
