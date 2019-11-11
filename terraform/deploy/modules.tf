@@ -69,7 +69,7 @@ module "concourse_worker" {
   concourse      = var.concourse
   concourse_keys = module.concourse_keys.outputs
   loadbalancer   = module.concourse_internal_lb.outputs
-  log_group      = module.concourse_web_log_group.outputs
+  log_group      = module.concourse_worker_log_group.outputs
   vpc            = module.vpc.outputs
 }
 

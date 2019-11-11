@@ -13,7 +13,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "logger" {
+resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
   role       = aws_iam_role.worker.id
 }
