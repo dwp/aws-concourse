@@ -1,7 +1,7 @@
 resource "aws_instance" "worker" {
   count = var.worker.count
 
-  ami                    = data.aws_ami.ami.id
+  ami                    = var.ami_id
   instance_type          = var.worker.instance_type
   subnet_id              = var.vpc.aws_subnets_private[count.index].id
   iam_instance_profile   = aws_iam_instance_profile.worker.id

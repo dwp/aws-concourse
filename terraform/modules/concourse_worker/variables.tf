@@ -8,6 +8,7 @@ variable "tags" {
   type        = map(string)
 }
 
+variable "ami_id" {}
 variable "concourse" {}
 variable "concourse_keys" {}
 variable "loadbalancer" {}
