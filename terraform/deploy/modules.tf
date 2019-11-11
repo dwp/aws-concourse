@@ -1,3 +1,7 @@
+module "amis" {
+  source = "../modules/amis"
+}
+
 module "concourse_keys" {
   source = "../modules/concourse_keys"
 
@@ -22,6 +26,7 @@ module "concourse_web" {
   name = var.name
   tags = var.tags
 
+  ami_id                = module.amis.ami_id
   concourse             = var.concourse
   concourse_keys        = module.concourse_keys.outputs
   concourse_secrets     = module.concourse_secrets.outputs
@@ -60,6 +65,7 @@ module "concourse_worker" {
   name = var.name
   tags = var.tags
 
+  ami_id         = module.amis.ami_id
   concourse      = var.concourse
   concourse_keys = module.concourse_keys.outputs
   loadbalancer   = module.concourse_internal_lb.outputs

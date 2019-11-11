@@ -1,7 +1,7 @@
 resource "aws_instance" "web" {
   count = var.web.count
 
-  ami                    = data.aws_ami.ami.id
+  ami                    = var.ami_id
   instance_type          = var.web.instance_type
   subnet_id              = var.vpc.aws_subnets_private[count.index].id
   iam_instance_profile   = aws_iam_instance_profile.web.id
