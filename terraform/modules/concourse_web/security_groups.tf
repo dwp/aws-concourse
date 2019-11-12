@@ -27,6 +27,26 @@ resource "aws_security_group_rule" "lb_web_out_http" {
   source_security_group_id = aws_security_group.web.id
 }
 
+resource "aws_security_group_rule" "web_internal_in_tcp" {
+  description              = "web_internal_in_tcp"
+  from_port                = 0
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.web.id
+  to_port                  = 65535
+  type                     = "ingress"
+  source_security_group_id = aws_security_group.web.id
+}
+
+resource "aws_security_group_rule" "web_internal_out_tcp" {
+  description              = "web_internal_out_tcp"
+  from_port                = 0
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.web.id
+  to_port                  = 65535
+  type                     = "egress"
+  source_security_group_id = aws_security_group.web.id
+}
+
 resource "aws_security_group_rule" "web_lb_in_ssh" {
   description       = "web_lb_in_ssh"
   from_port         = 2222
