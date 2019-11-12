@@ -14,10 +14,11 @@ module "concourse_lb" {
   name = var.name
   tags = var.tags
 
-  concourse_web         = module.concourse_web.outputs
-  parent_domain_name    = var.parent_domain_name
-  vpc                   = module.vpc.outputs
-  whitelist_cidr_blocks = var.whitelist_cidr_blocks
+  concourse_web          = module.concourse_web.outputs
+  parent_domain_name     = var.parent_domain_name
+  vpc                    = module.vpc.outputs
+  wafregional_web_acl_id = module.waf.wafregional_web_acl_id
+  whitelist_cidr_blocks  = var.whitelist_cidr_blocks
 }
 
 module "concourse_web" {
@@ -113,12 +114,10 @@ module "vpc" {
   vpc = var.vpc
 }
 
-#module "waf" {
-#  source = "../modules/waf"
-#
-#  name = var.name
-#  tags = var.tags
-#
-#
-#  whitelist_cidr_blocks = var.whitelist_cidr_blocks
-#}
+module "waf" {
+  source = "../modules/waf"
+
+  name = var.name
+
+  whitelist_cidr_blocks = var.whitelist_cidr_blocks
+}

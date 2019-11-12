@@ -1,6 +1,6 @@
-resource "aws_wafregional_web_acl" "idp" {
-  name        = "idp-acl"
-  metric_name = "idpacl"
+resource "aws_wafregional_web_acl" "acl" {
+  name        = var.name
+  metric_name = var.name
 
   default_action {
     type = "ALLOW"

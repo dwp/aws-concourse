@@ -11,4 +11,5 @@ variable "tags" {
 variable "concourse_web" {}
 variable "parent_domain_name" {}
 variable "vpc" {}
+variable "wafregional_web_acl_id" {}
 variable "whitelist_cidr_blocks" {}
