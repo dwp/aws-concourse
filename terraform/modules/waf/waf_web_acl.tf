@@ -66,15 +66,16 @@ resource "aws_wafregional_web_acl" "acl" {
     type     = "REGULAR"
   }
 
-  rule {
-    action {
-      type = "BLOCK"
-    }
-
-    priority = 7
-    rule_id  = aws_wafregional_rule.enforce_csrf.id
-    type     = "REGULAR"
-  }
+  # TODO: this breaks fly
+  # rule {
+  #   action {
+  #     type = "BLOCK"
+  #   }
+  #
+  #   priority = 7
+  #   rule_id  = aws_wafregional_rule.enforce_csrf.id
+  #   type     = "REGULAR"
+  # }
 
   rule {
     action {
