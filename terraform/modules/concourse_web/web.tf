@@ -26,24 +26,41 @@ locals {
     {
       environment_vars = merge(
         {
+          CONCOURSE_CLUSTER_NAME = var.name
+          CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
+          CONCOURSE_PEER_ADDRESS = "%H"
+
           CONCOURSE_ADD_LOCAL_USER       = "${data.aws_ssm_parameter.concourse_user.value}:${data.aws_ssm_parameter.concourse_password.value}"
-          CONCOURSE_CLUSTER_NAME         = var.name
-          CONCOURSE_EXTERNAL_URL         = "https://${var.loadbalancer.fqdn}"
           CONCOURSE_MAIN_TEAM_LOCAL_USER = data.aws_ssm_parameter.concourse_user.value
-          CONCOURSE_PEER_ADDRESS         = "%H"
-          CONCOURSE_POSTGRES_DATABASE    = var.database.database_name
-          CONCOURSE_POSTGRES_HOST        = var.database.endpoint
-          CONCOURSE_POSTGRES_PASSWORD    = data.aws_ssm_parameter.database_password.value
-          CONCOURSE_POSTGRES_USER        = data.aws_ssm_parameter.database_user.value
+
+          CONCOURSE_POSTGRES_DATABASE = var.database.database_name
+          CONCOURSE_POSTGRES_HOST     = var.database.endpoint
+          CONCOURSE_POSTGRES_PASSWORD = data.aws_ssm_parameter.database_password.value
+          CONCOURSE_POSTGRES_USER     = data.aws_ssm_parameter.database_user.value
+
+          CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
+          CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
+          CONCOURSE_TSA_HOST_KEY        = "/etc/concourse/host_key"
+
+          #TODO: Setup Monitoring !10
           CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
           CONCOURSE_PROMETHEUS_BIND_PORT = 8081
-          CONCOURSE_SESSION_SIGNING_KEY  = "/etc/concourse/session_signing_key"
-          CONCOURSE_TSA_AUTHORIZED_KEYS  = "/etc/concourse/authorized_worker_keys"
-          CONCOURSE_TSA_HOST_KEY         = "/etc/concourse/host_key"
-          // TODO: Github SSO
-          // CONCOURSE_GITHUB_CLIENT_ID=${data.aws_ssm_parameter.concourse_github_client_id.value}
-          // CONCOURSE_GITHUB_CLIENT_SECRET=${data.aws_ssm_parameter.concourse_github_client_secret.value}
-          // CONCOURSE_MAIN_TEAM_GITHUB_TEAM = ""
+
+          #TODO: Github SSO
+          #CONCOURSE_GITHUB_CLIENT_ID=${data.aws_ssm_parameter.concourse_github_client_id.value}
+          #CONCOURSE_GITHUB_CLIENT_SECRET=${data.aws_ssm_parameter.concourse_github_client_secret.value}
+          #CONCOURSE_MAIN_TEAM_GITHUB_TEAM = ""
+
+          #TODO: Audit logging
+          #CONCOURSE_ENABLE_BUILD_AUDITING     = true
+          #CONCOURSE_ENABLE_CONTAINER_AUDITING = true
+          #CONCOURSE_ENABLE_JOB_AUDITING       = true
+          #CONCOURSE_ENABLE_PIPELINE_AUDITING  = true
+          #CONCOURSE_ENABLE_RESOURCE_AUDITING  = true
+          #CONCOURSE_ENABLE_SYSTEM_AUDITING    = true
+          #CONCOURSE_ENABLE_TEAM_AUDITING      = true
+          #CONCOURSE_ENABLE_WORKER_AUDITING    = true
+          #CONCOURSE_ENABLE_VOLUME_AUDITING    = true
         },
         var.web.environment_override
       )
