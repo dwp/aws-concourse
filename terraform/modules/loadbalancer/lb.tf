@@ -6,6 +6,11 @@ resource "aws_lb" "lb" {
   tags               = merge(var.tags, { Name = "${var.name}-lb" })
 }
 
+resource "aws_wafregional_web_acl_association" "lb" {
+  resource_arn = aws_lb.lb.arn
+  web_acl_id   = var.wafregional_web_acl_id
+}
+
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.lb.arn
   port              = 443
