@@ -1,15 +1,3 @@
-resource "aws_instance" "web" {
-  count = var.web.count
-
-  ami                    = var.ami_id
-  instance_type          = var.web.instance_type
-  subnet_id              = var.vpc.aws_subnets_private[count.index].id
-  iam_instance_profile   = aws_iam_instance_profile.web.id
-  user_data_base64       = data.template_cloudinit_config.web_bootstrap.rendered
-  vpc_security_group_ids = [aws_security_group.web.id]
-  tags                   = merge(var.tags, { Name = "${local.name}-${data.aws_availability_zones.current.names[count.index]}" })
-}
-
 locals {
   logger_bootstrap_file = file("${path.module}/files/logger_bootstrap.sh")
   logger_systemd_file   = file("${path.module}/files/logger_systemd")

@@ -18,11 +18,9 @@ resource "aws_lb_target_group" "web_http" {
   tags = merge(var.tags, { Name = local.name })
 }
 
-resource "aws_lb_target_group_attachment" "web_http" {
-  count = var.web.count
-
-  target_group_arn = aws_lb_target_group.web_http.id
-  target_id        = aws_instance.web[count.index].id
+resource "aws_autoscaling_attachment" "web_http" {
+  alb_target_group_arn   = aws_lb_target_group.web_http.id
+  autoscaling_group_name = aws_autoscaling_group.web.name
 }
 
 resource "aws_lb_target_group" "web_ssh" {
@@ -45,9 +43,7 @@ resource "aws_lb_target_group" "web_ssh" {
   tags = merge(var.tags, { Name = local.name })
 }
 
-resource "aws_lb_target_group_attachment" "web_ssh" {
-  count = var.web.count
-
-  target_group_arn = aws_lb_target_group.web_ssh.id
-  target_id        = aws_instance.web[count.index].id
+resource "aws_autoscaling_attachment" "web_ssh" {
+  alb_target_group_arn   = aws_lb_target_group.web_ssh.id
+  autoscaling_group_name = aws_autoscaling_group.web.name
 }
