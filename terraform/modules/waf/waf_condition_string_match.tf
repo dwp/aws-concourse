@@ -37,9 +37,20 @@ resource "aws_wafregional_byte_match_set" "match_auth_tokens" {
 resource "aws_wafregional_byte_match_set" "match_rfi_lfi_traversal" {
   name = "match-rfi-lfi-traversal"
 
+  # TODO Removed to allow fly login (as it contians the redirect url)
+  #  byte_match_tuples {
+  #    text_transformation   = "HTML_ENTITY_DECODE"
+  #    target_string         = "://"
+  #    positional_constraint = "CONTAINS"
+  #
+  #    field_to_match {
+  #      type = "QUERY_STRING"
+  #    }
+  #  }
+
   byte_match_tuples {
     text_transformation   = "HTML_ENTITY_DECODE"
-    target_string         = "://"
+    target_string         = "../"
     positional_constraint = "CONTAINS"
 
     field_to_match {
@@ -47,8 +58,19 @@ resource "aws_wafregional_byte_match_set" "match_rfi_lfi_traversal" {
     }
   }
 
+  # TODO Removed to allow fly login (as it contians the redirect url)
+  #  byte_match_tuples {
+  #    text_transformation   = "URL_DECODE"
+  #    target_string         = "://"
+  #    positional_constraint = "CONTAINS"
+  #
+  #    field_to_match {
+  #      type = "QUERY_STRING"
+  #    }
+  #  }
+
   byte_match_tuples {
-    text_transformation   = "HTML_ENTITY_DECODE"
+    text_transformation   = "URL_DECODE"
     target_string         = "../"
     positional_constraint = "CONTAINS"
 
@@ -57,35 +79,16 @@ resource "aws_wafregional_byte_match_set" "match_rfi_lfi_traversal" {
     }
   }
 
-  byte_match_tuples {
-    text_transformation   = "URL_DECODE"
-    target_string         = "://"
-    positional_constraint = "CONTAINS"
-
-    field_to_match {
-      type = "QUERY_STRING"
-    }
-  }
-
-  byte_match_tuples {
-    text_transformation   = "URL_DECODE"
-    target_string         = "../"
-    positional_constraint = "CONTAINS"
-
-    field_to_match {
-      type = "QUERY_STRING"
-    }
-  }
-
-  byte_match_tuples {
-    text_transformation   = "HTML_ENTITY_DECODE"
-    target_string         = "://"
-    positional_constraint = "CONTAINS"
-
-    field_to_match {
-      type = "URI"
-    }
-  }
+  # TODO Removed to allow fly login (as it contians the redirect url)
+  #  byte_match_tuples {
+  #    text_transformation   = "HTML_ENTITY_DECODE"
+  #    target_string         = "://"
+  #    positional_constraint = "CONTAINS"
+  #
+  #    field_to_match {
+  #      type = "URI"
+  #    }
+  #  }
 
   byte_match_tuples {
     text_transformation   = "HTML_ENTITY_DECODE"
@@ -97,15 +100,16 @@ resource "aws_wafregional_byte_match_set" "match_rfi_lfi_traversal" {
     }
   }
 
-  byte_match_tuples {
-    text_transformation   = "URL_DECODE"
-    target_string         = "://"
-    positional_constraint = "CONTAINS"
-
-    field_to_match {
-      type = "URI"
-    }
-  }
+  # TODO Removed to allow fly login (as it contians the redirect url)
+  #  byte_match_tuples {
+  #    text_transformation   = "URL_DECODE"
+  #    target_string         = "://"
+  #    positional_constraint = "CONTAINS"
+  #
+  #    field_to_match {
+  #      type = "URI"
+  #    }
+  #  }
 
   byte_match_tuples {
     text_transformation   = "URL_DECODE"

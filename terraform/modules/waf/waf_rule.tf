@@ -4,14 +4,8 @@ resource "aws_wafregional_rule" "detect_admin_access" {
 
   predicate {
     data_id = aws_wafregional_ipset.admin_remote_ipset.id
-    negated = true
-    type    = "IPMatch"
-  }
-
-  predicate {
-    data_id = aws_wafregional_byte_match_set.match_admin_url.id
     negated = false
-    type    = "ByteMatch"
+    type    = "IPMatch"
   }
 }
 

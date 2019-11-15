@@ -72,7 +72,6 @@ packages:
 EOF
   }
 
-  # Create concourse_worker systemd service file
   part {
     content_type = "text/cloud-config"
 
