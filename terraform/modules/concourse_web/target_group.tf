@@ -29,6 +29,10 @@ resource "aws_lb_target_group" "web_ssh" {
   protocol = "TCP"
   vpc_id   = var.vpc.aws_vpc.id
 
+  # TODO healthcheck issues
+  # using port 2222 creates hundreds of lines of log spam a minute of failed SSH connections into CloudWatch
+  # using port 8080 requires a security group rule to allow all traffic from the private subnets ip ranges, as we cannot
+  # get the addresses of the NLB, from where the healthchecks originate, which is too broad to be accepted
   health_check {
     port     = "8080"
     protocol = "TCP"
