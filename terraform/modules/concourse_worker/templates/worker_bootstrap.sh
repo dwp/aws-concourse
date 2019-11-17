@@ -15,5 +15,5 @@ mkdir /etc/concourse
 aws ssm get-parameter --with-decryption --name ${tsa_host_pub_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/tsa_host_key.pub
 aws ssm get-parameter --with-decryption --name ${worker_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/worker_key
 
-systemctl enable concourse_worker.service
-systemctl start concourse_worker.service
+systemctl enable concourse-worker.service
+systemctl start concourse-worker.service

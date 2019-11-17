@@ -17,11 +17,12 @@ resource "aws_autoscaling_group" "worker" {
 }
 
 resource "aws_launch_template" "worker" {
-  name_prefix   = "${local.name}-"
-  image_id      = var.ami_id
-  instance_type = var.worker.instance_type
-  user_data     = data.template_cloudinit_config.worker_bootstrap.rendered
-  tags          = merge(var.tags, { Name = local.name })
+  name_prefix                          = "${local.name}-"
+  image_id                             = var.ami_id
+  instance_type                        = var.worker.instance_type
+  user_data                            = data.template_cloudinit_config.worker_bootstrap.rendered
+  instance_initiated_shutdown_behavior = "terminate"
+  tags                                 = merge(var.tags, { Name = local.name })
 
   block_device_mappings {
     device_name = "/dev/xvda"

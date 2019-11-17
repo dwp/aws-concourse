@@ -68,7 +68,7 @@ write_files:
   - encoding: b64
     content: ${base64encode(local.worker_systemd_file)}
     owner: root:root
-    path: /etc/systemd/system/concourse_worker.service
+    path: /etc/systemd/system/concourse-worker.service
     permissions: '0755'
   - encoding: b64
     content: ${base64encode(local.logger_conf_file)}
@@ -78,7 +78,7 @@ write_files:
   - encoding: b64
     content: ${base64encode(local.logger_systemd_file)}
     owner: root:root
-    path: /etc/systemd/system/journald_cloudwatch_logs.service
+    path: /etc/systemd/system/journald-cloudwatch-logs.service
     permissions: '0755'
 EOF
   }

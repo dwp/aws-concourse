@@ -16,5 +16,5 @@ aws ssm get-parameter --with-decryption --name ${session_signing_key_ssm_id} | j
 aws ssm get-parameter --with-decryption --name ${tsa_host_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/host_key
 aws ssm get-parameter --with-decryption --name ${authorized_worker_keys_ssm_id} | jq -r .Parameter.Value > /etc/concourse/authorized_worker_keys
 
-systemctl enable concourse_web.service
-systemctl start concourse_web.service
+systemctl enable concourse-web.service
+systemctl start concourse-web.service
