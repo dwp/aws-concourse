@@ -2,7 +2,7 @@
 Description=Concourse CI Web
 Wants=basic.target
 After=basic.target network.target
-OnFailure=poweroff.target
+# OnFailure=poweroff.target
 
 [Service]
 %{ for key, value in environment_vars ~}

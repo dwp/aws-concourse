@@ -34,10 +34,12 @@ locals {
           CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
           CONCOURSE_PROMETHEUS_BIND_PORT = 8081
 
-          #TODO: Github SSO
-          #CONCOURSE_GITHUB_CLIENT_ID=${data.aws_ssm_parameter.concourse_github_client_id.value}
-          #CONCOURSE_GITHUB_CLIENT_SECRET=${data.aws_ssm_parameter.concourse_github_client_secret.value}
-          #CONCOURSE_MAIN_TEAM_GITHUB_TEAM = ""
+          CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
+          CONCOURSE_OIDC_CLIENT_ID     = data.aws_ssm_parameter.concourse_cognito_client_id.value
+          CONCOURSE_OIDC_CLIENT_SECRET = data.aws_ssm_parameter.concourse_cognito_client_secret.value
+          CONCOURSE_OIDC_ISSUER        = var.cognito.issuer
+
+          CONCOURSE_MAIN_TEAM_OIDC_GROUP = var.cognito.admin_group
 
           #TODO: Audit logging
           #CONCOURSE_ENABLE_BUILD_AUDITING     = true
@@ -98,17 +100,17 @@ write_files:
     content: ${base64encode(local.web_systemd_file)}
     owner: root:root
     path: /etc/systemd/system/concourse-web.service
-    permissions: '0755'
+    permissions: '0644'
   - encoding: b64
     content: ${base64encode(local.logger_conf_file)}
     owner: root:root
     path: /opt/journald-cloudwatch-logs/journald-cloudwatch-logs.conf
-    permissions: '0755'
+    permissions: '0644'
   - encoding: b64
     content: ${base64encode(local.logger_systemd_file)}
     owner: root:root
     path: /etc/systemd/system/journald-cloudwatch-logs.service
-    permissions: '0755'
+    permissions: '0644'
 EOF
   }
 

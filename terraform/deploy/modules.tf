@@ -28,6 +28,7 @@ module "concourse_web" {
   tags = var.tags
 
   ami_id                = module.amis.ami_id
+  cognito               = var.cognito
   concourse             = var.concourse
   concourse_keys        = module.concourse_keys.outputs
   concourse_secrets     = module.concourse_secrets.outputs
