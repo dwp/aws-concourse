@@ -9,6 +9,7 @@ variable "tags" {
 }
 
 variable "ami_id" {}
+variable "cognito" {}
 variable "concourse" {}
 variable "concourse_keys" {}
 variable "concourse_secrets" {}
