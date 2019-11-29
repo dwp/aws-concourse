@@ -40,6 +40,8 @@ locals {
           CONCOURSE_OIDC_ISSUER        = var.cognito.issuer
 
           CONCOURSE_MAIN_TEAM_OIDC_GROUP = var.cognito.admin_group
+          CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
+          CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
 
           #TODO: Audit logging
           #CONCOURSE_ENABLE_BUILD_AUDITING     = true
