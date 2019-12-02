@@ -69,7 +69,7 @@ resource "aws_launch_template" "worker" {
 
 resource "aws_autoscaling_schedule" "worker_night" {
   scheduled_action_name = "night"
-  autoscaling_group_name = aws_autoscaling_group.worker.arn
+  autoscaling_group_name = aws_autoscaling_group.worker.name
   recurrence = var.asg_night.time
 
   min_size = var.asg_night.min_size
@@ -80,7 +80,7 @@ resource "aws_autoscaling_schedule" "worker_night" {
 
 resource "aws_autoscaling_schedule" "worker_day" {
   scheduled_action_name = "day"
-  autoscaling_group_name = aws_autoscaling_group.worker.arn
+  autoscaling_group_name = aws_autoscaling_group.worker.name
   recurrence = var.asg_day.time
 
   min_size = var.asg_day.min_size
