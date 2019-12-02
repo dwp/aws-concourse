@@ -75,7 +75,6 @@ resource "aws_autoscaling_schedule" "worker_night" {
   min_size         = var.asg_night.min_size
   max_size         = var.asg_night.max_size
   desired_capacity = var.asg_night.desired_capacity
-
 }
 
 resource "aws_autoscaling_schedule" "worker_day" {
@@ -86,5 +85,4 @@ resource "aws_autoscaling_schedule" "worker_day" {
   min_size         = var.asg_day.min_size
   max_size         = var.asg_day.max_size
   desired_capacity = var.asg_day.desired_capacity
-
 }
