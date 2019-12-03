@@ -11,5 +11,5 @@ data "aws_ami" "ami" {
     values = ["hvm"]
   }
 
-  owners = [local.amazons_aws_account_id]
+  owners = [local.amazons_aws_account_id, "self"]
 }
