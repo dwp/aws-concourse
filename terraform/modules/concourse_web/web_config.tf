@@ -9,10 +9,7 @@ locals {
     }
   )
 
-  web_systemd_file = templatefile(
-    "${path.module}/templates/web_systemd",
-    {
-      environment_vars = merge(
+  service_env_vars = merge(
         {
           CONCOURSE_CLUSTER_NAME = var.name
           CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
@@ -56,6 +53,18 @@ locals {
         },
         var.web.environment_override
       )
+
+  web_systemd_file = templatefile(
+    "${path.module}/templates/web_systemd",
+    {
+      environment_vars = local.service_env_vars
+    }
+  )
+
+  web_upstart_file = templatefile(
+    "${path.module}/templates/web_upstart",
+    {
+      environment_vars = local.service_env_vars
     }
   )
 
@@ -98,6 +107,11 @@ EOF
     content_type = "text/cloud-config"
     content      = <<EOF
 write_files:
+  - encoding: b64
+    content: ${base64encode(local.web_upstart_file)}
+    owner: root:root
+    path: /etc/init/concourse-web.conf
+    permissions: '0644'
   - encoding: b64
     content: ${base64encode(local.web_systemd_file)}
     owner: root:root
