@@ -1,0 +1,17 @@
+description "Concourse Worker"
+author "Concourse Team"
+
+start on runlevel [2345]
+stop on shutdown
+
+script
+  exec /bin/bash << 'EOT'
+  eval $(cat /etc/environment | sed 's/^export //')
+
+%{ for key, value in environment_vars ~}
+  export ${key}=${value}
+%{ endfor ~}
+
+  sudo -E /usr/local/concourse/bin/concourse worker
+  EOT
+end script

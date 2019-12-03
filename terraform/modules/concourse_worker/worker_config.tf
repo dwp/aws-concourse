@@ -26,6 +26,23 @@ locals {
     }
   )
 
+  worker_upstart_file = templatefile(
+    "${path.module}/templates/worker_upstart",
+    {
+      environment_vars = merge(
+        {
+          CONCOURSE_EPHEMERAL = true
+          CONCOURSE_WORK_DIR  = "/opt/concourse"
+
+          CONCOURSE_TSA_HOST               = "${var.loadbalancer.fqdn}:${local.service_port}"
+          CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
+          CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
+        },
+        var.worker.environment_override
+      )
+    }
+  )
+
   worker_bootstrap_file = templatefile(
     "${path.module}/templates/worker_bootstrap.sh",
     {
@@ -65,6 +82,11 @@ EOF
 
     content = <<EOF
 write_files:
+  - encoding: b64
+    content: ${base64encode(local.worker_upstart_file)}
+    owner: root:root
+    path: /etc/init/concourse-worker.conf
+    permissions: '0644'
   - encoding: b64
     content: ${base64encode(local.worker_systemd_file)}
     owner: root:root
