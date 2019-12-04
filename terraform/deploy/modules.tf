@@ -1,5 +1,8 @@
 module "amis" {
   source = "../modules/amis"
+
+  ami_filter_name   = var.ami_filter_name
+  ami_filter_values = var.ami_filter_values
 }
 
 module "concourse_keys" {
