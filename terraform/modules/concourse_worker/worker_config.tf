@@ -1,8 +1,14 @@
 locals {
-  logger_bootstrap_file = file("${path.module}/files/logger_bootstrap.sh")
-  logger_systemd_file   = file("${path.module}/files/logger_systemd")
+  logger_bootstrap_file = templatefile(
+    "${path.module}/templates/logger_bootstrap.sh",
+    {
+      cloudwath_agent_config_ssm_parameter : aws_ssm_parameter.cloudwatch_agent_config.name
+    }
+  )
 
-  logger_conf_file = templatefile(
+  journald_logger_systemd_file = file("${path.module}/files/logger_systemd")
+
+  journald_logger_conf_file = templatefile(
     "${path.module}/templates/journald-cloudwatch-logs.conf",
     {
       cloudwatch_log_group = var.log_group.name
@@ -93,12 +99,12 @@ write_files:
     path: /etc/systemd/system/concourse-worker.service
     permissions: '0644'
   - encoding: b64
-    content: ${base64encode(local.logger_conf_file)}
+    content: ${base64encode(local.journald_logger_conf_file)}
     owner: root:root
     path: /opt/journald-cloudwatch-logs/journald-cloudwatch-logs.conf
     permissions: '0644'
   - encoding: b64
-    content: ${base64encode(local.logger_systemd_file)}
+    content: ${base64encode(local.journald_logger_systemd_file)}
     owner: root:root
     path: /etc/systemd/system/journald-cloudwatch-logs.service
     permissions: '0644'
