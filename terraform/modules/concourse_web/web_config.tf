@@ -2,7 +2,7 @@ locals {
   logger_bootstrap_file = templatefile(
     "${path.module}/templates/logger_bootstrap.sh",
     {
-      cloudwath_agent_config_ssm_parameter : aws_ssm_parameter.cloudwatch_agent_config_web.name
+      cloudwath_agent_config_ssm_parameter = aws_ssm_parameter.cloudwatch_agent_config_web.name
     }
   )
 

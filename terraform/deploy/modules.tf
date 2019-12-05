@@ -41,7 +41,6 @@ module "concourse_web" {
   loadbalancer          = module.concourse_lb.outputs
   log_group             = module.concourse_web_log_group.outputs
   vpc                   = module.vpc.outputs
-
   ssm_name_prefix = var.name
 }
 
@@ -78,7 +77,6 @@ module "concourse_worker" {
   loadbalancer   = module.concourse_internal_lb.outputs
   log_group      = module.concourse_worker_log_group.outputs
   vpc            = module.vpc.outputs
-
   ssm_name_prefix = var.name
 }
 
