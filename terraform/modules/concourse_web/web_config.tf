@@ -6,15 +6,6 @@ locals {
     }
   )
 
-  journald_logger_systemd_file = file("${path.module}/files/logger_systemd")
-
-  journald_logger_conf_file = templatefile(
-    "${path.module}/templates/journald-cloudwatch-logs.conf",
-    {
-      cloudwatch_log_group = var.log_group.name
-    }
-  )
-
   service_env_vars = merge(
     {
       CONCOURSE_CLUSTER_NAME = var.name
@@ -122,16 +113,6 @@ write_files:
     content: ${base64encode(local.web_systemd_file)}
     owner: root:root
     path: /etc/systemd/system/concourse-web.service
-    permissions: '0644'
-  - encoding: b64
-    content: ${base64encode(local.journald_logger_conf_file)}
-    owner: root:root
-    path: /opt/journald-cloudwatch-logs/journald-cloudwatch-logs.conf
-    permissions: '0644'
-  - encoding: b64
-    content: ${base64encode(local.journald_logger_systemd_file)}
-    owner: root:root
-    path: /etc/systemd/system/journald-cloudwatch-logs.service
     permissions: '0644'
 EOF
   }

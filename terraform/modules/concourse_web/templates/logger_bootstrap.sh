@@ -5,17 +5,6 @@ set -u
 set -x
 set -o pipefail
 
-# Journald logger
-
-if [[ "$(rpm -qf /sbin/init)" == systemd* ]];
-then
-    wget https://github.com/saymedia/journald-cloudwatch-logs/releases/download/v0.0.1/journald-cloudwatch-logs-linux.zip
-    unzip journald-cloudwatch-logs-linux.zip -d /opt
-
-    systemctl enable journald-cloudwatch-logs.service
-    systemctl start journald-cloudwatch-logs.service
-fi
-
 # CloudWatch Agent
 
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg
