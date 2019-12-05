@@ -14,6 +14,7 @@ variable "concourse_keys" {}
 variable "loadbalancer" {}
 variable "log_group" {}
 variable "vpc" {}
+variable "ssm_name_prefix" {}
 
 variable "worker" {
   description = "worker configuration options"

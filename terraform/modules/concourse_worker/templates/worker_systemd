@@ -9,7 +9,7 @@ OnFailure=poweroff.target
 Environment=${key}=${value}
 %{ endfor ~}
 
-ExecStart=/usr/local/concourse/bin/concourse worker
+ExecStart=/bin/sh -c '/usr/local/concourse/bin/concourse worker > /var/log/concourse.log 2>&1'
 
 User=root
 Group=root

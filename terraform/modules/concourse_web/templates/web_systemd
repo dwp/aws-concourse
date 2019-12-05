@@ -9,7 +9,7 @@ After=basic.target network.target
 Environment=${key}=${value}
 %{ endfor ~}
 
-ExecStart=/usr/local/concourse/bin/concourse web
+ExecStart=/bin/sh -c '/usr/local/concourse/bin/concourse web > /var/log/concourse.log 2>&1'
 
 User=root
 Group=root

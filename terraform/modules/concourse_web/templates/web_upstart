@@ -11,6 +11,6 @@ script
   export ${key}=${value}
 %{ endfor ~}
 
-  sudo -E /usr/local/concourse/bin/concourse web
+  sudo -E /usr/local/concourse/bin/concourse web > /var/log/concourse.log 2>&1
   EOT
 end script
