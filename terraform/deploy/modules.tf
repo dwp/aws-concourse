@@ -80,7 +80,6 @@ module "concourse_worker" {
   vpc            = module.vpc.outputs
 
   ssm_name_prefix = var.name
-
 }
 
 module "concourse_worker_log_group" {

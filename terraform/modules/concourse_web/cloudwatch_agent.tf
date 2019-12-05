@@ -5,7 +5,6 @@ locals {
       cloudwatch_log_group : var.log_group.name
     }
   )
-
 }
 
 resource "aws_ssm_parameter" "cloudwatch_agent_config_web" {
