@@ -24,8 +24,8 @@ locals {
       CONCOURSE_TSA_HOST_KEY        = "/etc/concourse/host_key"
 
       #TODO: Setup Monitoring !10
-      CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
-      CONCOURSE_PROMETHEUS_BIND_PORT = 8081
+      #CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
+      #CONCOURSE_PROMETHEUS_BIND_PORT = 8081
 
       CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
       CONCOURSE_OIDC_CLIENT_ID     = data.aws_ssm_parameter.concourse_cognito_client_id.value
@@ -35,6 +35,10 @@ locals {
       CONCOURSE_MAIN_TEAM_OIDC_GROUP = var.cognito.admin_group
       CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
       CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
+
+      CONCOURSE_DATADOG_AGENT_HOST="localhost"
+      CONCOURSE_DATADOG_AGENT_PORT=8125
+      CONCOURSE_DATADOG_PREFIX="concourse"
 
       #TODO: Audit logging
       #CONCOURSE_ENABLE_BUILD_AUDITING     = true
