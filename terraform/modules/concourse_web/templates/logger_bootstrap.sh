@@ -5,8 +5,6 @@ set -u
 set -x
 set -o pipefail
 
-# CloudWatch Agent
-
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg
 gpg --import amazon-cloudwatch-agent.gpg
 
@@ -17,4 +15,4 @@ gpg --verify cloudwatch.rpm.sig cloudwatch.rpm
 
 rpm -U ./cloudwatch.rpm
 
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:${cloudwath_agent_config_ssm_parameter} -s
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:${cloudwatch_agent_config_ssm_parameter} -s
