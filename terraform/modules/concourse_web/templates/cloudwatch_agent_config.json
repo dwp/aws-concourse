@@ -22,6 +22,7 @@
         }
     },
     "metrics": {
+        "namespace": "CWAgent/${cloudwatch_namespace}",
         "append_dimensions": {
             "InstanceId": "$${aws:InstanceId}"
         },

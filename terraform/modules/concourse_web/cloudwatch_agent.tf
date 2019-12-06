@@ -2,7 +2,8 @@ locals {
   cloudwatch_agent_config_file = templatefile(
     "${path.module}/templates/cloudwatch_agent_config.json",
     {
-      cloudwatch_log_group = var.log_group.name
+      cloudwatch_log_group = var.log_group.name,
+      cloudwatch_namespace = var.name
     }
   )
 }
