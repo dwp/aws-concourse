@@ -26,14 +26,16 @@ variable "web" {
   description = "atc/tsa configuration options"
 
   type = object({
-    count                = number
-    instance_type        = string
-    environment_override = map(string)
+    count                 = number
+    max_instance_lifetime = number
+    instance_type         = string
+    environment_override  = map(string)
   })
 
   default = {
-    instance_type        = "t3.micro"
-    count                = 3
-    environment_override = {}
+    instance_type         = "t3.micro"
+    max_instance_lifetime = 60 * 60 * 24 * 7
+    count                 = 3
+    environment_override  = {}
   }
 }
