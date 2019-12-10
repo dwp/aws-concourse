@@ -24,7 +24,7 @@
     "metrics": {
         "namespace": "CWAgent/${cloudwatch_namespace}",
         "append_dimensions": {
-            "InstanceId": "$${aws:InstanceId}"
+            "AutoScalingGroupName": "$${aws:AutoScalingGroupName}"
         },
         "metrics_collected": {
             "statsd": {
