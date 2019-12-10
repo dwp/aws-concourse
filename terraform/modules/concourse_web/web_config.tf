@@ -54,19 +54,19 @@ locals {
     "${path.module}/templates/web_systemd",
     {
       environment_vars = merge(local.service_env_vars,
-       {
-         CONCOURSE_PEER_ADDRESS = "%H"
-       })
+        {
+          CONCOURSE_PEER_ADDRESS = "%H"
+      })
     }
   )
 
   web_upstart_file = templatefile(
     "${path.module}/templates/web_upstart",
     {
-      environment_vars = merge(local.service_env_vars, 
-      {
-        CONCOURSE_PEER_ADDRESS = "$HOSTNAME"
-        })
+      environment_vars = merge(local.service_env_vars,
+        {
+          CONCOURSE_PEER_ADDRESS = "$HOSTNAME"
+      })
     }
   )
 
