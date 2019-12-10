@@ -1,8 +1,9 @@
 resource "aws_autoscaling_group" "web" {
-  name             = local.name
-  max_size         = var.web.count
-  min_size         = var.web.count
-  desired_capacity = var.web.count
+  name                  = local.name
+  max_size              = var.web.count
+  min_size              = var.web.count
+  desired_capacity      = var.web.count
+  max_instance_lifetime = var.web.max_instance_lifetime
 
   vpc_zone_identifier = var.vpc.aws_subnets_private[*].id
 
