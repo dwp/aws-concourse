@@ -10,7 +10,6 @@ locals {
     {
       CONCOURSE_CLUSTER_NAME = var.name
       CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
-      CONCOURSE_PEER_ADDRESS = "%H"
 
       CONCOURSE_ADD_LOCAL_USER       = "${data.aws_ssm_parameter.concourse_user.value}:${data.aws_ssm_parameter.concourse_password.value}"
       CONCOURSE_MAIN_TEAM_LOCAL_USER = data.aws_ssm_parameter.concourse_user.value
@@ -54,14 +53,20 @@ locals {
   web_systemd_file = templatefile(
     "${path.module}/templates/web_systemd",
     {
-      environment_vars = local.service_env_vars
+      environment_vars = merge(local.service_env_vars,
+       {
+         CONCOURSE_PEER_ADDRESS = "%H"
+       })
     }
   )
 
   web_upstart_file = templatefile(
     "${path.module}/templates/web_upstart",
     {
-      environment_vars = local.service_env_vars
+      environment_vars = merge(local.service_env_vars, 
+      {
+        CONCOURSE_PEER_ADDRESS = "$HOSTNAME"
+        })
     }
   )
 
