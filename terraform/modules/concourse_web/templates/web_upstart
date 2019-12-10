@@ -8,7 +8,7 @@ script
   eval $(cat /etc/environment | sed 's/^export //')
 
 %{ for key, value in environment_vars ~}
-  export ${key}=${value}
+  export ${key}="${value}"
 %{ endfor ~}
 
   sudo -E /usr/local/concourse/bin/concourse web > /var/log/concourse.log 2>&1
