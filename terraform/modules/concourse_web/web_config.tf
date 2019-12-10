@@ -36,9 +36,9 @@ locals {
       CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
       CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
 
-      CONCOURSE_DATADOG_AGENT_HOST="localhost"
-      CONCOURSE_DATADOG_AGENT_PORT=8125
-      CONCOURSE_DATADOG_PREFIX="concourse"
+      CONCOURSE_DATADOG_AGENT_HOST = "localhost"
+      CONCOURSE_DATADOG_AGENT_PORT = 8125
+      CONCOURSE_DATADOG_PREFIX     = "concourse"
 
       #TODO: Audit logging
       #CONCOURSE_ENABLE_BUILD_AUDITING     = true
