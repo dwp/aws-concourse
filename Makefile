@@ -1,5 +1,8 @@
 SHELL:=bash
 
+aws_profile=default
+aws_region=eu-west-2
+
 default: help
 
 .PHONY: help
@@ -9,6 +12,7 @@ help:
 .PHONY: bootstrap
 bootstrap: ## Bootstrap local environment for first use
 	make git-hooks
+	make bootstrap-terraform
 
 .PHONY: git-hooks
 git-hooks: ## Set up hooks in .git/hooks
@@ -21,4 +25,12 @@ git-hooks: ## Set up hooks in .git/hooks
 			fi; \
 			ln -s -f ../../.githooks/$${hook} $${HOOK_DIR}/$${hook}; \
 		done \
+	}
+
+.PHONY: bootstrap-terraform
+bootstrap-terraform: ## Bootstrap local environment for first use
+	@{ \
+		export AWS_PROFILE=$(aws_profile); \
+		export AWS_REGION=$(aws_region); \
+		python bootstrap_terraform.py; \
 	}
