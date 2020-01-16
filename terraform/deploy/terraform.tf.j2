@@ -1,0 +1,16 @@
+terraform {
+  required_version = "~> 0.12"
+
+  backend "s3" {
+    bucket         = "{{state_file_bucket}}"
+    key            = "terraform/dataworks/github/dataworks-github-config.tfstate"
+    region         = "{{state_file_region}}"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:eu-west-1:{{state_file_account}}:key/{{state_file_kms_key}}"
+    dynamodb_table = "remote_state_locks"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
