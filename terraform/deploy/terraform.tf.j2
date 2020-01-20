@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "{{state_file_bucket}}"
-    key            = "terraform/dataworks/github/dataworks-github-config.tfstate"
+    key            = "terraform/dataworks/github/aws-concourse.tfstate"
     region         = "{{state_file_region}}"
     encrypt        = true
     kms_key_id     = "arn:aws:kms:eu-west-1:{{state_file_account}}:key/{{state_file_kms_key}}"
