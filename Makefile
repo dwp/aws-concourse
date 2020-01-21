@@ -1,6 +1,6 @@
 SHELL:=bash
 
-aws_profile=default
+aws_profile=dataworks-dev
 aws_region=eu-west-2
 
 default: help
@@ -34,3 +34,9 @@ bootstrap-terraform: ## Bootstrap local environment for first use
 		export AWS_REGION=$(aws_region); \
 		python bootstrap_terraform.py; \
 	}
+
+.PHONY: bootstrap-terraform-dev
+bootstrap-terraform-dev: ## Bootstrap local environment for first use
+	make bootstrap-terraform
+	/usr/bin/sed -i '' 's|"default" ? "management-dev"|"default" ? "development"|g' terraform/deploy/terraform.tf
+	/usr/bin/sed -i '' 's|terraform/dataworks/aws-concourse.tfstate|terraform/dataworks/aws-concourse-${shell git rev-parse --abbrev-ref HEAD}.tfstate|g' terraform/deploy/terraform.tf

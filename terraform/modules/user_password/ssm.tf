@@ -1,7 +1,7 @@
 resource "random_uuid" "uuid" {}
 
 resource "random_string" "user" {
-  length  = 32
+  length  = 16
   special = false # RDS doesn't allow /,", and @
 }
 
