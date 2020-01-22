@@ -17,6 +17,10 @@ def main():
         template = jinja2.Template(in_template.read())
     with open('terraform/deploy/terraform.tf', 'w+') as terraform_tf:
         terraform_tf.write(template.render(config_data))
+    with open('terraform/deploy/terraform.tfvars.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('terraform/deploy/terraform.tfvars', 'w+') as terraform_tfvars:
+        terraform_tfvars.write(template.render(config_data))
     print("Terraform config successfully created")
 
 

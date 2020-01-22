@@ -1,0 +1,15 @@
+assume_role = "administrator"
+tags = {
+  Name        = "concourse"
+  Environment = "development"
+  Project     = "ci"
+  environment = "dev"
+  application = "aws-concourse"
+  created-by  = "terraform"
+  owner       = "dataworks platform"
+}
+parent_domain_name    = "ci-dw-poc.co.uk"
+whitelist_cidr_blocks = ["{{cidr_block['ucfs_network']}}"]
+vpc = {
+  cidr_block = ""
+}
