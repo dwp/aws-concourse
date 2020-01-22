@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+
+import boto3
+import botocore
 import jinja2
 import os
+import sys
 import yaml
-import boto3
 
 
 def main():
@@ -11,7 +15,17 @@ def main():
         ssm = boto3.client('ssm', region_name=os.environ['AWS_REGION'])
     else:
         ssm = boto3.client('ssm')
-    parameter = ssm.get_parameter(Name='terraform_bootstrap_config', WithDecryption=False)
+
+    try:
+        parameter = ssm.get_parameter(Name='terraform_bootstrap_config', WithDecryption=False)
+    except botocore.exceptions.ClientError as e:
+        error_message = e.response["Error"]["Message"]
+        if "The security token included in the request is invalid" in error_message:
+            print("ERROR: Invalid security token used when calling AWS SSM. Have you run `aws-sts` recently?")
+        else:
+            print("ERROR: Problem calling AWS SSM: {}".format(error_message))
+        sys.exit(1)
+
     config_data = yaml.load(parameter['Parameter']['Value'], Loader=yaml.FullLoader)
     with open('terraform/deploy/terraform.tf.j2') as in_template:
         template = jinja2.Template(in_template.read())

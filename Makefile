@@ -1,6 +1,6 @@
 SHELL:=bash
 
-aws_profile=dataworks-dev
+aws_profile=dataworks-development
 aws_region=eu-west-2
 
 default: help
@@ -11,10 +11,15 @@ help:
 
 .PHONY: bootstrap
 bootstrap: ## Bootstrap local environment for first use
+	make dependencies
 	make git-hooks
 	make bootstrap-terraform
 
-.PHONY: git-hooks
+.PHONY: dependencies
+dependencies: ## Install Python dependencies
+	pip3 install --user Jinja2 PyYAML boto3
+
+PHONY: git-hooks
 git-hooks: ## Set up hooks in .git/hooks
 	@{ \
 		HOOK_DIR=.git/hooks; \
@@ -32,7 +37,7 @@ bootstrap-terraform: ## Bootstrap local environment for first use
 	@{ \
 		export AWS_PROFILE=$(aws_profile); \
 		export AWS_REGION=$(aws_region); \
-		python bootstrap_terraform.py; \
+		python3 bootstrap_terraform.py; \
 	}
 
 .PHONY: bootstrap-terraform-dev
