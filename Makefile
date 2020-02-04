@@ -45,3 +45,15 @@ bootstrap-terraform-dev: ## Bootstrap local environment for first use
 	make bootstrap-terraform
 	/usr/bin/sed -i '' 's|"default" ? "management-dev"|"default" ? "development"|g' terraform/deploy/terraform.tf
 	/usr/bin/sed -i '' 's|terraform/dataworks/aws-concourse.tfstate|terraform/dataworks/aws-concourse-${shell git rev-parse --abbrev-ref HEAD}.tfstate|g' terraform/deploy/terraform.tf
+
+.PHONY: terraform-init
+terraform-init: ## Run `terraform init` from repo root
+	terraform init terraform/deploy/
+
+.PHONY: terraform-plan
+terraform-plan: ## Run `terraform plan` from repo root
+	terraform plan -var-file=terraform/deploy/terraform.tfvars terraform/deploy/
+
+.PHONY: terraform-apply
+terraform-apply: ## Run `terraform apply` from repo root
+	terraform apply -var-file=terraform/deploy/terraform.tfvars terraform/deploy/
