@@ -117,8 +117,7 @@ module "vpc" {
 
   name = var.name
   tags = var.tags
-
-  vpc = var.vpc
+  vpc  = var.vpc
 }
 
 module "waf" {

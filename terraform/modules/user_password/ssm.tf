@@ -3,7 +3,7 @@ resource "random_uuid" "uuid" {}
 resource "random_string" "user" {
   length  = 16
   special = false # RDS doesn't allow /,", and @
-  number = false
+  number  = false
 }
 
 resource "aws_ssm_parameter" "user" {

@@ -16,15 +16,15 @@ variable "vpc" {
 }
 variable "subnets" {
   description = "define sizes for subnets using Terraform cidrsubnet function. Defaults suit an empty /24 VPC"
-  type = map(map(number))
+  type        = map(map(number))
   default = {
     public = {
       newbits = 4
-      netnum = 0
+      netnum  = 0
     }
     private = {
       newbits = 2
-      netnum = 1
+      netnum  = 1
     }
   }
 }
