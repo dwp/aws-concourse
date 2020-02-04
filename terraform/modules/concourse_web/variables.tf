@@ -39,3 +39,12 @@ variable "web" {
     environment_override  = {}
   }
 }
+
+variable "proxy" {
+  type = map(string)
+  default = {
+    http_proxy  = ""
+    https_proxy = ""
+    no_proxy    = ""
+  }
+}
