@@ -1,14 +1,16 @@
 assume_role = "administrator"
 tags = {
-  Name        = "concourse"
-  Environment = "development"
-  Project     = "ci"
-  Application = "aws-concourse"
-  CreatedBy   = "terraform"
-  Owner       = "dataworks platform"
+{% for key, value in common_tags.items() %}
+  {{key}} = "{{value}}"{% endfor %}
+  Name         = "concourse"
+  Environment  = "development"
+  Project      = "ci"
+  Application  = "aws-concourse"
+  Persistence  = "True"
+  AutoShutdown = "False"
 }
-parent_domain_name    = "ci-dw-poc.co.uk"
+parent_domain_name    = "wip.{{dataworks_domain_name}}"
 whitelist_cidr_blocks = ["{{cidr_block['ucfs_network']}}"]
 vpc = {
-  cidr_block = ""
+  cidr_block = "{{cidr_block['ci-cd']}}"
 }
