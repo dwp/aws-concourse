@@ -1,6 +1,7 @@
 resource "aws_iam_role" "worker" {
   name               = local.name
   assume_role_policy = data.aws_iam_policy_document.concourse.json
+  tags               = var.tags
 }
 
 resource "aws_iam_instance_profile" "worker" {
