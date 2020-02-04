@@ -51,6 +51,8 @@ locals {
       #CONCOURSE_ENABLE_WORKER_AUDITING    = true
       #CONCOURSE_ENABLE_VOLUME_AUDITING    = true
 
+      CONCOURSE_CONTAINER_PLACEMENT_STRATEGY : "random"
+
       #TODO: Egress Proxy Config
       #HTTP_PROXY     = var.proxy.http_proxy
       #HTTPS_PROXY    = var.proxy.https_proxy
