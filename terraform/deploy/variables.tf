@@ -58,3 +58,8 @@ variable "ami_filter_values" {
   type    = list(string)
   default = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
 }
+
+variable "ami_owners" {
+  type    = list(string)
+  default = ["self", "amazon"]
+}

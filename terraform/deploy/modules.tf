@@ -3,6 +3,7 @@ module "amis" {
 
   ami_filter_name   = var.ami_filter_name
   ami_filter_values = var.ami_filter_values
+  ami_owners        = var.ami_owners
 }
 
 module "concourse_keys" {

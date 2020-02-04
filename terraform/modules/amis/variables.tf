@@ -5,3 +5,8 @@ variable "ami_filter_name" {
 variable "ami_filter_values" {
   type = list(string)
 }
+
+variable "ami_owners" {
+  type    = list(string)
+  default = ["self", "amazon"]
+}
