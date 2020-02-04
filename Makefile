@@ -1,6 +1,6 @@
 SHELL:=bash
 
-aws_profile=dataworks-development
+aws_profile=default
 aws_region=eu-west-2
 
 default: help
