@@ -16,7 +16,7 @@ module "concourse_lb" {
   source = "../modules/loadbalancer"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   concourse_web          = module.concourse_web.outputs
   parent_domain_name     = var.parent_domain_name
@@ -29,7 +29,7 @@ module "concourse_web" {
   source = "../modules/concourse_web"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   ami_id                = module.amis.ami_id
   cognito               = var.cognito
@@ -49,7 +49,7 @@ module "concourse_web_log_group" {
   source = "../modules/cloudwatch_log_group"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   group_name = "concourse-web"
 }
@@ -58,7 +58,7 @@ module "concourse_internal_lb" {
   source = "../modules/internal_loadbalancer"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   concourse_web         = module.concourse_web.outputs
   parent_domain_name    = var.parent_domain_name
@@ -70,7 +70,7 @@ module "concourse_worker" {
   source = "../modules/concourse_worker"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   ami_id          = module.amis.ami_id
   concourse       = var.concourse
@@ -85,7 +85,7 @@ module "concourse_worker_log_group" {
   source = "../modules/cloudwatch_log_group"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   group_name = "concourse-worker"
 }
@@ -100,7 +100,7 @@ module "database" {
   source = "../modules/database"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   secrets = module.database_secrets.outputs
   vpc     = module.vpc.outputs
@@ -116,7 +116,7 @@ module "vpc" {
   source = "../modules/vpc"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
   vpc  = var.vpc
 }
 

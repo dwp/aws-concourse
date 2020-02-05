@@ -1,14 +1,4 @@
 assume_role = "administrator"
-tags = {
-{% for key, value in common_tags.items() %}
-  {{key}} = "{{value}}"{% endfor %}
-  Name         = "concourse"
-  Environment  = "development"
-  Project      = "ci"
-  Application  = "aws-concourse"
-  Persistence  = "True"
-  AutoShutdown = "False"
-}
 parent_domain_name    = "wip.{{dataworks_domain_name}}"
 whitelist_cidr_blocks = ["{{cidr_block['ucfs_network']}}"]
 vpc = {

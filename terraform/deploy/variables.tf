@@ -4,11 +4,6 @@ variable "name" {
   default     = "ci"
 }
 
-variable "tags" {
-  description = "tags to apply to aws resource"
-  type        = map(string)
-}
-
 variable "cognito" {
   description = "cognito secret locations/values required for login"
   type        = map(string)

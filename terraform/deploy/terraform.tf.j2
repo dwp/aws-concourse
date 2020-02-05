@@ -47,4 +47,15 @@ locals {
   }
 
   environment = terraform.workspace == "default" ? "management-dev" : terraform.workspace
+
+  tags = {
+  {% for key, value in common_tags.items() %}
+    {{key}} = "{{value}}"{% endfor %}
+    Name         = "concourse"
+    Environment  = local.environment
+    Project      = "ci"
+    Application  = "aws-concourse"
+    Persistence  = "Ignore"
+    AutoShutdown = "False"
+  }
 }
