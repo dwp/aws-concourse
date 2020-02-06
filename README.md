@@ -8,19 +8,9 @@ Built on top of [concourse-control-tower](https://github.com/dwp/concourse-contr
 
 In order to install dependencies required by this repo, run `make bootstrap`
 
-## Deploying Concourse to Management Dev Account
+## Deploying Concourse
 
 ```
-make bootstrap-terraform-dev
-make terraform-init
-make terraform-plan
-make terraform-apply
-```
-
-## Deploying Concourse to Management Account
-
-```
-make bootstrap-terraform
 make terraform-init
 make terraform-plan
 make terraform-apply

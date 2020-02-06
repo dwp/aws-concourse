@@ -40,12 +40,6 @@ bootstrap-terraform: ## Bootstrap local environment for first use
 		python3 bootstrap_terraform.py; \
 	}
 
-.PHONY: bootstrap-terraform-dev
-bootstrap-terraform-dev: ## Bootstrap local environment for first use
-	make bootstrap-terraform
-	/usr/bin/sed -i '' 's|"default" ? "management-dev"|"default" ? "development"|g' terraform/deploy/terraform.tf
-	/usr/bin/sed -i '' 's|terraform/dataworks/aws-concourse.tfstate|terraform/dataworks/aws-concourse-${shell git rev-parse --abbrev-ref HEAD}.tfstate|g' terraform/deploy/terraform.tf
-
 .PHONY: terraform-init
 terraform-init: ## Run `terraform init` from repo root
 	terraform init terraform/deploy/
