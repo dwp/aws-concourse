@@ -1,6 +1,3 @@
 assume_role = "administrator"
 parent_domain_name    = "wip.{{dataworks_domain_name}}"
-whitelist_cidr_blocks = ["{{cidr_block['ucfs_network']}}"]
-vpc = {
-  cidr_block = "{{cidr_block['ci-cd']}}"
-}
+whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}"]
