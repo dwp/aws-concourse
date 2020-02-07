@@ -11,15 +11,16 @@ help:
 
 .PHONY: bootstrap
 bootstrap: ## Bootstrap local environment for first use
-	make dependencies
 	make git-hooks
-	make bootstrap-terraform
-
-.PHONY: dependencies
-dependencies: ## Install Python dependencies
 	pip3 install --user Jinja2 PyYAML boto3
+	@{ \
+		export AWS_PROFILE=$(aws_profile); \
+		export AWS_REGION=$(aws_region); \
+		python3 bootstrap_terraform.py; \
+	}
+	terraform fmt -recursive
 
-PHONY: git-hooks
+.PHONY: git-hooks
 git-hooks: ## Set up hooks in .git/hooks
 	@{ \
 		HOOK_DIR=.git/hooks; \
@@ -30,14 +31,6 @@ git-hooks: ## Set up hooks in .git/hooks
 			fi; \
 			ln -s -f ../../.githooks/$${hook} $${HOOK_DIR}/$${hook}; \
 		done \
-	}
-
-.PHONY: bootstrap-terraform
-bootstrap-terraform: ## Bootstrap local environment for first use
-	@{ \
-		export AWS_PROFILE=$(aws_profile); \
-		export AWS_REGION=$(aws_region); \
-		python3 bootstrap_terraform.py; \
 	}
 
 .PHONY: terraform-init
