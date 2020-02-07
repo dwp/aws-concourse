@@ -43,6 +43,11 @@ module "concourse_web" {
   log_group             = module.concourse_web_log_group.outputs
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
+  proxy = {
+    http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
+    https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
+    no_proxy    = "169.254.169.254,169.254.169.123,.amazonaws.com"
+  }
 }
 
 module "concourse_web_log_group" {
