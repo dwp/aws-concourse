@@ -58,4 +58,12 @@ locals {
     Persistence  = "Ignore"
     AutoShutdown = "False"
   }
+
+  cidr_block = {
+  {% for environment, ranges in cidr_block.items() %}
+      {{ environment }} = {
+        {% for key, value in ranges.items() %}
+          {{ key }} = "{{ value }}"{% endfor %}
+      } {% endfor %}
+  }
 }

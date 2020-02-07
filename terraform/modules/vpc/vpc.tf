@@ -3,7 +3,7 @@ module "vpc" {
   version                                    = "2.0.0"
   vpc_name                                   = "ci-cd"
   region                                     = data.aws_region.current.name
-  vpc_cidr_block                             = var.vpc.cidr_block
+  vpc_cidr_block                             = var.vpc_cidr_block
   interface_vpce_source_security_group_count = 0
   interface_vpce_source_security_group_ids   = []
   interface_vpce_subnet_ids                  = aws_subnet.private.*.id

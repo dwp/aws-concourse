@@ -115,9 +115,9 @@ module "database_secrets" {
 module "vpc" {
   source = "../modules/vpc"
 
-  name = var.name
-  tags = local.tags
-  vpc  = var.vpc
+  name           = var.name
+  tags           = local.tags
+  vpc_cidr_block = local.cidr_block[local.environment].ci-cd
 }
 
 module "waf" {

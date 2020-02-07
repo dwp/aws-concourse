@@ -8,11 +8,9 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "vpc" {
-  description = "vpc configurables"
-  type = object({
-    cidr_block = string
-  })
+variable "vpc_cidr_block" {
+  description = "The CIDR block for the VPC."
+  type        = string
 }
 variable "subnets" {
   description = "define sizes for subnets using Terraform cidrsubnet function. For an empty /24 VPC, the defaults will create /28 public subnets and /26 private subnets, one of each in each AZ. As shown on /docs/architecture.png"

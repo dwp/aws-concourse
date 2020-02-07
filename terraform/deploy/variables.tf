@@ -36,14 +36,6 @@ variable "whitelist_cidr_blocks" {
   type        = list(string)
 }
 
-variable "vpc" {
-  description = "vpc configuration"
-
-  type = object({
-    cidr_block = string
-  })
-}
-
 variable "ami_filter_name" {
   type    = string
   default = "name"
