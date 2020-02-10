@@ -3,6 +3,7 @@ module "amis" {
 
   ami_filter_name   = var.ami_filter_name
   ami_filter_values = var.ami_filter_values
+  ami_owners        = var.ami_owners
 }
 
 module "concourse_keys" {
@@ -15,10 +16,10 @@ module "concourse_lb" {
   source = "../modules/loadbalancer"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   concourse_web          = module.concourse_web.outputs
-  parent_domain_name     = var.parent_domain_name
+  parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
   whitelist_cidr_blocks  = var.whitelist_cidr_blocks
@@ -28,7 +29,7 @@ module "concourse_web" {
   source = "../modules/concourse_web"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   ami_id                = module.amis.ami_id
   cognito               = var.cognito
@@ -42,13 +43,18 @@ module "concourse_web" {
   log_group             = module.concourse_web_log_group.outputs
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
+  proxy = {
+    http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
+    https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
+    no_proxy    = "169.254.169.254,169.254.169.123,.amazonaws.com"
+  }
 }
 
 module "concourse_web_log_group" {
   source = "../modules/cloudwatch_log_group"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   group_name = "concourse-web"
 }
@@ -57,10 +63,10 @@ module "concourse_internal_lb" {
   source = "../modules/internal_loadbalancer"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   concourse_web         = module.concourse_web.outputs
-  parent_domain_name    = var.parent_domain_name
+  parent_domain_name    = local.parent_domain_name[local.environment]
   vpc                   = module.vpc.outputs
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
 }
@@ -69,7 +75,7 @@ module "concourse_worker" {
   source = "../modules/concourse_worker"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   ami_id          = module.amis.ami_id
   concourse       = var.concourse
@@ -84,7 +90,7 @@ module "concourse_worker_log_group" {
   source = "../modules/cloudwatch_log_group"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   group_name = "concourse-worker"
 }
@@ -99,7 +105,7 @@ module "database" {
   source = "../modules/database"
 
   name = var.name
-  tags = var.tags
+  tags = local.tags
 
   secrets = module.database_secrets.outputs
   vpc     = module.vpc.outputs
@@ -114,10 +120,9 @@ module "database_secrets" {
 module "vpc" {
   source = "../modules/vpc"
 
-  name = var.name
-  tags = var.tags
-
-  vpc = var.vpc
+  name           = var.name
+  tags           = local.tags
+  vpc_cidr_block = local.cidr_block[local.environment].ci-cd
 }
 
 module "waf" {

@@ -4,11 +4,6 @@ variable "name" {
   default     = "ci"
 }
 
-variable "tags" {
-  description = "tags to apply to aws resource"
-  type        = map(string)
-}
-
 variable "cognito" {
   description = "cognito secret locations/values required for login"
   type        = map(string)
@@ -41,14 +36,6 @@ variable "whitelist_cidr_blocks" {
   type        = list(string)
 }
 
-variable "vpc" {
-  description = "vpc configuration"
-
-  type = object({
-    cidr_block = string
-  })
-}
-
 variable "ami_filter_name" {
   type    = string
   default = "name"
@@ -57,4 +44,9 @@ variable "ami_filter_name" {
 variable "ami_filter_values" {
   type    = list(string)
   default = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
+}
+
+variable "ami_owners" {
+  type    = list(string)
+  default = ["self", "amazon"]
 }

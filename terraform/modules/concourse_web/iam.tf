@@ -1,6 +1,7 @@
 resource "aws_iam_role" "web" {
   name               = local.name
   assume_role_policy = data.aws_iam_policy_document.web.json
+  tags               = var.tags
 }
 
 resource "aws_iam_instance_profile" "web" {

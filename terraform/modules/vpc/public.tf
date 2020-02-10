@@ -1,19 +1,19 @@
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc.id
   tags   = merge(var.tags, { Name = var.name })
 }
 
 resource "aws_subnet" "public" {
   count                   = local.zone_count
-  cidr_block              = cidrsubnet(aws_vpc.main.cidr_block, 4, count.index)
-  vpc_id                  = aws_vpc.main.id
+  cidr_block              = cidrsubnet(module.vpc.vpc.cidr_block, var.subnets.public.newbits, var.subnets.public.netnum + count.index)
+  vpc_id                  = module.vpc.vpc.id
   availability_zone_id    = data.aws_availability_zones.current.zone_ids[count.index]
   map_public_ip_on_launch = true
   tags                    = merge(var.tags, { Name = "${var.name}-public-${local.zone_names[count.index]}" })
 }
 
 resource "aws_default_route_table" "public" {
-  default_route_table_id = aws_vpc.main.default_route_table_id
+  default_route_table_id = module.vpc.vpc.main_route_table_id
   tags                   = merge(var.tags, { Name = "${var.name}-public" })
 
   route {

@@ -1,0 +1,8 @@
+groups:
+- name: master
+  jobs:
+  - management
+  - management-dev
+- name: pull-request
+  jobs:
+  - management-plan

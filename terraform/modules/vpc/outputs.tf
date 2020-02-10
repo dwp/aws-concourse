@@ -4,6 +4,6 @@ output "outputs" {
     aws_nat_gateways       = aws_nat_gateway.nat
     aws_subnets_private    = aws_subnet.private
     aws_subnets_public     = aws_subnet.public
-    aws_vpc                = aws_vpc.main
+    aws_vpc                = module.vpc.vpc
   }
 }

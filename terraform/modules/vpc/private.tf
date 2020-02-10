@@ -1,14 +1,14 @@
 resource "aws_subnet" "private" {
   count                = local.zone_count
-  cidr_block           = cidrsubnet(aws_vpc.main.cidr_block, 4, count.index + local.zone_count)
-  vpc_id               = aws_vpc.main.id
+  cidr_block           = cidrsubnet(module.vpc.vpc.cidr_block, var.subnets.private.newbits, var.subnets.private.netnum + count.index)
+  vpc_id               = module.vpc.vpc.id
   availability_zone_id = data.aws_availability_zones.current.zone_ids[count.index]
   tags                 = merge(var.tags, { Name = "${var.name}-private-${local.zone_names[count.index]}" })
 }
 
 resource "aws_route_table" "private" {
   count  = local.zone_count
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc.id
   tags   = merge(var.tags, { Name = "${var.name}-private-${local.zone_names[count.index]}" })
 
   route {
