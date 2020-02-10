@@ -29,7 +29,7 @@ jobs:
         TF_CLI_ARGS_plan:  -lock-timeout=300s
       run:
         path: sh
-        dir: aws-concourse-pr
+        dir: aws-concourse-pr/terraform/deploy
         args:
         - -exc
         - |
@@ -41,6 +41,8 @@ jobs:
       inputs:
       - name: aws-concourse
       - name: terraform-config
+    input_mapping:
+      aws-concourse: aws-concourse-pr
     on_failure:
       put: aws-concourse-pr
       params:

@@ -16,7 +16,9 @@ meta:
             - -exc
             - |
               python bootstrap_terraform.py
-              cp terraform.tf ../terraform-config
+              sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
+              cp terraform/deploy/terraform.tf ../terraform-config
+              cp terraform/deploy/terraform.tfvars ../terraform-config
           dir: aws-concourse
         inputs:
           - name: aws-concourse
@@ -26,7 +28,6 @@ meta:
         AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
         AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
         AWS_REGION: eu-west-2
-        AWS_PROFILE: default
     terraform-apply:
       task: terraform-apply
       config:
