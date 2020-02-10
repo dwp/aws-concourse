@@ -60,6 +60,11 @@ locals {
     management     = ["preprod", "production"]
   }
 
+  parent_domain_name = {
+    management-dev = "wip.${var.parent_domain_name}"
+    management = var.parent_domain_name
+  }
+
   environment = terraform.workspace == "default" ? "management-dev" : terraform.workspace
 
   tags = {
