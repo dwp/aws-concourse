@@ -57,7 +57,7 @@ meta:
             terraform plan -out terraform.plan
             terraform apply -auto-approve terraform.plan
         inputs:
-        - name: aws-management-infrastructure
+        - name: aws-concourse
         - name: terraform-config
     terraform-plan:
       task: terraform-plan
