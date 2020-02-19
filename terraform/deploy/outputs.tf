@@ -1,3 +1,3 @@
 output "loadbalancer" {
-    value = module.loadbalancer
+  value = module.concourse_lb
 }
