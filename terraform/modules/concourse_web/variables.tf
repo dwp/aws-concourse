@@ -35,7 +35,7 @@ variable "web" {
   default = {
     instance_type         = "t3.micro"
     max_instance_lifetime = 60 * 60 * 24 * 7
-    count                 = 0
+    count                 = 3
     environment_override  = {}
   }
 }
