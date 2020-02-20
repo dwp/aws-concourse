@@ -50,3 +50,16 @@ variable "ami_owners" {
   type    = list(string)
   default = ["self", "amazon"]
 }
+
+variable "github_vpc" {
+  type = object({
+    id         = string
+    owner      = string
+    cidr_block = string
+  })
+  default = {
+    id         = ""
+    owner      = ""
+    cidr_block = ""
+  }
+}
