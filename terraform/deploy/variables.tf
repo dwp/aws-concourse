@@ -56,10 +56,12 @@ variable "github_vpc" {
     id         = string
     owner      = string
     cidr_block = string
+    region     = string
   })
   default = {
     id         = ""
     owner      = ""
     cidr_block = ""
+    region     = ""
   }
 }
