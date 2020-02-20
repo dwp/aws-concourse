@@ -12,3 +12,8 @@ variable "group_name" {
   description = "log group name"
   type        = string
 }
+
+variable "retention_in_days" {
+  description = "retention in days"
+  type        = number
+}
