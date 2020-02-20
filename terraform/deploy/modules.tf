@@ -56,7 +56,8 @@ module "concourse_web_log_group" {
   name = var.name
   tags = local.tags
 
-  group_name = "concourse-web"
+  group_name        = "concourse-web"
+  retention_in_days = 30
 }
 
 module "concourse_internal_lb" {
@@ -92,7 +93,8 @@ module "concourse_worker_log_group" {
   name = var.name
   tags = local.tags
 
-  group_name = "concourse-worker"
+  group_name        = "concourse-worker"
+  retention_in_days = 30
 }
 
 module "concourse_secrets" {
