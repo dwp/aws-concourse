@@ -25,7 +25,7 @@ variable "worker" {
   })
   default = {
     instance_type        = "t3.micro"
-    count                = 0
+    count                = 3
     environment_override = {}
   }
 }
