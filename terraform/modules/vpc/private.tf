@@ -10,15 +10,17 @@ resource "aws_route_table" "private" {
   count  = local.zone_count
   vpc_id = module.vpc.vpc.id
   tags   = merge(var.tags, { Name = "${var.name}-private-${local.zone_names[count.index]}" })
-
-  route {
-    nat_gateway_id = aws_nat_gateway.nat[count.index].id
-    cidr_block     = "0.0.0.0/0"
-  }
 }
 
 resource "aws_route_table_association" "private" {
   count          = local.zone_count
   route_table_id = aws_route_table.private[count.index].id
   subnet_id      = aws_subnet.private[count.index].id
+}
+
+resource "aws_route" "concourse_ui_to_client" {
+  count                  = local.zone_count
+  route_table_id         = aws_route_table.private[count.index].id
+  destination_cidr_block = var.ui_access_cidr_block
+  nat_gateway_id         = aws_nat_gateway.nat[count.index].id
 }

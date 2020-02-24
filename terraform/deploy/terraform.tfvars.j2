@@ -1,10 +1,16 @@
 assume_role = "administrator"
 parent_domain_name    = "{{dataworks_domain_name}}"
 whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}"]
+ui_access_cidr_block = "{{ucfs['team_cidr_block']}}"
 ami_filter_values = ["dw-hardened-ami-*"]
 ami_owners        = ["{{accounts['management']}}"]
 
 github_vpc = {
 {%- for k, v in ucfs['github']['vpc'].items() %}
   {{ k }} = "{{ v }}"{% endfor %}
+}
+
+packer_egress_test_zip = {
+  base_path = "../../../packer-egress-test-release"
+  version   = "0.0.10"
 }

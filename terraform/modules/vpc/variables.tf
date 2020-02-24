@@ -26,3 +26,6 @@ variable "subnets" {
     }
   }
 }
+
+variable "ui_access_cidr_block" { type = string }
+
