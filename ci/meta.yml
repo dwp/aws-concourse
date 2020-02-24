@@ -54,7 +54,7 @@ meta:
             cp ../../../terraform-config/terraform.tfvars .
             terraform init
             terraform workspace show
-            export TF_VAR_packer_egress_test_zip="{base_path = \"../packer-egress-test-release\", version = \"$(cat ../packer-egress-test-release/version)\"}"
+            export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
             terraform plan -out terraform.plan
             terraform apply -auto-approve terraform.plan
         inputs:
@@ -88,7 +88,7 @@ meta:
             cp ../../../terraform-config/terraform.tfvars .
             terraform init
             terraform workspace show
-            export TF_VAR_packer_egress_test_zip="{base_path = \"../packer-egress-test-release\", version = \"$(cat ../packer-egress-test-release/version)\"}"
+            export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
             terraform plan -detailed-exitcode
         inputs:
         - name: aws-concourse

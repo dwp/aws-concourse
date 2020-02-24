@@ -5,6 +5,7 @@ jobs:
     passed:
     - management-dev
     trigger: true
+  - get: packer-egress-test-release
   - .: (( inject meta.plan.terraform-bootstrap ))
   - .: (( inject meta.plan.terraform-apply ))
     params:
