@@ -4,9 +4,9 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "concourse" {
   vpc_id             = module.vpc.outputs.aws_vpc.id
   tags = merge(
     local.tags,
-    map(
-      "Name", "concourse-${local.environment}",
-    )
+    {
+      "Name" = "concourse-${local.environment}",
+    }
   )
 }
 
@@ -15,9 +15,9 @@ resource "aws_ec2_transit_gateway_route_table" "concourse" {
 
   tags = merge(
     local.tags,
-    map(
-      "Name", "concourse-${local.environment}",
-    )
+    {
+      "Name" = "concourse-${local.environment}",
+    }
   )
 }
 
