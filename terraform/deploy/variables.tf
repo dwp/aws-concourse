@@ -58,7 +58,7 @@ variable "ami_owners" {
 
 variable "concourse_no_proxy" {
   type    = string
-  default = ""
+  default = "169.254.169.254,169.254.169.123,.amazonaws.com"
 }
 
 variable "packer_egress_test_zip" {
