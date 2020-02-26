@@ -19,8 +19,8 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route" "concourse_ui_to_client" {
-  count                  = local.zone_count
-  route_table_id         = aws_route_table.private[count.index].id
-  destination_cidr_block = var.ui_access_cidr_block
-  nat_gateway_id         = aws_nat_gateway.nat[count.index].id
+  count                  = length(local.route_table_cidr_combinations)
+  route_table_id         = local.route_table_cidr_combinations[count.index].rtb_id
+  destination_cidr_block = local.route_table_cidr_combinations[count.index].cidr
+  nat_gateway_id         = aws_nat_gateway.nat[count.index % local.zone_count].id
 }

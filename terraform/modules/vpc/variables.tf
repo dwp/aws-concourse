@@ -27,5 +27,8 @@ variable "subnets" {
   }
 }
 
-variable "ui_access_cidr_block" { type = string }
+variable "whitelist_cidr_blocks" {
+  description = "list of allowed cidr blocks"
+  type        = list(string)
+}
 

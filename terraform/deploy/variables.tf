@@ -31,11 +31,6 @@ variable "parent_domain_name" {
   type        = string
 }
 
-variable "ui_access_cidr_block" {
-  description = "cidr block from which UI requests will be received"
-  type        = string
-}
-
 variable "whitelist_cidr_blocks" {
   description = "list of allowed cidr blocks"
   type        = list(string)

@@ -126,7 +126,7 @@ module "vpc" {
   tags           = local.tags
   vpc_cidr_block = local.cidr_block[local.environment].ci-cd-vpc
 
-  ui_access_cidr_block = var.ui_access_cidr_block
+  whitelist_cidr_blocks = var.whitelist_cidr_blocks
 }
 
 module "waf" {
