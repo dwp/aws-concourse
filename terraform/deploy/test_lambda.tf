@@ -30,8 +30,12 @@ resource "aws_lambda_function" "concourse_egress_test" {
 
   tags = merge(
     local.tags,
-    map("Name", "concourse_egress_test"),
-    map("contains-sensitive-info", "False")
+    {
+      Name = "concourse_egress_test"
+    },
+    {
+      contains-sensitive-info = "False"
+    }
   )
 
   depends_on = [aws_cloudwatch_log_group.concourse_egress_test]
