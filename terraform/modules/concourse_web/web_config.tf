@@ -53,13 +53,12 @@ locals {
 
       CONCOURSE_CONTAINER_PLACEMENT_STRATEGY : "random"
 
-      #TODO: Egress Proxy Config
-      #HTTP_PROXY     = var.proxy.http_proxy
-      #HTTPS_PROXY    = var.proxy.https_proxy
-      #NO_PROXY       = var.proxy.no_proxy
-      #http_proxy     = var.proxy.http_proxy
-      #https_proxy    = var.proxy.https_proxy
-      #no_proxy       = var.proxy.no_proxy
+      HTTP_PROXY  = var.proxy.http_proxy
+      HTTPS_PROXY = var.proxy.https_proxy
+      NO_PROXY    = var.proxy.no_proxy
+      http_proxy  = var.proxy.http_proxy
+      https_proxy = var.proxy.https_proxy
+      no_proxy    = var.proxy.no_proxy
     },
     var.web.environment_override
   )

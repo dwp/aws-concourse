@@ -4,6 +4,7 @@ jobs:
   - get: aws-concourse-pr
     trigger: true
     version: every
+  - get: packer-egress-test-release
   - put: aws-concourse-pr
     params:
       context: $BUILD_JOB_NAME
@@ -37,10 +38,12 @@ jobs:
           cp ../../../terraform-config/terraform.tfvars .
           terraform init
           terraform workspace select management
+          export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
           terraform plan
       inputs:
       - name: aws-concourse
       - name: terraform-config
+      - name: packer-egress-test-release
     input_mapping:
       aws-concourse: aws-concourse-pr
     on_failure:

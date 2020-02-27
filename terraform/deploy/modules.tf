@@ -46,7 +46,7 @@ module "concourse_web" {
   proxy = {
     http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
     https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
-    no_proxy    = "169.254.169.254,169.254.169.123,.amazonaws.com"
+    no_proxy    = var.concourse_no_proxy
   }
 }
 
@@ -125,6 +125,8 @@ module "vpc" {
   name           = var.name
   tags           = local.tags
   vpc_cidr_block = local.cidr_block[local.environment].ci-cd-vpc
+
+  whitelist_cidr_blocks = var.whitelist_cidr_blocks
 }
 
 module "waf" {

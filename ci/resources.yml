@@ -14,3 +14,11 @@ resources:
     password: ((github_com.token))
     uri: https://github.com/dwp/aws-concourse.git
   check_every: 15m
+- name: packer-egress-test-release
+  type: github-release
+  source:
+    owner: dwp
+    repository: packer-egress-test
+    access_token: ((github_com.token))
+  check_every: 720h
+
