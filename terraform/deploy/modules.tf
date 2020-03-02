@@ -124,7 +124,9 @@ module "vpc" {
 
   name           = var.name
   tags           = local.tags
+
   vpc_cidr_block = local.cidr_block[local.environment].ci-cd-vpc
+  loadbalancer   = module.concourse_lb.outputs
 }
 
 module "waf" {
