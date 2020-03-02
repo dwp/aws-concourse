@@ -126,7 +126,6 @@ module "vpc" {
   tags                  = local.tags
   vpc_cidr_block        = local.cidr_block[local.environment].ci-cd-vpc
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
-  loadbalancer          = module.concourse_lb.outputs
 }
 
 module "waf" {
