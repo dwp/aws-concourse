@@ -3,6 +3,8 @@ variable "name" {
   type        = string
 }
 
+variable "loadbalancer" {}
+
 variable "tags" {
   description = "tags to apply to aws resource"
   type        = map(string)
