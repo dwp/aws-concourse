@@ -7,7 +7,7 @@ resource "aws_security_group" "internet_proxy_endpoint" {
 
 resource "aws_vpc_endpoint" "internet_proxy" {
   vpc_id              = module.vpc.vpc.id
-  service_name        = "aws.concourse.endpoint"
+  service_name        = var.internet_proxy_fqdn
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [aws_security_group.internet_proxy_endpoint.id]
   subnet_ids          = ["aws_subnet.private.*.id"]
