@@ -1,12 +1,15 @@
-resource "aws_vpc_endpoint" "concourse" {
-  #   count             = local.zone_count
-  vpc_id            = module.vpc.vpc.id
-  service_name      = "aws.concourse.endpoint"
-  vpc_endpoint_type = "Interface"
+resource "aws_security_group" "internet_proxy_endpoint" {
+  name        = "proxy_vpc_endpoint"
+  description = "Control access to the Internet Proxy VPC Endpoint"
+  vpc_id      = module.vpc.vpc.id
+  tags        = var.tags
+}
 
-  security_group_ids = [var.loadbalancer.security_group_id]
-
+resource "aws_vpc_endpoint" "internet_proxy" {
+  vpc_id              = module.vpc.vpc.id
+  service_name        = "aws.concourse.endpoint"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [aws_security_group.internet_proxy_endpoint.id]
   subnet_ids          = ["aws_subnet.private.*.id"]
   private_dns_enabled = true
 }
-
