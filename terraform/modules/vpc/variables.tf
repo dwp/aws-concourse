@@ -32,3 +32,7 @@ variable "whitelist_cidr_blocks" {
   type        = list(string)
 }
 
+variable "internet_proxy_fqdn" {
+  description = "FQDN of the Internet Proxy"
+  type        = string
+}
