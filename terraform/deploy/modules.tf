@@ -122,11 +122,12 @@ module "database_secrets" {
 module "vpc" {
   source = "../modules/vpc"
 
-  name                  = var.name
-  tags                  = local.tags
-  vpc_cidr_block        = local.cidr_block[local.environment].ci-cd-vpc
-  whitelist_cidr_blocks = var.whitelist_cidr_blocks
-  internet_proxy_fqdn   = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
+  name                        = var.name
+  tags                        = local.tags
+  vpc_cidr_block              = local.cidr_block[local.environment].ci-cd-vpc
+  whitelist_cidr_blocks       = var.whitelist_cidr_blocks
+  internet_proxy_fqdn         = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
+  internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
 }
 
 module "waf" {
