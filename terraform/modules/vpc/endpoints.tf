@@ -2,7 +2,7 @@ resource "aws_security_group" "internet_proxy_endpoint" {
   name        = "proxy_vpc_endpoint"
   description = "Control access to the Internet Proxy VPC Endpoint"
   vpc_id      = module.vpc.vpc.id
-  tags        = merge(var.tags, { Name = "${var.name}-endpoint-${local.zone_names[count.index]}" })
+  tags        = var.tags
 }
 
 resource "aws_vpc_endpoint" "internet_proxy" {
