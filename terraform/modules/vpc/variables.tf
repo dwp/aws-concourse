@@ -36,3 +36,8 @@ variable "internet_proxy_fqdn" {
   description = "FQDN of the Internet Proxy"
   type        = string
 }
+
+variable "internet_proxy_service_name" {
+  description = "Internet Proxy VPC Endpoint Service name"
+  type        = string
+}
