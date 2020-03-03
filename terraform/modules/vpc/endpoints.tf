@@ -11,5 +11,5 @@ resource "aws_vpc_endpoint" "internet_proxy" {
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [aws_security_group.internet_proxy_endpoint.id]
   subnet_ids          = aws_subnet.private.*.id
-  private_dns_enabled = true
+  private_dns_enabled = false
 }
