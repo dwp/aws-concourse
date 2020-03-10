@@ -41,3 +41,8 @@ variable "internet_proxy_service_name" {
   description = "Internet Proxy VPC Endpoint Service name"
   type        = string
 }
+
+variable "vpc_endpoint_source_sg_ids" {
+  description = "Security group IDs of consumers of VPC endpoint services"
+  type        = list(string)
+}
