@@ -57,7 +57,9 @@ resource "aws_launch_template" "worker" {
     ebs {
       delete_on_termination = true
       encrypted             = true
-      volume_size           = 32
+      volume_type           = "io1"
+      iops                  = 2000
+      volume_size           = 40
     }
   }
 
