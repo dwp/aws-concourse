@@ -44,8 +44,8 @@ module "concourse_web" {
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
   proxy = {
-    http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
-    https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
+    http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.http_address
+    https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.https_address
     no_proxy    = var.concourse_no_proxy
   }
 }
@@ -128,6 +128,7 @@ module "vpc" {
   whitelist_cidr_blocks       = var.whitelist_cidr_blocks
   internet_proxy_fqdn         = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
+  vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
 }
 
 module "waf" {
