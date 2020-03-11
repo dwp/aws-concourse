@@ -91,6 +91,9 @@ locals {
       concourse_version             = var.concourse.version
       session_signing_key_ssm_id    = var.concourse_keys.session_signing_key
       tsa_host_key_ssm_id           = var.concourse_keys.tsa_host_key
+      http_proxy                    = var.proxy.http_proxy
+      https_proxy                   = var.proxy.https_proxy
+      no_proxy                      = var.proxy.no_proxy
     }
   )
 }
