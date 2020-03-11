@@ -6,6 +6,9 @@ spruce:
   - with_in: ci/
     regexp: ".*yml"
   - with_in: ci/jobs/
+    except:
+    - management-dev.yml.j2
+    - management.yml.j2
   to: aviator_pipeline.yml
 fly:
   name: aws-concourse

@@ -19,6 +19,10 @@ jobs:
     params:
       TF_WORKSPACE: management
   - .: (( inject meta.plan.concourse-smoke-tests ))
+  - .: (( inject meta.plan.create-aws-profiles ))
+    config:
+      params:
+        AWS_ACC: "{{accounts['management']}}"
   - .: (( inject meta.plan.generate-negative-proxy-test-manifest ))
   - .: (( inject meta.plan.generate-positive-proxy-test-manifest ))
   - .: (( inject meta.plan.run-positive-proxy-test ))
