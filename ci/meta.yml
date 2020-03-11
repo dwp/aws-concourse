@@ -144,3 +144,117 @@ meta:
           dir: concourse-smoke-tests
         inputs:
           - name: terraform-output
+    generate-positive-proxy-test-manifest:
+      task: generate-positive-proxy-test-manifest
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        outputs:
+          - name: positive-proxy-test-manifest
+        run:
+          path: sh
+          dir: positive-proxy-test-manifest
+          args:
+          - -exc
+          - |
+            cat << EOF > manifest.json
+            {
+                "required_endpoints": {
+                  "GitHub":  "https://github.com",
+                }
+            }
+            EOF
+            cat manifest.json
+    generate-negative-proxy-test-manifest:
+      task: generate-negative-proxy-test-manifest
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        outputs:
+          - name: negative-proxy-test-manifest
+        run:
+          path: sh
+          dir: negative-proxy-test-manifest
+          args:
+          - -exc
+          - |
+            cat << EOF > manifest.json
+            {
+              "required_endpoints": {
+                "MSN": "https://msn.com"
+              }
+            }
+            EOF
+            cat manifest.json
+    run-positive-proxy-test:
+      task: run-positive-proxy-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: positive-proxy-test-manifest
+          - name: .aws
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            echo "Test that whitelisted URLs are accessible through proxy"
+            aws lambda invoke --function-name packer_egress_test \
+              --invocation-type RequestResponse \
+              --payload file://positive-proxy-test-manifest/manifest.json \
+              --cli-connect-timeout 600 \
+              --cli-read-timeout 600 \
+            output.json
+
+            cat output.json | jq -eC 'if .errorMessage? then error(.errorMessage) else true end'
+    run-negative-proxy-test:
+      task: run-negative-proxy-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: negative-proxy-test-manifest
+          - name: .aws
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            echo "Test that URLs not in the whitelist aren't accessible through proxy"
+            aws lambda invoke --function-name packer_egress_test \
+              --invocation-type RequestResponse \
+              --payload file://negative-proxy-test-manifest/manifest.json \
+              --cli-connect-timeout 600 \
+              --cli-read-timeout 600 \
+            output.json
+
+            cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
