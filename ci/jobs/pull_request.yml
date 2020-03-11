@@ -1,5 +1,5 @@
 jobs:
-- name: management-plan
+- name: aws-concourse-pr
   plan:
   - get: aws-concourse-pr
     trigger: true
