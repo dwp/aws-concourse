@@ -19,11 +19,11 @@ resource "aws_lambda_function" "concourse_egress_test" {
   environment {
     variables = {
       LOG_LEVEL   = "INFO"
-      HTTP_PROXY  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
-      HTTPS_PROXY = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
+      HTTP_PROXY  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
+      HTTPS_PROXY = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
       NO_PROXY    = var.concourse_no_proxy
-      http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy.http_address
-      https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy.https_address
+      http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
+      https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
       no_proxy    = var.concourse_no_proxy
     }
   }

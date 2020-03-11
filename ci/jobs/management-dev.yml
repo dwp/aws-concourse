@@ -9,3 +9,7 @@ jobs:
   - .: (( inject meta.plan.terraform-plan ))
   - .: (( inject meta.plan.terraform-output ))
   - .: (( inject meta.plan.concourse-smoke-tests ))
+  - .: (( inject meta.plan.generate-negative-proxy-test-manifest ))
+  - .: (( inject meta.plan.generate-positive-proxy-test-manifest ))
+  - .: (( inject meta.plan.run-positive-proxy-test ))
+  - .: (( inject meta.plan.run-negative-proxy-test ))
