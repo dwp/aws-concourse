@@ -7,3 +7,5 @@
 
 terraform.tf
 aviator_pipeline.yml
+ci/jobs/management-dev.yml
+ci/jobs/management.yml
