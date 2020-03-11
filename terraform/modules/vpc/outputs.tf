@@ -7,6 +7,6 @@ output "outputs" {
     aws_subnets_public      = aws_subnet.public
     aws_vpc                 = module.vpc.vpc
     internet_egress_sg      = aws_security_group.internet_proxy_endpoint
-    internet_proxy_endpoint = aws_vpc_endpoint.internet_proxy
+    internet_proxy_endpoint = aws_vpc_endpoint.internet_proxy.dns_entry[0].dns_name
   }
 }
