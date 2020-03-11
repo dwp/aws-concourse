@@ -39,6 +39,9 @@ locals {
       aws_default_region      = data.aws_region.current.name
       tsa_host_pub_key_ssm_id = var.concourse_keys.tsa_host_pub_key
       worker_key_ssm_id       = var.concourse_keys.worker_key
+      http_proxy              = var.proxy.http_proxy
+      https_proxy             = var.proxy.https_proxy
+      no_proxy                = var.proxy.no_proxy
     }
   )
 }

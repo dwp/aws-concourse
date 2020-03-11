@@ -65,3 +65,12 @@ variable "asg_day" {
     time             = "0 7 * * 1-5"
   }
 }
+
+variable "proxy" {
+  type = map(string)
+  default = {
+    http_proxy  = ""
+    https_proxy = ""
+    no_proxy    = ""
+  }
+}
