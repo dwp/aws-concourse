@@ -58,7 +58,6 @@ resource "aws_security_group_rule" "web_lb_in_ssh" {
 }
 
 resource "aws_security_group_rule" "web_db_out" {
-   description              = "web_db_out"
    description              = "outbound connectivity from web nodes to db"
    from_port                = 5432
    protocol                 = "tcp"
