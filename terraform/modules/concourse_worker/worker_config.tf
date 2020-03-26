@@ -11,7 +11,7 @@ locals {
       CONCOURSE_EPHEMERAL = true
       CONCOURSE_WORK_DIR  = "/opt/concourse"
 
-      CONCOURSE_TSA_HOST               = "${var.loadbalancer.fqdn}:${local.service_port}"
+      CONCOURSE_TSA_HOST               = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
       CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
       CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
     },

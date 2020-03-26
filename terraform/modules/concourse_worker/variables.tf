@@ -11,6 +11,7 @@ variable "tags" {
 variable "ami_id" {}
 variable "concourse" {}
 variable "concourse_keys" {}
+variable "internal_loadbalancer" {}
 variable "loadbalancer" {}
 variable "log_group" {}
 variable "vpc" {}
