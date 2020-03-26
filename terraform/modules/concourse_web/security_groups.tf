@@ -57,6 +57,17 @@ resource "aws_security_group_rule" "web_lb_in_ssh" {
   source_security_group_id = var.loadbalancer.security_group_id
 }
 
+resource "aws_security_group_rule" "web_db_out" {
+   description              = "web_db_out"
+   description              = "outbound connectivity from web nodes to db"
+   from_port                = 5432
+   protocol                 = "tcp"
+   security_group_id        = var.database.security_group_id
+   to_port                  = 5432
+   type                     = "egress"
+   source_security_group_id = aws_security_group.web.id
+ }
+
 resource "aws_security_group_rule" "db_web_in" {
   description              = "inbound connectivity to db from web nodes"
   from_port                = 5432
