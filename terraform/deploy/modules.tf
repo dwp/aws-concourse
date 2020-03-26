@@ -78,9 +78,9 @@ module "concourse_worker" {
   name = var.name
   tags = local.tags
 
-  ami_id         = module.amis.ami_id
-  concourse      = var.concourse
-  concourse_keys = module.concourse_keys.outputs
+  ami_id                = module.amis.ami_id
+  concourse             = var.concourse
+  concourse_keys        = module.concourse_keys.outputs
   internal_loadbalancer = module.concourse_internal_lb.outputs
   loadbalancer          = module.concourse_lb.outputs
   log_group             = module.concourse_worker_log_group.outputs
