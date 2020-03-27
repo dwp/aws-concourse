@@ -8,6 +8,7 @@ resource "aws_security_group" "lb" {
 }
 
 resource "aws_security_group_rule" "lb_external_https_in" {
+  description       = "enable inbound connectivity from whitelisted endpoints"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.lb.id

@@ -78,13 +78,14 @@ module "concourse_worker" {
   name = var.name
   tags = local.tags
 
-  ami_id          = module.amis.ami_id
-  concourse       = var.concourse
-  concourse_keys  = module.concourse_keys.outputs
-  loadbalancer    = module.concourse_internal_lb.outputs
-  log_group       = module.concourse_worker_log_group.outputs
-  vpc             = module.vpc.outputs
-  ssm_name_prefix = var.name
+  ami_id                = module.amis.ami_id
+  concourse             = var.concourse
+  concourse_keys        = module.concourse_keys.outputs
+  internal_loadbalancer = module.concourse_internal_lb.outputs
+  loadbalancer          = module.concourse_lb.outputs
+  log_group             = module.concourse_worker_log_group.outputs
+  vpc                   = module.vpc.outputs
+  ssm_name_prefix       = var.name
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
