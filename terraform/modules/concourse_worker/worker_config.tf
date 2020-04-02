@@ -3,6 +3,7 @@ locals {
     "${path.module}/templates/logger_bootstrap.sh",
     {
       cloudwatch_agent_config_ssm_parameter = aws_ssm_parameter.cloudwatch_agent_config_worker.name
+      https_proxy                           = var.proxy.https_proxy
     }
   )
 
