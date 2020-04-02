@@ -77,3 +77,12 @@ resource "aws_security_group_rule" "db_web_in" {
   source_security_group_id = aws_security_group.web.id
 }
 
+resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
+  description       = "web inbound https connectivity"
+  from_port         = 443
+  protocol          = "all"
+  security_group_id = aws_security_group.web.id
+  to_port           = 443
+  type              = "ingress"
+  cidr_blocks       = [var.github_cidr_block]
+}
