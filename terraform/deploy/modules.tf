@@ -44,9 +44,10 @@ module "concourse_web" {
   log_group             = module.concourse_web_log_group.outputs
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
+  github_cidr_block     = var.github_vpc.cidr_block
   proxy = {
-    http_proxy  = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.http_address
-    https_proxy = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.https_address
+    http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
+    https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = var.concourse_no_proxy
   }
 }
@@ -88,6 +89,7 @@ module "concourse_worker" {
   log_group             = module.concourse_worker_log_group.outputs
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
+  github_cidr_block     = var.github_vpc.cidr_block
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"

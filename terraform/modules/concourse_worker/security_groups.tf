@@ -27,3 +27,13 @@ resource "aws_security_group_rule" "worker_lb_out_ssh" {
   type                     = "egress"
   source_security_group_id = aws_security_group.worker.id
 }
+
+resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
+  description       = "worker outbound https connectivity"
+  from_port         = 443
+  protocol          = "all"
+  security_group_id = aws_security_group.worker.id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = [var.github_cidr_block]
+}

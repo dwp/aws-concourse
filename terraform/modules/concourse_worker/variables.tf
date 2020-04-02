@@ -75,3 +75,8 @@ variable "proxy" {
     no_proxy    = ""
   }
 }
+
+variable "github_cidr_block" {
+  type    = string
+  default = ""
+}
