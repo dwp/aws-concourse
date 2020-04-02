@@ -10,3 +10,10 @@ resource "aws_vpc_peering_connection" "ucfs_github" {
     allow_vpc_to_remote_classic_link = false
   }
 }
+
+resource "aws_route" "ucfs_github" {
+  count                     = length(module.vpc.outputs.aws_route_table_private)
+  route_table_id            = module.vpc.outputs.aws_route_table_private[count.index].id
+  destination_cidr_block    = var.github_vpc.cidr_block[count.index].cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.ucfs_github.id
+}
