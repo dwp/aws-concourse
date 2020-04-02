@@ -116,7 +116,7 @@ data "template_cloudinit_config" "web_bootstrap" {
     content_type = "text/cloud-config"
     content      = <<EOF
 packages:
-  - awscli
+  - aws-cli
   - jq
 EOF
   }
