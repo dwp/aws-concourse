@@ -98,3 +98,13 @@ resource "aws_security_group_rule" "web_outbound_s3_https" {
   from_port         = 443
   to_port           = 443
 }
+
+resource "aws_security_group_rule" "web_outbound_s3_http" {
+  security_group_id = aws_security_group.web.id
+  description       = "s3 outbound http connectivity (for YUM updates)"
+  type              = "egress"
+  prefix_list_ids   = [var.s3_prefix_list_id]
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
+}
