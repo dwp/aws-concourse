@@ -35,5 +35,5 @@ resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   security_group_id = aws_security_group.worker.id
   to_port           = 443
   type              = "egress"
-  cidr_blocks       = [var.github_vpc.cidr_block]
+  cidr_blocks       = [var.github_cidr_block]
 }
