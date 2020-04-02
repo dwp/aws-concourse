@@ -15,8 +15,9 @@ module "concourse_keys" {
 module "concourse_lb" {
   source = "../modules/loadbalancer"
 
-  name = var.name
-  tags = local.tags
+  name    = "${var.name}-public"
+  lb_name = var.name
+  tags    = local.tags
 
   concourse_web          = module.concourse_web.outputs
   parent_domain_name     = local.parent_domain_name[local.environment]
@@ -63,8 +64,9 @@ module "concourse_web_log_group" {
 module "concourse_internal_lb" {
   source = "../modules/internal_loadbalancer"
 
-  name = var.name
-  tags = local.tags
+  name    = "${var.name}-private"
+  lb_name = var.name
+  tags    = local.tags
 
   concourse_web         = module.concourse_web.outputs
   parent_domain_name    = local.parent_domain_name[local.environment]
