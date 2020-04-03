@@ -53,3 +53,8 @@ variable "github_cidr_block" {
   type    = string
   default = ""
 }
+
+variable "s3_prefix_list_id" {
+  type    = string
+  default = ""
+}

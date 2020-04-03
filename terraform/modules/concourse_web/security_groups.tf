@@ -86,3 +86,13 @@ resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
   type              = "ingress"
   cidr_blocks       = [var.github_cidr_block]
 }
+
+resource "aws_security_group_rule" "web_outbound_s3_https" {
+  description       = "s3 outbound https connectivity"
+  from_port         = 443
+  protocol          = "all"
+  security_group_id = aws_security_group.web.id
+  to_port           = 443
+  type              = "egress"
+  prefix_list_ids   = [var.s3_prefix_list_id]
+}
