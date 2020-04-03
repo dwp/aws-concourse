@@ -13,10 +13,10 @@ resource "aws_security_group_rule" "worker_lb_out_ssh" {
   description              = "outbound traffic to web nodes via lb"
   from_port                = local.service_port
   protocol                 = "tcp"
-  security_group_id        = var.loadbalancer.security_group_id
+  security_group_id        = aws_security_group.worker.id
   to_port                  = local.service_port
   type                     = "egress"
-  source_security_group_id = aws_security_group.worker.id
+  source_security_group_id = var.loadbalancer.security_group_id
 }
 
 resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
