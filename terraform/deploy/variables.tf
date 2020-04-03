@@ -4,6 +4,12 @@ variable "name" {
   default     = "ci"
 }
 
+variable "lb_name" {
+  description = "load balancer name"
+  type        = string
+  default     = "ci"
+}
+
 variable "cognito" {
   description = "cognito secret locations/values required for login"
   type        = map(string)

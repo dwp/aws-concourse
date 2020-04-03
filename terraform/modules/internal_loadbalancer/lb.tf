@@ -1,4 +1,5 @@
 resource "aws_lb" "lb" {
+  name               = var.name
   internal           = true
   load_balancer_type = "network"
   subnets            = var.vpc.aws_subnets_private[*].id
