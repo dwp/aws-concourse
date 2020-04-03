@@ -32,7 +32,7 @@ module "concourse_web" {
   name = var.name
 
   tags = merge(
-  local.tags,
+    local.tags,
     {
       Name = "concourse-web"
     }
@@ -88,10 +88,10 @@ module "concourse_worker" {
   name = var.name
 
   tags = merge(
-  local.tags,
-  {
-    Name = "concourse-worker"
-  }
+    local.tags,
+    {
+      Name = "concourse-worker"
+    }
   )
 
   ami_id                = module.amis.ami_id
