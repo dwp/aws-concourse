@@ -30,7 +30,13 @@ module "concourse_web" {
   source = "../modules/concourse_web"
 
   name = var.name
-  tags = local.tags
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "concourse-web"
+    }
+  )
 
   ami_id                = module.amis.ami_id
   cognito               = var.cognito
@@ -80,7 +86,13 @@ module "concourse_worker" {
   source = "../modules/concourse_worker"
 
   name = var.name
-  tags = local.tags
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "concourse-worker"
+    }
+  )
 
   ami_id                = module.amis.ami_id
   concourse             = var.concourse
