@@ -1,17 +1,13 @@
 #!/bin/bash
 
-set -e
-set -u
-set -x
-set -o pipefail
+set -euxo pipefail
 
 export AWS_DEFAULT_REGION=${aws_default_region}
 
-http_proxy="${http_proxy}"
-https_proxy="${https_proxy}"
-no_proxy="${no_proxy}"
-curl -s -L -f -o ./concourse.tgz https://github.com/concourse/concourse/releases/download/v${concourse_version}/concourse-${concourse_version}-linux-amd64.tgz
-tar -xzf ./concourse.tgz -C /usr/local
+concourse_tarball="concourse-${concourse_version}-linux-amd64.tgz"
+https_proxy="${https_proxy}" curl -s -L -O https://github.com/concourse/concourse/releases/download/v${concourse_version}/$concourse_tarball
+tar -xzf $concourse_tarball -C /usr/local
+rm $concourse_tarball
 
 mkdir /etc/concourse
 

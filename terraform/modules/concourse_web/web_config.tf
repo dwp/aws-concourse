@@ -3,6 +3,7 @@ locals {
     "${path.module}/templates/logger_bootstrap.sh",
     {
       cloudwatch_agent_config_ssm_parameter = aws_ssm_parameter.cloudwatch_agent_config_web.name
+      https_proxy                           = var.proxy.https_proxy
     }
   )
 
@@ -116,7 +117,7 @@ data "template_cloudinit_config" "web_bootstrap" {
     content_type = "text/cloud-config"
     content      = <<EOF
 packages:
-  - awscli
+  - aws-cli
   - jq
 EOF
   }
