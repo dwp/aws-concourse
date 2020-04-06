@@ -14,6 +14,9 @@ mkdir /etc/concourse
 aws ssm get-parameter --with-decryption --name ${tsa_host_pub_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/tsa_host_key.pub
 aws ssm get-parameter --with-decryption --name ${worker_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/worker_key
 
+touch /var/spool/cron/root
+echo "*/3 * * * * /home/root/healthcheck.sh" >> /var/spool/cron/root
+
 if [[ "$(rpm -qf /sbin/init)" == upstart* ]];
 then
     initctl start concourse-worker

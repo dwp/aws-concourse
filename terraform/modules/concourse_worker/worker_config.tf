@@ -45,6 +45,11 @@ locals {
       no_proxy                = var.proxy.no_proxy
     }
   )
+
+  healthcheck_file = templatefile(
+    "${path.module}/templates/healthcheck.sh"
+  )
+
 }
 
 data "template_cloudinit_config" "worker_bootstrap" {
@@ -85,6 +90,11 @@ write_files:
     owner: root:root
     path: /etc/systemd/system/concourse-worker.service
     permissions: '0644'
+  - encoding: b64
+    content: ${base64encode(local.healthcheck_file)}
+    owner: root:root
+    path: /home/root/healthcheck.sh
+    permissions: '0700' 
 EOF
   }
 
