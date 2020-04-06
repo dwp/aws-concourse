@@ -47,7 +47,8 @@ locals {
   )
 
   healthcheck_file = templatefile(
-    "${path.module}/templates/healthcheck.sh"
+    "${path.module}/templates/healthcheck.sh",
+    {}
   )
 
 }
