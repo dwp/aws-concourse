@@ -29,14 +29,14 @@ resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   cidr_blocks       = [var.github_cidr_block]
 }
 
-resource "aws_security_group_rule" "worker_web_inbound" {
-  description              = "web to worker inbound connectivity"
-  from_port                = 8888
-  protocol                 = "all"
+resource "aws_security_group_rule" "web_lb_out_ssh" {
+  description              = "outbound traffic to web nodes from worker nodes via lb"
+  from_port                = 2222
+  protocol                 = "tcp"
   security_group_id        = aws_security_group.worker.id
-  to_port                  = 8888
-  type                     = "ingress"
-  source_security_group_id = aws_security_group.web.id
+  to_port                  = 2222
+  type                     = "egress"
+  source_security_group_id = var.internal_loadbalancer.security_group_id
 }
 
 resource "aws_security_group_rule" "worker_outbound_s3_https" {
