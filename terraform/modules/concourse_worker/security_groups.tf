@@ -9,16 +9,6 @@ resource "aws_security_group" "worker" {
   }
 }
 
-resource "aws_security_group_rule" "worker_lb_out_ssh" {
-  description              = "outbound traffic to web nodes via lb"
-  from_port                = local.service_port
-  protocol                 = "tcp"
-  security_group_id        = var.loadbalancer.security_group_id
-  to_port                  = local.service_port
-  type                     = "egress"
-  source_security_group_id = aws_security_group.worker.id
-}
-
 resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   description       = "worker outbound https connectivity"
   from_port         = 443
@@ -29,14 +19,14 @@ resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   cidr_blocks       = [var.github_cidr_block]
 }
 
-resource "aws_security_group_rule" "web_lb_out_ssh" {
-  description              = "outbound traffic to web nodes from worker nodes via lb"
-  from_port                = 2222
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.worker.id
-  to_port                  = 2222
-  type                     = "egress"
-  source_security_group_id = var.internal_loadbalancer.security_group_id
+resource "aws_security_group_rule" "worker_lb_out_ssh" {
+  description       = "outbound traffic to web nodes from worker nodes via lb"
+  from_port         = 2222
+  protocol          = "tcp"
+  security_group_id = aws_security_group.worker.id
+  to_port           = 2222
+  type              = "egress"
+  cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
 }
 
 resource "aws_security_group_rule" "worker_outbound_s3_https" {
