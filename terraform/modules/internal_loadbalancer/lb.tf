@@ -3,6 +3,7 @@ resource "aws_lb" "lb" {
   internal           = true
   load_balancer_type = "network"
   subnets            = var.vpc.aws_subnets_private[*].id
+  security_groups    = [aws_security_group.internal_lb.id]
   tags               = merge(var.tags, { Name = "${var.name}-int-lb" })
 }
 
