@@ -56,7 +56,7 @@ resource "aws_security_group_rule" "web_lb_in_ssh" {
   security_group_id        = aws_security_group.web.id
   to_port                  = 2222
   type                     = "ingress"
-  source_security_group_id = var.loadbalancer.security_group_id
+  source_security_group_id = var.internal_loadbalancer.security_group_id
 }
 
 resource "aws_security_group_rule" "web_db_out" {
