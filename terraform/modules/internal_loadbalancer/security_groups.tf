@@ -8,11 +8,11 @@ resource "aws_security_group" "internal_lb" {
 }
 
 resource "aws_security_group_rule" "internal_ssh_in" {
-  description       = "enable inbound connectivity from whitelisted endpoints"
-  from_port         = 2222
-  protocol          = "tcp"
-  security_group_id = aws_security_group.internal_lb.id
-  to_port           = 2222
-  type              = "ingress"
-  cidr_blocks       = var.whitelist_cidr_blocks
+  description              = "enable inbound connectivity from whitelisted endpoints"
+  from_port                = 2222
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.internal_lb.id
+  to_port                  = 2222
+  type                     = "ingress"
+  source_security_group_id = var.concourse_web.security_group.id
 }
