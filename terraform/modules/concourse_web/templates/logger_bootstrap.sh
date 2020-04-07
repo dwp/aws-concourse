@@ -12,4 +12,4 @@ gpg --import amazon-cloudwatch-agent.gpg
 gpg --verify cloudwatch.rpm.sig cloudwatch.rpm
 rpm -U ./cloudwatch.rpm
 
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:${cloudwatch_agent_config_ssm_parameter} -s
+sudo /opt/aws/awsagent/bin/awsagent -a fetch-config -m ec2 -c ssm:${cloudwatch_agent_config_ssm_parameter} -s
