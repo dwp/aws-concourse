@@ -42,7 +42,9 @@ locals {
       # CONCOURSE_DATADOG_AGENT_PORT = 8125
       # CONCOURSE_DATADOG_PREFIX     = "concourse"
 
-      CONCOURSE_EMIT_TO_LOGS = true
+      CONCOURSE_EMIT_TO_LOGS          = true
+      CONCOURSE_METRICS_HOST_NAME     = "$HOSTNAME"
+      CONCOURSE_CAPTURE_ERROR_METRICS = true
 
       #TODO: Audit logging
       #CONCOURSE_ENABLE_BUILD_AUDITING     = true
