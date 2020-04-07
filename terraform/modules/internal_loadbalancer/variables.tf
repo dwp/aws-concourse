@@ -14,6 +14,7 @@ variable "tags" {
 }
 
 variable "concourse_web" {}
+variable "concourse_worker" {}
 variable "parent_domain_name" {}
 variable "vpc" {}
 variable "whitelist_cidr_blocks" {}

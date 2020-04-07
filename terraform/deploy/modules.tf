@@ -77,6 +77,7 @@ module "concourse_internal_lb" {
   tags    = local.tags
 
   concourse_web         = module.concourse_web.outputs
+  concourse_worker      = module.concourse_worker.outputs
   parent_domain_name    = local.parent_domain_name[local.environment]
   vpc                   = module.vpc.outputs
   whitelist_cidr_blocks = var.whitelist_cidr_blocks

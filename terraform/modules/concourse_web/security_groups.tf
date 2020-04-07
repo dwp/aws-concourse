@@ -50,13 +50,13 @@ resource "aws_security_group_rule" "web_internal_out_tcp" {
 }
 
 resource "aws_security_group_rule" "web_lb_in_ssh" {
-  description              = "inbound traffic to web nodes from worker nodes via lb"
-  from_port                = 2222
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.web.id
-  to_port                  = 2222
-  type                     = "ingress"
-  source_security_group_id = var.loadbalancer.security_group_id
+  description       = "inbound traffic to web nodes from worker nodes via lb"
+  from_port         = 2222
+  protocol          = "tcp"
+  security_group_id = aws_security_group.web.id
+  to_port           = 2222
+  type              = "ingress"
+  cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
 }
 
 resource "aws_security_group_rule" "web_db_out" {

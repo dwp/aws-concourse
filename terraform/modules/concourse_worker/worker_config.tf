@@ -15,6 +15,13 @@ locals {
       CONCOURSE_TSA_HOST               = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
       CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
       CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
+
+      HTTP_PROXY  = var.proxy.http_proxy
+      HTTPS_PROXY = var.proxy.https_proxy
+      NO_PROXY    = var.proxy.no_proxy
+      http_proxy  = var.proxy.http_proxy
+      https_proxy = var.proxy.https_proxy
+      no_proxy    = var.proxy.no_proxy
     },
     var.worker.environment_override
   )
@@ -45,6 +52,12 @@ locals {
       no_proxy                = var.proxy.no_proxy
     }
   )
+
+  healthcheck_file = templatefile(
+    "${path.module}/templates/healthcheck.sh",
+    {}
+  )
+
 }
 
 data "template_cloudinit_config" "worker_bootstrap" {
@@ -85,6 +98,11 @@ write_files:
     owner: root:root
     path: /etc/systemd/system/concourse-worker.service
     permissions: '0644'
+  - encoding: b64
+    content: ${base64encode(local.healthcheck_file)}
+    owner: root:root
+    path: /home/root/healthcheck.sh
+    permissions: '0700' 
 EOF
   }
 
