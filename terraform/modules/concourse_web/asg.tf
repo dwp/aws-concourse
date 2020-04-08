@@ -79,3 +79,23 @@ resource "aws_launch_template" "web" {
     create_before_destroy = true
   }
 }
+
+resource "aws_autoscaling_schedule" "web_night" {
+  scheduled_action_name  = "night"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+  recurrence             = var.asg_night.time
+
+  min_size         = var.asg_night.min_size
+  max_size         = var.asg_night.max_size
+  desired_capacity = var.asg_night.desired_capacity
+}
+
+resource "aws_autoscaling_schedule" "web_day" {
+  scheduled_action_name  = "day"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+  recurrence             = var.asg_day.time
+
+  min_size         = var.asg_day.min_size
+  max_size         = var.asg_day.max_size
+  desired_capacity = var.asg_day.desired_capacity
+}
