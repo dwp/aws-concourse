@@ -79,3 +79,75 @@ resource "aws_launch_template" "web" {
     create_before_destroy = true
   }
 }
+
+resource "aws_autoscaling_schedule" "web_night" {
+  scheduled_action_name  = "night"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+  recurrence             = var.asg_night.time
+
+  min_size         = var.asg_night.min_size
+  max_size         = var.asg_night.max_size
+  desired_capacity = var.asg_night.desired_capacity
+}
+
+resource "aws_autoscaling_schedule" "web_day" {
+  scheduled_action_name  = "day"
+  autoscaling_group_name = aws_autoscaling_group.web.name
+  recurrence             = var.asg_day.time
+
+  min_size         = var.asg_day.min_size
+  max_size         = var.asg_day.max_size
+  desired_capacity = var.asg_day.desired_capacity
+}
+
+resource "aws_autoscaling_policy" "web-scale-up" {
+  name                   = "web-scale-up"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 180
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+resource "aws_autoscaling_policy" "web-scale-down" {
+  name                   = "web-scale-down"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 180
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu-high" {
+  alarm_name          = "cpu-util-high-web"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "90"
+  alarm_description   = "This metric monitors ec2 cpu for high utilization on web nodes"
+  alarm_actions = [
+    aws_autoscaling_policy.web-scale-up.arn
+  ]
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.web.name
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu-low" {
+  alarm_name          = "cpu-util-low-web"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "10"
+  alarm_description   = "This metric monitors ec2 cpu for low utilization on agent hosts"
+  alarm_actions = [
+    aws_autoscaling_policy.web-scale-down.arn
+  ]
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.web.name
+  }
+}

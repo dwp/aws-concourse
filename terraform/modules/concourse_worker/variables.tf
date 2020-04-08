@@ -26,7 +26,7 @@ variable "worker" {
   })
   default = {
     instance_type        = "t3.micro"
-    count                = 3
+    count                = 1
     environment_override = {}
   }
 }
@@ -60,9 +60,9 @@ variable "asg_day" {
   })
 
   default = {
-    min_size         = 3
+    min_size         = 1
     max_size         = 3
-    desired_capacity = 3
+    desired_capacity = 1
     time             = "0 7 * * 1-5"
   }
 }
