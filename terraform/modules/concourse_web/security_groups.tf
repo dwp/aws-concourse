@@ -111,10 +111,10 @@ resource "aws_security_group_rule" "web_outbound_s3_http" {
 
 resource "aws_security_group_rule" "web_lb_in_metrics" {
   description       = "inbound traffic to web nodes metrics port"
-  from_port         = 8081
+  from_port         = 9090
   protocol          = "tcp"
   security_group_id = aws_security_group.web.id
-  to_port           = 8081
+  to_port           = 9090
   type              = "ingress"
   cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
 }

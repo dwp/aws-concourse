@@ -26,7 +26,7 @@ locals {
 
       #TODO: Setup Monitoring !10
       CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
-      CONCOURSE_PROMETHEUS_BIND_PORT = 8081
+      CONCOURSE_PROMETHEUS_BIND_PORT = 9090
 
       #CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
       #CONCOURSE_OIDC_CLIENT_ID     = data.aws_ssm_parameter.concourse_cognito_client_id.value
