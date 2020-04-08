@@ -116,5 +116,6 @@ resource "aws_security_group_rule" "web_lb_in_metrics" {
   security_group_id = aws_security_group.web.id
   to_port           = 9090
   type              = "ingress"
-  cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
+  # CHANGE BELOW TO PROMETHEUS LOCATION/SUBNET
+  cidr_blocks = var.vpc.aws_subnets_private.*.cidr_block
 }
