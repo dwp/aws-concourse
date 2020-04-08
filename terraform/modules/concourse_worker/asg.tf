@@ -115,3 +115,55 @@ resource "aws_autoscaling_schedule" "worker_day" {
   max_size         = var.asg_day.max_size
   desired_capacity = var.asg_day.desired_capacity
 }
+
+resource "aws_autoscaling_policy" "worker-scale-up" {
+  name                   = "worker-scale-up"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 180
+  autoscaling_group_name = aws_autoscaling_group.worker.name
+}
+
+resource "aws_autoscaling_policy" "worker-scale-down" {
+  name                   = "worker-scale-down"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 180
+  autoscaling_group_name = aws_autoscaling_group.worker.name
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu-high" {
+  alarm_name          = "cpu-util-high-worker"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "CPUUtilization"
+  namespace           = "System/Linux"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "90"
+  alarm_description   = "This metric monitors ec2 cpu for high utilization on agent hosts"
+  alarm_actions = [
+    aws_autoscaling_policy.worker-scale-up.arn
+  ]
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.worker.name
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu-low" {
+  alarm_name          = "cpu-util-low-worker"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "CPUUtilization"
+  namespace           = "System/Linux"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "10"
+  alarm_description   = "This metric monitors ec2 cpu for low utilization on worker nodes"
+  alarm_actions = [
+    aws_autoscaling_policy.worker-scale-down.arn
+  ]
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.worker.name
+  }
+}
