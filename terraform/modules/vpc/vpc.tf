@@ -1,6 +1,6 @@
 module "vpc" {
   source                                     = "dwp/vpc/aws"
-  version                                    = "2.0.0"
+  version                                    = "2.0.6"
   vpc_name                                   = "ci-cd"
   region                                     = data.aws_region.current.name
   vpc_cidr_block                             = var.vpc_cidr_block
@@ -15,5 +15,6 @@ module "vpc" {
   s3_endpoint                                = true
   ssm_endpoint                               = true
   ssmmessages_endpoint                       = true
+  secretsmanager_endpoint                    = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
