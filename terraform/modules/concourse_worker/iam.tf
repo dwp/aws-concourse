@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "concourse" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = ["ec2.amazonaws.com", "secretsmanager.amazonaws.com"]
     }
   }
 }
@@ -46,6 +46,33 @@ data "aws_iam_policy_document" "secrets" {
 
     resources = [
       "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter/${var.name}*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "secrets_manager" {
+  name   = "${local.name}SecretsManagerAccess"
+  role   = aws_iam_role.worker.id
+  policy = data.aws_iam_policy_document.secrets_manager.json
+}
+
+resource "aws_iam_role_policy_attachment" "secrets_manager" {
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+  role       = aws_iam_role.worker.id
+}
+
+data "aws_iam_policy_document" "secrets_manager" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:ListSecrets",
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+
+    resources = [
+      "arn:aws:secretsmanager:::secret:/*"
     ]
   }
 }
