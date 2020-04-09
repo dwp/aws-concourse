@@ -11,4 +11,4 @@ jobs:
             source: { repository: busybox }
           run:
             path: echo
-            args: [((HELLO))]
+            args: [((output))]
