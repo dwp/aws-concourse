@@ -71,13 +71,16 @@ data "aws_iam_policy_document" "secrets_manager" {
     effect = "Allow"
 
     actions = [
+      "kms:Decrypt",
       "secretsmanager:ListSecrets",
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
 
     resources = [
-      "arn:aws:secretsmanager:::secret:/concourse/*"
+      "arn:aws:kms:::*",
+      "arn:aws:secretsmanager:::secret:/concourse/*",
+      "arn:aws:secretsmanager:::secret:concourse/*"
     ]
   }
 }
