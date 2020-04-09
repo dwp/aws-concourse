@@ -49,3 +49,35 @@ data "aws_iam_policy_document" "secrets" {
     ]
   }
 }
+
+resource "aws_iam_policy" "concourse_secrets_manager" {
+  name        = "ConcourseSecretsAccess"
+  description = "Concourse access to Secrets Manager"
+  policy      = data.aws_iam_policy_document.secrets_manager.json
+}
+
+resource "aws_iam_role_policy_attachment" "secrets_manager" {
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+  role       = aws_iam_role.web.id
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_secrets_manager" {
+  policy_arn = aws_iam_policy.concourse_secrets_manager.arn
+  role       = aws_iam_role.web.id
+}
+
+data "aws_iam_policy_document" "secrets_manager" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:ListSecrets",
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+
+    resources = [
+      "arn:aws:secretsmanager:::secret:/concourse/*"
+    ]
+  }
+}
