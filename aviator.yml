@@ -12,6 +12,6 @@ spruce:
     to: aviator_pipeline.yml
 fly:
   name: aws-concourse
-  target: aws-concourse
+  target: concourse
   expose: false
   config: aviator_pipeline.yml
