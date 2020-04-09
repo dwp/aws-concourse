@@ -32,55 +32,55 @@ data "aws_iam_policy_document" "web" {
   }
 }
 
-resource "aws_iam_role_policy" "parameter_store" {
-  name   = "${local.name}ParameterStoreAccess"
-  role   = aws_iam_role.web.id
-  policy = data.aws_iam_policy_document.secrets.json
-}
-
-data "aws_iam_policy_document" "secrets" {
-  statement {
-    actions = [
-      "ssm:GetParameter"
-    ]
-
-    resources = [
-      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter/${var.name}*"
-    ]
-  }
-}
-
-resource "aws_iam_policy" "concourse_secrets_manager" {
-  name        = "ConcourseSecretsAccess"
-  description = "Concourse access to Secrets Manager"
-  policy      = data.aws_iam_policy_document.secrets_manager.json
-}
-
-resource "aws_iam_role_policy_attachment" "secrets_manager" {
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-  role       = aws_iam_role.web.id
-}
-
-resource "aws_iam_role_policy_attachment" "concourse_secrets_manager" {
-  policy_arn = aws_iam_policy.concourse_secrets_manager.arn
-  role       = aws_iam_role.web.id
-}
-
-data "aws_iam_policy_document" "secrets_manager" {
+data "aws_iam_policy_document" "concourse_secretsmanager" {
   statement {
     effect = "Allow"
 
     actions = [
-      "kms:Decrypt",
       "secretsmanager:ListSecrets",
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
 
     resources = [
-      "arn:aws:kms:::*",
       "arn:aws:secretsmanager:::secret:/concourse/*",
-      "arn:aws:secretsmanager:::secret:concourse/*"
     ]
   }
+}
+
+resource "aws_iam_policy" "concourse_secretsmanager" {
+  name        = "ConcourseSecretsReadOnly"
+  description = "Concourse read only access to Secrets Manager"
+  policy      = data.aws_iam_policy_document.concourse_secretsmanager.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_secretsmanager" {
+  policy_arn = "arn:aws:iam::aws:policy/ConcourseSecretsReadOnly"
+  role       = aws_iam_role.web.id
+}
+
+data "aws_iam_policy_document" "concourse_kms" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    # TODO: Lock this down once we have a KMS key for Concourse secrets
+    resources = [
+      "arn:aws:kms:::*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "concourse_kms" {
+  name        = "ConcourseKMSReadOnly"
+  description = "Concourse decrypt access to secrets KMS key"
+  policy      = data.aws_iam_policy_document.concourse_kms.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_kms" {
+  policy_arn = aws_iam_policy.concourse_kms.arn
+  role       = aws_iam_role.web.id
 }
