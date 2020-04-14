@@ -1,3 +1,3 @@
 locals {
-  name = "emr"
+  name = "concourse"
 }

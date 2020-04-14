@@ -2,7 +2,7 @@ resource aws_cognito_user_pool_client app_client {
   for_each = toset(var.clients)
 
   name                                 = each.value
-  user_pool_id                         = aws_cognito_user_pool.emr.id
+  user_pool_id                         = aws_cognito_user_pool.concourse.id
   generate_secret                      = true
   allowed_oauth_flows_user_pool_client = true
 
