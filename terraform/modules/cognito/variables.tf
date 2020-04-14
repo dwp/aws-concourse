@@ -1,7 +1,3 @@
-variable common_tags {
-  description = "common tags to apply to aws resources"
-}
-
 variable clients {
   description = "List of named client/group pairs"
   type        = list(string)

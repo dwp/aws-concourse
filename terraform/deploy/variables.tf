@@ -83,7 +83,3 @@ variable "github_vpc" {
     region     = ""
   }
 }
-
-variable "assume_role" {}
-
-variable "region" {}

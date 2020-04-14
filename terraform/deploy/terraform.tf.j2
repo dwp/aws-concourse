@@ -34,7 +34,7 @@ variable "region" {
 }
 
 provider "aws" {
-  version = "~> 2.45.0"
+  version = "~> 2.48.0"
   region  = var.region
 
   assume_role {
@@ -78,6 +78,14 @@ locals {
     AutoShutdown = "False"
   }
 
+  root_dns_name = {
+    development = "dev.wip.{{dataworks_domain_name}}"
+    qa          = "qa.wip.{{dataworks_domain_name}}"
+    integration = "int.wip.{{dataworks_domain_name}}"
+    preprod     = "pre.{{dataworks_domain_name}}"
+    production  = "{{dataworks_domain_name}}"
+  }
+
   cidr_block = {
   {% for environment, ranges in cidr_block.items() %}
       {{ environment }} = {
@@ -85,4 +93,6 @@ locals {
           {{ key }} = "{{ value }}"{% endfor %}
       } {% endfor %}
   }
+
+  cognito_domain = local.mgmt_account_mapping[local.environment] == "management" ? "dataworks" : "dataworks-dev"
 }
