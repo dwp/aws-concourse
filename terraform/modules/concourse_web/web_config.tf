@@ -28,6 +28,11 @@ locals {
       CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
       CONCOURSE_PROMETHEUS_BIND_PORT = 9090
 
+      CONCOURSE_AWS_SECRETSMANAGER_REGION = data.aws_region.current.name
+      CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
+      CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
+
+
       #CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
       #CONCOURSE_OIDC_CLIENT_ID     = data.aws_ssm_parameter.concourse_cognito_client_id.value
       #CONCOURSE_OIDC_CLIENT_SECRET = data.aws_ssm_parameter.concourse_cognito_client_secret.value
