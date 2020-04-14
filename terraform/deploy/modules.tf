@@ -163,3 +163,16 @@ module "waf" {
 
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
 }
+
+module "cognito" {
+  source = "../../modules/cognito"
+
+  common_tags = local.common_tags
+
+  clients = [
+    "concourse",
+  ]
+
+  root_dns_names = values(local.root_dns_name)
+  domain         = local.cognito_domain
+}
