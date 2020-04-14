@@ -1,4 +1,4 @@
-resource aws_cognito_user_pool emr {
+resource aws_cognito_user_pool concourse {
   name = local.name
 
   mfa_configuration = "OFF"
