@@ -165,9 +165,7 @@ module "waf" {
 }
 
 module "cognito" {
-  source = "../../modules/cognito"
-
-  common_tags = local.common_tags
+  source = "../modules/cognito"
 
   clients = [
     "concourse",
