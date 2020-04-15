@@ -12,5 +12,8 @@ variable root_dns_names {
   description = "Root dns names to use for cognito callback URLs"
   type        = list(string)
 }
+<<<<<<< HEAD
 
 variable "loadbalancer" {}
+=======
+>>>>>>> a6322d1d36fe32be3ea7d04199f77604bc54fa9c
