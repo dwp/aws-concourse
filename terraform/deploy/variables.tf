@@ -15,11 +15,11 @@ variable "cognito" {
   type        = map(string)
 
   default = {
-    name                        = "concourse"
-    issuer                      = "https://concourse-idp.eu-west-2.amazonaws.com/user_pool_id"
-    client_id_ssm_parameter     = "/path/to/ssm_param"
-    client_secret_ssm_parameter = "/path/to/ssm_param"
-    admin_group                 = "ci_admin"
+    name          = "concourse"
+    issuer        = "https://concourse-idp.eu-west-2.amazonaws.com/user_pool_id"
+    client_id     = "/aws/reference/secretsmanager/test-ssm"
+    client_secret = "/aws/reference/secretsmanager/test-ssm"
+    admin_group   = "ci_admin"
   }
 }
 
