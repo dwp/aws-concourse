@@ -26,6 +26,11 @@ module "concourse_lb" {
   whitelist_cidr_blocks  = var.whitelist_cidr_blocks
 }
 
+locals {
+  amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
+  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "logs"]
+}
+
 module "concourse_web" {
   source = "../modules/concourse_web"
 
@@ -59,7 +64,7 @@ module "concourse_web" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = var.concourse_no_proxy
+    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
@@ -112,7 +117,7 @@ module "concourse_worker" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = var.concourse_no_proxy
+    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
