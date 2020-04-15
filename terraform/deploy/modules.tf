@@ -52,6 +52,8 @@ module "concourse_web" {
   ssm_name_prefix       = var.name
   github_cidr_block     = var.github_vpc.cidr_block
   s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
+  cognito_client_secret = module.cognito.outputs.app_client.client_secret
+  cognito_client_id     = module.cognito.outputs.app_client.id
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"

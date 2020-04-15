@@ -33,8 +33,8 @@ locals {
       CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
 
       CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
-      CONCOURSE_OIDC_CLIENT_ID     = data.aws_ssm_parameter.concourse_cognito_client_id.value
-      CONCOURSE_OIDC_CLIENT_SECRET = data.aws_ssm_parameter.concourse_cognito_client_secret.value
+      CONCOURSE_OIDC_CLIENT_ID     = var.cognito_client_id
+      CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
       CONCOURSE_OIDC_ISSUER        = var.cognito.issuer
 
       CONCOURSE_MAIN_TEAM_OIDC_GROUP = var.cognito.admin_group

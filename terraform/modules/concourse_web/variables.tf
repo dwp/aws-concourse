@@ -94,3 +94,7 @@ variable "s3_prefix_list_id" {
   type    = string
   default = ""
 }
+
+variable "cognito_client_secret" {}
+
+variable "cognito_client_id" {}
