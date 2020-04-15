@@ -6,7 +6,7 @@ resource aws_cognito_user_pool_client app_client {
   generate_secret                      = true
   allowed_oauth_flows_user_pool_client = true
 
-  callback_urls = formatlist("https://ci.%s/hub/oauth_callback", var.root_dns_names)
+  callback_urls = formatlist("https://%s/sky/issuer/callback", var.loadbalancer.fqdn)
 
   supported_identity_providers = ["COGNITO"]
 
