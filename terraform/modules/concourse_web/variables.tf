@@ -98,3 +98,5 @@ variable "s3_prefix_list_id" {
 variable "cognito_client_secret" {}
 
 variable "cognito_client_id" {}
+
+variable "cognito_domain" {}
