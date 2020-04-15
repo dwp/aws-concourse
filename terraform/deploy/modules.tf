@@ -55,6 +55,7 @@ module "concourse_web" {
   cognito_client_secret = module.cognito.outputs.app_client.client_secret
   cognito_client_id     = module.cognito.outputs.app_client.id
   cognito_domain        = module.cognito.outputs.user_pool_domain
+  cognito_issuer        = module.cognito.outputs.issuer
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
