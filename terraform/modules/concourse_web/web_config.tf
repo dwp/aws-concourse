@@ -37,7 +37,7 @@ locals {
       CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
       CONCOURSE_OIDC_ISSUER        = var.cognito_domain
 
-      CONCOURSE_MAIN_TEAM_OIDC_GROUP = var.cognito.admin_group
+      CONCOURSE_MAIN_TEAM_OIDC_GROUP = "concourse"
       CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
       CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
 
