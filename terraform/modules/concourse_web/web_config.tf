@@ -101,7 +101,12 @@ locals {
 
   teams = templatefile(
     "${path.module}/templates/teams.sh",
-    {}
+    {
+      concourse_version = var.concourse.version
+      target            = "aws-concourse"
+      username          = data.aws_ssm_parameter.concourse_user.value
+      password          = data.aws_ssm_parameter.concourse_password.value
+    }
   )
 
   dataworks = templatefile(
