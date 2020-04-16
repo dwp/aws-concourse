@@ -98,6 +98,22 @@ locals {
       no_proxy                      = var.proxy.no_proxy
     }
   )
+
+  teams = templatefile(
+    "${path.module}/templates/teams.sh",
+    {}
+  )
+
+  dataworks = templatefile(
+    "${path.module}/templates/teams/dataworks/team.yml",
+    {}
+  )
+
+  utility = templatefile(
+    "${path.module}/templates/teams/utility/team.yml",
+    {}
+  )
+
 }
 
 data "template_cloudinit_config" "web_bootstrap" {
@@ -137,6 +153,21 @@ write_files:
     owner: root:root
     path: /etc/systemd/system/concourse-web.service
     permissions: '0644'
+  - encoding: b64
+    content: ${base64encode(local.teams)}
+    owner: root:root
+    path: /root/teams.sh
+    permissions: '0700'
+  - encoding: b64
+    content: ${base64encode(local.dataworks)}
+    owner: root:root
+    path: /root/teams/dataworks/team.yml
+    permissions: '0600'
+  - encoding: b64
+    content: ${base64encode(local.utility)}
+    owner: root:root
+    path: /root/teams/utility/team.yml
+    permissions: '0600'
 EOF
   }
 
@@ -148,5 +179,20 @@ EOF
   part {
     content_type = "text/x-shellscript"
     content      = local.logger_bootstrap_file
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = local.teams
+  }
+
+  part {
+    content_type = "text/plain"
+    content      = local.dataworks
+  }
+
+  part {
+    content_type = "text/plain"
+    content      = local.utility
   }
 }
