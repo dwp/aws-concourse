@@ -36,10 +36,8 @@ locals {
       CONCOURSE_OIDC_CLIENT_ID     = var.cognito_client_id
       CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
       CONCOURSE_OIDC_ISSUER        = var.cognito_issuer
-
-      CONCOURSE_MAIN_TEAM_OIDC_GROUP = "concourse"
-      CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
-      CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
+      CONCOURSE_OIDC_GROUPS_KEY    = "cognito:groups"
+      CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
 
       CONCOURSE_METRICS_HOST_NAME     = "${local.name}"
       CONCOURSE_CAPTURE_ERROR_METRICS = true

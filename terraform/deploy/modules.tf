@@ -177,7 +177,7 @@ module "cognito" {
   source = "../modules/cognito"
 
   clients = [
-    "concourse",
+    "dataworks"
   ]
 
   root_dns_names = values(local.root_dns_name)
