@@ -26,6 +26,11 @@ module "concourse_lb" {
   whitelist_cidr_blocks  = var.whitelist_cidr_blocks
 }
 
+locals {
+  amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
+  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "logs"]
+}
+
 module "concourse_web" {
   source = "../modules/concourse_web"
 
@@ -39,7 +44,6 @@ module "concourse_web" {
   )
 
   ami_id                = module.amis.ami_id
-  cognito               = var.cognito
   concourse             = var.concourse
   concourse_keys        = module.concourse_keys.outputs
   concourse_secrets     = module.concourse_secrets.outputs
@@ -52,10 +56,15 @@ module "concourse_web" {
   ssm_name_prefix       = var.name
   github_cidr_block     = var.github_vpc.cidr_block
   s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
+  cognito_client_secret = module.cognito.outputs.app_client.client_secret
+  cognito_client_id     = module.cognito.outputs.app_client.id
+  cognito_domain        = module.cognito.outputs.user_pool_domain
+  cognito_issuer        = module.cognito.outputs.issuer
+  cognito_name          = module.cognito.outputs.name
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = var.concourse_no_proxy
+    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
@@ -108,7 +117,7 @@ module "concourse_worker" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = var.concourse_no_proxy
+    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
@@ -162,4 +171,16 @@ module "waf" {
   name = var.name
 
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
+}
+
+module "cognito" {
+  source = "../modules/cognito"
+
+  clients = [
+    "concourse",
+  ]
+
+  root_dns_names = values(local.root_dns_name)
+  domain         = local.cognito_domain
+  loadbalancer   = module.concourse_lb.outputs
 }

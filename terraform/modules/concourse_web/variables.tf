@@ -9,7 +9,6 @@ variable "tags" {
 }
 
 variable "ami_id" {}
-variable "cognito" {}
 variable "concourse" {}
 variable "concourse_keys" {}
 variable "concourse_secrets" {}
@@ -20,6 +19,11 @@ variable "loadbalancer" {}
 variable "log_group" {}
 variable "vpc" {}
 variable "ssm_name_prefix" {}
+variable "cognito_client_secret" {}
+variable "cognito_client_id" {}
+variable "cognito_domain" {}
+variable "cognito_issuer" {}
+variable "cognito_name" {}
 
 
 variable "web" {

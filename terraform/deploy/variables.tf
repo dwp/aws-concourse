@@ -10,19 +10,6 @@ variable "lb_name" {
   default     = "ci"
 }
 
-variable "cognito" {
-  description = "cognito secret locations/values required for login"
-  type        = map(string)
-
-  default = {
-    name                        = "cognito"
-    issuer                      = "https://cognito-idp.eu-west-2.amazonaws.com/user_pool_id"
-    client_id_ssm_parameter     = "/path/to/ssm_param"
-    client_secret_ssm_parameter = "/path/to/ssm_param"
-    admin_group                 = "ci_admin"
-  }
-}
-
 variable "concourse" {
   description = "concourse version to install"
   type        = map(string)
