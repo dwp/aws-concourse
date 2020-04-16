@@ -44,7 +44,6 @@ module "concourse_web" {
   )
 
   ami_id                = module.amis.ami_id
-  cognito               = var.cognito
   concourse             = var.concourse
   concourse_keys        = module.concourse_keys.outputs
   concourse_secrets     = module.concourse_secrets.outputs
@@ -61,6 +60,7 @@ module "concourse_web" {
   cognito_client_id     = module.cognito.outputs.app_client.id
   cognito_domain        = module.cognito.outputs.user_pool_domain
   cognito_issuer        = module.cognito.outputs.issuer
+  cognito_name          = module.cognito.outputs.name
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"

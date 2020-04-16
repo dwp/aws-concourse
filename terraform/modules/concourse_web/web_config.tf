@@ -32,7 +32,7 @@ locals {
       CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
       CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
 
-      CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito.name
+      CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito_name
       CONCOURSE_OIDC_CLIENT_ID     = var.cognito_client_id
       CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
       CONCOURSE_OIDC_ISSUER        = var.cognito_issuer
