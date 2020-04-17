@@ -1,0 +1,4 @@
+roles:
+  - name: member
+    oidc:
+      groups: ["dataworks"]
