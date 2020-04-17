@@ -85,11 +85,12 @@ module "concourse_internal_lb" {
   lb_name = var.name
   tags    = local.tags
 
-  concourse_web         = module.concourse_web.outputs
-  concourse_worker      = module.concourse_worker.outputs
-  parent_domain_name    = local.parent_domain_name[local.environment]
-  vpc                   = module.vpc.outputs
-  whitelist_cidr_blocks = var.whitelist_cidr_blocks
+  concourse_web                         = module.concourse_web.outputs
+  concourse_worker                      = module.concourse_worker.outputs
+  parent_domain_name                    = local.parent_domain_name[local.environment]
+  vpc                                   = module.vpc.outputs
+  whitelist_cidr_blocks                 = var.whitelist_cidr_blocks
+  concourse_internal_allowed_principals = formatlist("arn:aws:iam::%s:root", [data.aws_caller_identity.current.account_id, var.github_vpc.owner])
 }
 
 module "concourse_worker" {
