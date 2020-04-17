@@ -102,10 +102,13 @@ locals {
   teams = templatefile(
     "${path.module}/templates/teams.sh",
     {
-      concourse_version = var.concourse.version
-      target            = "aws-concourse"
-      username          = data.aws_ssm_parameter.concourse_user.value
-      password          = data.aws_ssm_parameter.concourse_password.value
+      http_proxy         = var.proxy.http_proxy
+      https_proxy        = var.proxy.https_proxy
+      no_proxy           = var.proxy.no_proxy
+      target             = "aws-concourse"
+      concourse_version  = var.concourse.version
+      concourse_username = data.aws_ssm_parameter.concourse_user.value
+      concourse_password = data.aws_ssm_parameter.concourse_password.value
     }
   )
 
