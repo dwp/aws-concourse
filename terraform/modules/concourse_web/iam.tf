@@ -37,14 +37,14 @@ data "aws_iam_policy_document" "concourse_secretsmanager" {
     effect = "Allow"
 
     actions = [
-      "secretsmanager:ListSecrets",
-      "secretsmanager:ListSecretVersionIds",
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret"
+      "secretsmanager:List*",
+      "secretsmanager:Get*",
+      "secretsmanager:Describe*"
     ]
 
     resources = [
       "arn:aws:secretsmanager:::secret:/concourse/*",
+      "arn:aws:secretsmanager:::secret:/concourse/dataworks/*",
     ]
   }
 }
