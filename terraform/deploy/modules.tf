@@ -120,6 +120,11 @@ module "concourse_worker" {
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
+  worker = {
+    instance_type        = "m4.large"
+    count                = 1
+    environment_override = {}
+  }
 }
 
 module "concourse_worker_log_group" {
