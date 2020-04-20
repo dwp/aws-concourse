@@ -38,6 +38,7 @@ data "aws_iam_policy_document" "concourse_secretsmanager" {
 
     actions = [
       "secretsmanager:ListSecrets",
+      "secretsmanager:ListSecretVersionIds",
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
