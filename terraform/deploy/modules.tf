@@ -28,7 +28,7 @@ module "concourse_lb" {
 
 locals {
   amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
-  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "logs"]
+  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs"]
 }
 
 module "concourse_web" {
