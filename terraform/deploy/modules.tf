@@ -64,7 +64,7 @@ module "concourse_web" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
+    no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
