@@ -43,9 +43,7 @@ data "aws_iam_policy_document" "concourse_secretsmanager" {
     ]
 
     resources = [
-      "arn:aws:secretsmanager:::secret:/concourse/*",
-      "arn:aws:secretsmanager:::secret:/concourse/dataworks/*",
-      "arn:aws:secretsmanager:::secret:/concourse/main/*",
+      "*"
     ]
   }
 }
