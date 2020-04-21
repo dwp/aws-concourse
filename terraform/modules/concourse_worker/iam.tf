@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "concourse_parameters_worker" {
     ]
 
     resources = [
-      "arn:aws:ssm:::parameter/${var.name}*"
+      "arn:aws:ssm:::parameter/*"
     ]
   }
 }

@@ -98,7 +98,7 @@ data "aws_iam_policy_document" "concourse_parameters_web" {
     ]
 
     resources = [
-      "arn:aws:ssm:::parameter/${var.name}*"
+      "arn:aws:ssm:::parameter/*"
     ]
   }
 }
