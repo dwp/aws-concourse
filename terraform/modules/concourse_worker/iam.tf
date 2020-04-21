@@ -1,6 +1,6 @@
 resource "aws_iam_role" "worker" {
   name               = local.name
-  assume_role_policy = data.aws_iam_policy_document.concourse.json
+  assume_role_policy = data.aws_iam_policy_document.worker.json
   tags               = var.tags
 }
 
@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   role       = aws_iam_role.worker.id
 }
 
-data "aws_iam_policy_document" "concourse" {
+data "aws_iam_policy_document" "worker" {
   statement {
     actions = [
       "sts:AssumeRole",
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "concourse_parameters_worker" {
     ]
 
     resources = [
-      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter/${var.name}*"
+      "arn:aws:ssm:::parameter/${var.name}*"
     ]
   }
 }
