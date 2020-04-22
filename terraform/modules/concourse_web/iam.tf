@@ -37,13 +37,13 @@ data "aws_iam_policy_document" "concourse_secretsmanager" {
     effect = "Allow"
 
     actions = [
-      "secretsmanager:ListSecrets",
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret"
+      "secretsmanager:List*",
+      "secretsmanager:Get*",
+      "secretsmanager:Describe*"
     ]
 
     resources = [
-      "arn:aws:secretsmanager:::secret:/concourse/*",
+      "*"
     ]
   }
 }
@@ -85,25 +85,25 @@ resource "aws_iam_role_policy_attachment" "concourse_kms" {
   role       = aws_iam_role.web.id
 }
 
-resource "aws_iam_policy" "concourse_parameters" {
+resource "aws_iam_policy" "concourse_parameters_web" {
   name        = "${local.name}ParameterStoreAccess"
   description = "Access to SSM for Web Nodes"
-  policy      = data.aws_iam_policy_document.concourse_parameters.json
+  policy      = data.aws_iam_policy_document.concourse_parameters_web.json
 }
 
-data "aws_iam_policy_document" "concourse_parameters" {
+data "aws_iam_policy_document" "concourse_parameters_web" {
   statement {
     actions = [
       "ssm:GetParameter"
     ]
 
     resources = [
-      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter/${var.name}*"
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/*"
     ]
   }
 }
 
-resource "aws_iam_role_policy_attachment" "concourse_parameters" {
-  policy_arn = aws_iam_policy.concourse_parameters.arn
+resource "aws_iam_role_policy_attachment" "concourse_parameters_web" {
+  policy_arn = aws_iam_policy.concourse_parameters_web.arn
   role       = aws_iam_role.web.id
 }

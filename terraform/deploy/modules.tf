@@ -28,7 +28,7 @@ module "concourse_lb" {
 
 locals {
   amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
-  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "logs"]
+  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs"]
 }
 
 module "concourse_web" {
@@ -64,7 +64,7 @@ module "concourse_web" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
+    no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
   }
 }
 
@@ -118,7 +118,12 @@ module "concourse_worker" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = "instance-data.${var.region}.compute.internal,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
+    no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
+  }
+  worker = {
+    instance_type        = "m4.large"
+    count                = 1
+    environment_override = {}
   }
 }
 

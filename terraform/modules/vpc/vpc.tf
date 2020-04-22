@@ -10,6 +10,7 @@ module "vpc" {
   gateway_vpce_route_table_ids               = aws_route_table.private.*.id
   ec2_endpoint                               = true
   ec2messages_endpoint                       = true
+  kms_endpoint                               = true
   logs_endpoint                              = true
   monitoring_endpoint                        = true
   s3_endpoint                                = true

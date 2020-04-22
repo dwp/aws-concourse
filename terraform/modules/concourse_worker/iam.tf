@@ -1,6 +1,6 @@
 resource "aws_iam_role" "worker" {
   name               = local.name
-  assume_role_policy = data.aws_iam_policy_document.concourse.json
+  assume_role_policy = data.aws_iam_policy_document.worker.json
   tags               = var.tags
 }
 
@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   role       = aws_iam_role.worker.id
 }
 
-data "aws_iam_policy_document" "concourse" {
+data "aws_iam_policy_document" "worker" {
   statement {
     actions = [
       "sts:AssumeRole",
@@ -32,20 +32,25 @@ data "aws_iam_policy_document" "concourse" {
   }
 }
 
-resource "aws_iam_role_policy" "parameter_store" {
-  name   = "${local.name}ParameterStoreAccess"
-  role   = aws_iam_role.worker.id
-  policy = data.aws_iam_policy_document.secrets.json
+resource "aws_iam_policy" "concourse_parameters_worker" {
+  name        = "${local.name}ParameterStoreAccess"
+  description = "Access to SSM for Worker Nodes"
+  policy      = data.aws_iam_policy_document.concourse_parameters_worker.json
 }
 
-data "aws_iam_policy_document" "secrets" {
+data "aws_iam_policy_document" "concourse_parameters_worker" {
   statement {
     actions = [
       "ssm:GetParameter"
     ]
 
     resources = [
-      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter/${var.name}*"
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/*"
     ]
   }
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_parameters_worker" {
+  policy_arn = aws_iam_policy.concourse_parameters_worker.arn
+  role       = aws_iam_role.worker.id
 }
