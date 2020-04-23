@@ -14,6 +14,11 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   role       = aws_iam_role.web.id
 }
 
+resource "aws_iam_role_policy_attachment" "ssm" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  role       = aws_iam_role.web.id
+}
+
 data "aws_iam_policy_document" "web" {
   statement {
     actions = [
