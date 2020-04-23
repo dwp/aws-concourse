@@ -16,6 +16,8 @@ variable "loadbalancer" {}
 variable "log_group" {}
 variable "vpc" {}
 variable "ssm_name_prefix" {}
+variable "remote_state" {}
+variable "concourse_web" {}
 
 variable "worker" {
   description = "worker configuration options"
