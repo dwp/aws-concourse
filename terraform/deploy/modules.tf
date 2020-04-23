@@ -61,6 +61,7 @@ module "concourse_web" {
   cognito_domain        = module.cognito.outputs.user_pool_domain
   cognito_issuer        = module.cognito.outputs.issuer
   cognito_name          = module.cognito.outputs.name
+  remote_state          = local.remote_state
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"

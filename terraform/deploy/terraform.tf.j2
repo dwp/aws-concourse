@@ -89,5 +89,10 @@ locals {
       } {% endfor %}
   }
 
+  remote_state = {
+    bucket_arn = "arn:aws:s3:::{{state_file_bucket}}"
+    dynamo_arn = "arn:aws:dynamodb:{{state_file_region}}:{{state_file_account}}:table/remote_state_locks"
+  }
+
   cognito_domain = local.environment == "management" ? "concourse-dataworks" : "concourse-dataworks-dev"
 }
