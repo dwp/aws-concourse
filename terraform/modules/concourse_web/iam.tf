@@ -32,6 +32,29 @@ data "aws_iam_policy_document" "web" {
   }
 }
 
+data "aws_iam_policy_document" "concourse_parameters_web" {
+  statement {
+    actions = [
+      "ssm:GetParameter"
+    ]
+
+    resources = [
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_parameters_web" {
+  policy_arn = aws_iam_policy.concourse_parameters_web.arn
+  role       = aws_iam_role.web.id
+}
+
+resource "aws_iam_policy" "concourse_parameters_web" {
+  name        = "${local.name}ParameterStoreAccess"
+  description = "Access to SSM for Web Nodes"
+  policy      = data.aws_iam_policy_document.concourse_parameters_web.json
+}
+
 resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWeb" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.web.id
