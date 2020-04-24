@@ -32,25 +32,22 @@ data "aws_iam_policy_document" "worker" {
   }
 }
 
-resource "aws_iam_policy" "concourse_parameters_worker" {
-  name        = "${local.name}ParameterStoreAccess"
-  description = "Access to SSM for Worker Nodes"
-  policy      = data.aws_iam_policy_document.concourse_parameters_worker.json
+resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
+  role       = aws_iam_role.worker.id
 }
 
-data "aws_iam_policy_document" "concourse_parameters_worker" {
-  statement {
-    actions = [
-      "ssm:GetParameter"
-    ]
-
-    resources = [
-      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/*"
-    ]
-  }
+resource "aws_iam_role_policy_attachment" "TerraformDependenciesWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/TerraformDependencies"
+  role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "concourse_parameters_worker" {
-  policy_arn = aws_iam_policy.concourse_parameters_worker.arn
+resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraformWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
+  role       = aws_iam_role.worker.id
+}
+
+resource "aws_iam_role_policy_attachment" "RemoteStateWriteWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/RemoteStateWrite"
   role       = aws_iam_role.worker.id
 }
