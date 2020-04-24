@@ -32,27 +32,27 @@ data "aws_iam_policy_document" "worker" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ci_user" {
-  policy_arn = var.concourse_web.ci_user_arn
+resource "aws_iam_role_policy_attachment" "CiAllowAssumeRole" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "remote_state_read_policy" {
-  policy_arn = var.concourse_web.remote_state_read_policy_arn
+resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraform" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "terraform_dependencies" {
-  policy_arn = var.concourse_web.terraform_dependencies_arn
+resource "aws_iam_role_policy_attachment" "TerraformDependencies" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/TerraformDependencies"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "remote_state_write_policy" {
-  policy_arn = var.concourse_web.remote_state_write_policy_arn
+resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraform" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "ci_user_policy" {
-  policy_arn = var.concourse_web.ci_user_policy_arn
+resource "aws_iam_role_policy_attachment" "RemoteStateWrite" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/RemoteStateWrite"
   role       = aws_iam_role.worker.id
 }
