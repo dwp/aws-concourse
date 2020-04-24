@@ -32,27 +32,22 @@ data "aws_iam_policy_document" "worker" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "CiAllowAssumeRole" {
+resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWorker" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraform" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "TerraformDependencies" {
+resource "aws_iam_role_policy_attachment" "TerraformDependenciesWorker" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/TerraformDependencies"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraform" {
+resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraformWorker" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "RemoteStateWrite" {
+resource "aws_iam_role_policy_attachment" "RemoteStateWriteWorker" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/RemoteStateWrite"
   role       = aws_iam_role.worker.id
 }
