@@ -24,7 +24,6 @@ variable "cognito_client_id" {}
 variable "cognito_domain" {}
 variable "cognito_issuer" {}
 variable "cognito_name" {}
-variable "remote_state" {}
 
 
 variable "web" {
