@@ -55,28 +55,28 @@ resource "aws_iam_policy" "concourse_parameters_worker" {
   policy      = data.aws_iam_policy_document.concourse_parameters_worker.json
 }
 
-data "aws_iam_policy_document" "concourse_secrets_read" {
+data "aws_iam_policy_document" "all_secrets_read" {
   statement {
     actions = [
       "secretsmanager:DescribeSecret",
       "secretsmanager:GetSecretValue",
-      "secretsmanager:ListSecretVersionIds"
+      "secretsmanager:ListSecretVersionIds",
     ]
 
     resources = [
-      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/concourse/*"
+      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/*",
     ]
   }
 }
 
-resource "aws_iam_policy" "concourse_secrets_read" {
+resource "aws_iam_policy" "all_secrets_read" {
   name        = "${local.name}SecretsAccess"
-  description = "Read-only access to Concourse Secrets"
-  policy      = data.aws_iam_policy_document.concourse_secrets_read.json
+  description = "Read-only access to all secrets"
+  policy      = data.aws_iam_policy_document.all_secrets_read.json
 }
 
 resource "aws_iam_role_policy_attachment" "concourse_worker_secrets" {
-  policy_arn = aws_iam_policy.concourse_secrets_read.arn
+  policy_arn = aws_iam_policy.all_secrets_read.arn
   role       = aws_iam_role.worker.id
 }
 
