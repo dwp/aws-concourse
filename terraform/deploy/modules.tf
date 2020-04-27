@@ -172,12 +172,22 @@ module "vpc" {
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
 }
 
-module "waf" {
-  source = "../modules/waf"
+module "concourse_waf_log_group" {
+  source = "../modules/cloudwatch_log_group"
 
   name = var.name
+  tags = local.tags
 
+  group_name        = "waf"
+  retention_in_days = 30
+}
+
+module "waf" {
+  source                = "../modules/waf"
+  name                  = var.name
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
+  log_bucket            = data.terraform_remote_state.security-tools.outputs.logstore_bucket.arn
+  cloudwatch_log_group  = "/${var.name}/waf"
 }
 
 module "cognito" {
