@@ -20,15 +20,15 @@ resource "aws_iam_role" "log_role" {
   assume_role_policy = data.aws_iam_policy_document.firehose_assume_role.json
 }
 
-resource "aws_iam_policy" "write_waf_logs_s3" {
+resource "aws_iam_policy" "write_waf_logs" {
   name        = "${var.name}_WriteLogs"
-  description = "Allow writing WAF logs to S3"
-  policy      = data.aws_iam_policy_document.write_s3_logs.json
+  description = "Allow writing WAF logs to S3 + CloudWatch"
+  policy      = data.aws_iam_policy_document.write_waf_logs.json
 }
 
-resource "aws_iam_role_policy_attachment" "write_s3_firehose" {
+resource "aws_iam_role_policy_attachment" "write_waf_logs" {
   role       = aws_iam_role.log_role.name
-  policy_arn = aws_iam_policy.write_waf_logs_s3.arn
+  policy_arn = aws_iam_policy.write_waf_logs.arn
 }
 
 data "aws_iam_policy_document" "firehose_assume_role" {
@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "firehose_assume_role" {
   }
 }
 
-data "aws_iam_policy_document" "write_s3_logs" {
+data "aws_iam_policy_document" "write_waf_logs" {
   statement {
     effect = "Allow"
 
@@ -68,6 +68,18 @@ data "aws_iam_policy_document" "write_s3_logs" {
 
     resources = [
       "${var.log_bucket}/waf/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:*",
+    ]
+
+    resources = [
+      "*"
     ]
   }
 }
