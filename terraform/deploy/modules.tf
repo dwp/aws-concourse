@@ -23,7 +23,7 @@ module "concourse_lb" {
   parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
-  whitelist_cidr_blocks  = var.whitelist_cidr_blocks
+  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
 }
 
 locals {
@@ -188,6 +188,7 @@ module "waf" {
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
   log_bucket            = data.terraform_remote_state.security-tools.outputs.logstore_bucket.arn
   cloudwatch_log_group  = "/${var.name}/waf"
+  github_metadata       = local.github_metadata
 }
 
 module "cognito" {
