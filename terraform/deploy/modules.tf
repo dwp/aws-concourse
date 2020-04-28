@@ -179,7 +179,7 @@ module "concourse_waf_log_group" {
   tags = local.tags
 
   group_name        = "waf"
-  retention_in_days = 30
+  retention_in_days = 180
 }
 
 module "waf" {
@@ -189,6 +189,7 @@ module "waf" {
   log_bucket            = data.terraform_remote_state.security-tools.outputs.logstore_bucket.arn
   cloudwatch_log_group  = "/${var.name}/waf"
   github_metadata       = local.github_metadata
+  tags                  = local.tags
 }
 
 module "cognito" {

@@ -10,3 +10,8 @@ variable "log_bucket" {}
 variable "cloudwatch_log_group" {}
 
 variable "github_metadata" {}
+
+variable "tags" {
+  description = "tags to apply to aws resource"
+  type        = map(string)
+}

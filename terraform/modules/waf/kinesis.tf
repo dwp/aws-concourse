@@ -2,6 +2,8 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
   name        = "aws-waf-logs-${var.name}"
   destination = "extended_s3"
 
+  tags = var.tags
+
   extended_s3_configuration {
     role_arn   = aws_iam_role.log_role.arn
     prefix     = "waf/${var.name}/"
