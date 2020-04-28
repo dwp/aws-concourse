@@ -1,6 +1,7 @@
 resource "aws_wafregional_web_acl" "acl" {
   name        = var.name
   metric_name = var.name
+  tags        = var.tags
 
   logging_configuration {
     log_destination = aws_kinesis_firehose_delivery_stream.extended_s3_stream.arn
