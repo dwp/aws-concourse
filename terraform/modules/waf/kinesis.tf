@@ -64,36 +64,11 @@ data "aws_iam_policy_document" "write_waf_logs" {
 
     actions = [
       "s3:GetObject*",
-      "s3:DeleteObject*",
       "s3:PutObject*",
     ]
 
     resources = [
       "${var.log_bucket}/waf/*"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "logs:*",
-    ]
-
-    resources = [
-      "*"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "kms:*",
-    ]
-
-    resources = [
-      "*"
     ]
   }
 }
