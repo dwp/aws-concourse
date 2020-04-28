@@ -5,4 +5,9 @@ resource "aws_wafregional_geo_match_set" "gb" {
     type  = "Country"
     value = "GB"
   }
+
+  geo_match_constraint {
+    type  = "Country"
+    value = "US"
+  }
 }
