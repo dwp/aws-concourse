@@ -36,7 +36,7 @@ resource "aws_wafregional_web_acl" "acl" {
     }
 
     priority = 3
-    rule_id  = aws_wafregional_rule.detect_bad_auth_tokens.id
+    rule_id  = aws_wafregional_rule.github_com_restrict_sizes.id
     type     = "REGULAR"
   }
 
@@ -46,7 +46,7 @@ resource "aws_wafregional_web_acl" "acl" {
     }
 
     priority = 4
-    rule_id  = aws_wafregional_rule.mitigate_sqli.id
+    rule_id  = aws_wafregional_rule.detect_bad_auth_tokens.id
     type     = "REGULAR"
   }
 
@@ -56,7 +56,7 @@ resource "aws_wafregional_web_acl" "acl" {
     }
 
     priority = 5
-    rule_id  = aws_wafregional_rule.mitigate_xss.id
+    rule_id  = aws_wafregional_rule.mitigate_sqli.id
     type     = "REGULAR"
   }
 
@@ -66,6 +66,16 @@ resource "aws_wafregional_web_acl" "acl" {
     }
 
     priority = 6
+    rule_id  = aws_wafregional_rule.mitigate_xss.id
+    type     = "REGULAR"
+  }
+
+  rule {
+    action {
+      type = "BLOCK"
+    }
+
+    priority = 7
     rule_id  = aws_wafregional_rule.detect_rfi_lfi_traversal.id
     type     = "REGULAR"
   }
