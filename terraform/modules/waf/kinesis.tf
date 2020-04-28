@@ -84,26 +84,12 @@ data "aws_iam_policy_document" "write_waf_logs" {
       "*"
     ]
   }
-}
 
-resource "aws_iam_policy" "decrypt_waf_logs" {
-  name        = "${var.name}_decryptLogs"
-  description = "Allow decrypting WAF logs from S3 "
-  policy      = data.aws_iam_policy_document.decrypt_waf_logs.json
-}
-
-resource "aws_iam_role_policy_attachment" "decrypt_waf_logs" {
-  role       = aws_iam_role.log_role.name
-  policy_arn = aws_iam_policy.decrypt_waf_logs.arn
-}
-
-data "aws_iam_policy_document" "decrypt_waf_logs" {
   statement {
     effect = "Allow"
 
     actions = [
-      "kms:Decrypt",
-      "kms:Encrypt",
+      "kms:*",
     ]
 
     resources = [
