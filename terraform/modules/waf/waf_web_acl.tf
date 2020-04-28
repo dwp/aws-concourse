@@ -35,16 +35,6 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 3
-    rule_id  = aws_wafregional_rule.github_com_restrict_sizes.id
-    type     = "REGULAR"
-  }
-
-  rule {
-    action {
-      type = "BLOCK"
-    }
-
     priority = 4
     rule_id  = aws_wafregional_rule.detect_bad_auth_tokens.id
     type     = "REGULAR"
@@ -108,6 +98,16 @@ resource "aws_wafregional_web_acl" "acl" {
 
     priority = 9
     rule_id  = aws_wafregional_rule.detect_admin_access.id
+    type     = "REGULAR"
+  }
+
+  rule {
+    action {
+      type = "ALLOW"
+    }
+
+    priority = 10
+    rule_id  = aws_wafregional_rule.detect_github_access.id
     type     = "REGULAR"
   }
 }

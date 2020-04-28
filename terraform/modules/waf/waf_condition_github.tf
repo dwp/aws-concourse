@@ -12,64 +12,13 @@ resource "aws_wafregional_ipset" "github_com_ipset" {
   }
 }
 
-resource "aws_wafregional_size_constraint_set" "github_com_size_restrictions" {
-  name = "github-com-size-restrictions"
-
-  size_constraints {
-    text_transformation = "NONE"
-    comparison_operator = "GT"
-    size                = "16384"
-
-    field_to_match {
-      type = "BODY"
-    }
-  }
-
-  size_constraints {
-    text_transformation = "NONE"
-    comparison_operator = "GT"
-    size                = "4093"
-
-    field_to_match {
-      type = "HEADER"
-      data = "cookie"
-    }
-  }
-
-  size_constraints {
-    text_transformation = "NONE"
-    comparison_operator = "GT"
-    size                = "1024"
-
-    field_to_match {
-      type = "QUERY_STRING"
-    }
-  }
-
-  size_constraints {
-    text_transformation = "NONE"
-    comparison_operator = "GT"
-    size                = "512"
-
-    field_to_match {
-      type = "URI"
-    }
-  }
-}
-
-resource "aws_wafregional_rule" "github_com_restrict_sizes" {
-  name        = "restrict-sizes"
-  metric_name = "restrictsizes"
+resource "aws_wafregional_rule" "detect_github_access" {
+  name        = "detect-github-access"
+  metric_name = "detectgithubaccess"
 
   predicate {
     data_id = aws_wafregional_ipset.github_com_ipset.id
     negated = true
     type    = "IPMatch"
-  }
-
-  predicate {
-    data_id = aws_wafregional_size_constraint_set.github_com_size_restrictions.id
-    negated = false
-    type    = "SizeConstraint"
   }
 }
