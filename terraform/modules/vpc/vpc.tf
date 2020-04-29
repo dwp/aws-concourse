@@ -8,6 +8,7 @@ module "vpc" {
   interface_vpce_source_security_group_ids   = var.vpc_endpoint_source_sg_ids
   interface_vpce_subnet_ids                  = aws_subnet.private.*.id
   gateway_vpce_route_table_ids               = aws_route_table.private.*.id
+  ec2autoscaling_endpoint                    = true
   ec2_endpoint                               = true
   ec2messages_endpoint                       = true
   kms_endpoint                               = true
