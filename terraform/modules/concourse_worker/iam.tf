@@ -55,6 +55,30 @@ resource "aws_iam_policy" "concourse_parameters_worker" {
   policy      = data.aws_iam_policy_document.concourse_parameters_worker.json
 }
 
+
+data "aws_iam_policy_document" "concourse_autoscaling_worker" {
+  statement {
+    actions = [
+      "autoscaling:SetInstanceHealth"
+    ]
+
+    resources = [
+      aws_autoscaling_group.worker.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "concourse_autoscaling_worker" {
+  name        = "${local.name}AutoScaling"
+  description = "Change Concourse Worker's Instance Health"
+  policy      = data.aws_iam_policy_document.concourse_autoscaling_worker.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_autoscaling_worker" {
+  policy_arn = aws_iam_policy.concourse_autoscaling_worker.arn
+  role       = aws_iam_role.worker.id
+}
+
 resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWorker" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.worker.id
