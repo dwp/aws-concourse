@@ -4,8 +4,8 @@ CURLSTATUS=$?
 REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document|grep region|awk -F\" '{print $4}')
 INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 
-# Check for timeout
-if [ $CURLSTATUS -eq 28 ]
+# Check for timeout or dead process
+if [ $CURLSTATUS -eq 28 -o -z "${HEADERS}" ]
 then
     echo "Connection timeout, unhealthy"
     aws autoscaling set-instance-health --region $REGION --instance-id $INSTANCE_ID --health-status Unhealthy
