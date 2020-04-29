@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "write_waf_logs" {
     ]
 
     resources = [
-      "${var.log_bucket}"
+      var.log_bucket
     ]
   }
 
