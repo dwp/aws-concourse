@@ -1,6 +1,11 @@
 resource "aws_wafregional_web_acl" "acl" {
   name        = var.name
   metric_name = var.name
+  tags        = var.tags
+
+  logging_configuration {
+    log_destination = aws_kinesis_firehose_delivery_stream.extended_s3_stream.arn
+  }
 
   default_action {
     type = "ALLOW"
@@ -31,7 +36,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 3
+    priority = 4
     rule_id  = aws_wafregional_rule.detect_bad_auth_tokens.id
     type     = "REGULAR"
   }
@@ -41,7 +46,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 4
+    priority = 5
     rule_id  = aws_wafregional_rule.mitigate_sqli.id
     type     = "REGULAR"
   }
@@ -51,7 +56,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 5
+    priority = 6
     rule_id  = aws_wafregional_rule.mitigate_xss.id
     type     = "REGULAR"
   }
@@ -61,7 +66,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 6
+    priority = 7
     rule_id  = aws_wafregional_rule.detect_rfi_lfi_traversal.id
     type     = "REGULAR"
   }
@@ -94,6 +99,16 @@ resource "aws_wafregional_web_acl" "acl" {
 
     priority = 9
     rule_id  = aws_wafregional_rule.detect_admin_access.id
+    type     = "REGULAR"
+  }
+
+  rule {
+    action {
+      type = "ALLOW"
+    }
+
+    priority = 10
+    rule_id  = aws_wafregional_rule.detect_github_access.id
     type     = "REGULAR"
   }
 }

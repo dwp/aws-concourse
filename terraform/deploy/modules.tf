@@ -23,7 +23,7 @@ module "concourse_lb" {
   parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
-  whitelist_cidr_blocks  = var.whitelist_cidr_blocks
+  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
 }
 
 locals {
@@ -166,18 +166,30 @@ module "vpc" {
   name                        = var.name
   tags                        = local.tags
   vpc_cidr_block              = local.cidr_block[local.environment].ci-cd-vpc
-  whitelist_cidr_blocks       = var.whitelist_cidr_blocks
+  whitelist_cidr_blocks       = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
   internet_proxy_fqdn         = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
 }
 
-module "waf" {
-  source = "../modules/waf"
+module "concourse_waf_log_group" {
+  source = "../modules/cloudwatch_log_group"
 
   name = var.name
+  tags = local.tags
 
+  group_name        = "waf"
+  retention_in_days = 180
+}
+
+module "waf" {
+  source                = "../modules/waf"
+  name                  = var.name
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
+  log_bucket            = data.terraform_remote_state.security-tools.outputs.logstore_bucket.arn
+  cloudwatch_log_group  = "/${var.name}/waf"
+  github_metadata       = local.github_metadata
+  tags                  = local.tags
 }
 
 module "cognito" {
