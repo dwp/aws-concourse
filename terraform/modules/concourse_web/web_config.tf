@@ -32,12 +32,17 @@ locals {
       CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
       CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
 
+      # Cognito Auth
       CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito_name
       CONCOURSE_OIDC_CLIENT_ID     = var.cognito_client_id
       CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
       CONCOURSE_OIDC_ISSUER        = var.cognito_issuer
       CONCOURSE_OIDC_GROUPS_KEY    = "cognito:groups"
       CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
+
+      # UC GitHub Auth
+      CONCOURSE_GITHUB_CLIENT_ID     = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["clientid"]
+      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["clientsecret"]
 
       CONCOURSE_METRICS_HOST_NAME     = "${local.name}"
       CONCOURSE_CAPTURE_ERROR_METRICS = true
