@@ -26,9 +26,17 @@ module "concourse_lb" {
   whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
 }
 
+data "aws_secretsmanager_secret" "dataworks" {
+  name = "/concourse/dataworks/dataworks"
+}
+data "aws_secretsmanager_secret_version" "dataworks" {
+  secret_id = data.aws_secretsmanager_secret.dataworks.id
+}
+
 locals {
-  amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
-  endpoint_services    = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs"]
+  amazon_region_domain  = "${data.aws_region.current.name}.amazonaws.com"
+  endpoint_services     = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs"]
+  enterprise_github_url = jsondecode(data.aws_secretsmanager_secret_version.dataworks.secret_binary)["enterprise_github_url"]
 }
 
 module "concourse_web" {
@@ -64,7 +72,7 @@ module "concourse_web" {
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}"
+    no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))}, {local.enterprise_github_url}"
   }
 }
 
