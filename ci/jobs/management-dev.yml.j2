@@ -13,7 +13,4 @@ jobs:
     config:
       params:
         AWS_ACC: "{{accounts['management-dev']}}"
-  - .: (( inject meta.plan.generate-negative-proxy-test-manifest ))
-  - .: (( inject meta.plan.generate-positive-proxy-test-manifest ))
-  - .: (( inject meta.plan.run-positive-proxy-test ))
-  - .: (( inject meta.plan.run-negative-proxy-test ))
+  - .: (( inject meta.plan.proxy-test ))
