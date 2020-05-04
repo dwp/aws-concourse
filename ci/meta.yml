@@ -193,29 +193,30 @@ meta:
             repository: ((docker-awscli.repository))
             version: ((docker-awscli.version))
             tag: ((docker-awscli.version))
-        outputs:
-          - name: positive-proxy-test-manifest
+        inputs:
+          - name: .aws
         params:
           AWS_PROFILE: ci
           AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
           AWS_CONFIG_FILE: .aws/config
         run:
           path: sh
-          dir: positive-proxy-test-manifest
           args:
             - -exc
             - |
               cat << EOF > positive-manifest.json
               {
-                  "required_endpoints": {
-                    "GitHub":  "https://github.com",
-                  }
+                "required_endpoints": 
+              {
+                  "Github": "https://github.com"
+                }
               }
               EOF
               cat positive-manifest.json
               cat << EOF > negative-manifest.json
               {
-                "required_endpoints": {
+                "required_endpoints": 
+              {
                   "MSN": "https://msn.com"
                 }
               }
