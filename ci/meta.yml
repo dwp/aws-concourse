@@ -201,7 +201,7 @@ meta:
           args:
             - -exc
             - |
-              cat << EOF > manifest.json
+              cat << EOF > positive-manifest.json
               {
                   "required_endpoints": {
                     "GitHub":  "https://github.com",
@@ -210,7 +210,7 @@ meta:
               EOF
               cat positive-manifest.json
               |
-              cat << EOF > manifest.json
+              cat << EOF > negative-manifest.json
               {
                 "required_endpoints": {
                   "MSN": "https://msn.com"
