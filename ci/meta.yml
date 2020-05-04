@@ -43,24 +43,24 @@ meta:
           AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
           TF_INPUT: false
           TF_CLI_ARGS_apply: -lock-timeout=300s
-          TF_CLI_ARGS_plan:  -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
         run:
           path: sh
           dir: aws-concourse/terraform/deploy
           args:
-          - -exc
-          - |
-            cp ../../../terraform-config/terraform.tf .
-            cp ../../../terraform-config/terraform.tfvars .
-            terraform init
-            terraform workspace show
-            export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
-            terraform plan -out terraform.plan
-            terraform apply -auto-approve terraform.plan
+            - -exc
+            - |
+              cp ../../../terraform-config/terraform.tf .
+              cp ../../../terraform-config/terraform.tfvars .
+              terraform init
+              terraform workspace show
+              export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
+              terraform plan -out terraform.plan
+              terraform apply -auto-approve terraform.plan
         inputs:
-        - name: aws-concourse
-        - name: terraform-config
-        - name: packer-egress-test-release
+          - name: aws-concourse
+          - name: terraform-config
+          - name: packer-egress-test-release
     terraform-plan:
       task: terraform-plan
       config:
@@ -76,24 +76,24 @@ meta:
           AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
           TF_INPUT: false
           TF_CLI_ARGS_apply: -lock-timeout=300s
-          TF_CLI_ARGS_plan:  -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
           TF_VAR_slack_webhook_url: ((slack.webhook_url))
         run:
           path: sh
           dir: aws-concourse/terraform/deploy
           args:
-          - -exc
-          - |
-            cp ../../../terraform-config/terraform.tf .
-            cp ../../../terraform-config/terraform.tfvars .
-            terraform init
-            terraform workspace show
-            export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
-            terraform plan -detailed-exitcode
+            - -exc
+            - |
+              cp ../../../terraform-config/terraform.tf .
+              cp ../../../terraform-config/terraform.tfvars .
+              terraform init
+              terraform workspace show
+              export TF_VAR_packer_egress_test_zip="{base_path = \"../../../packer-egress-test-release\", version = \"$(cat ../../../packer-egress-test-release/version)\"}"
+              terraform plan -detailed-exitcode
         inputs:
-        - name: aws-concourse
-        - name: terraform-config
-        - name: packer-egress-test-release
+          - name: aws-concourse
+          - name: terraform-config
+          - name: packer-egress-test-release
     terraform-output:
       task: terraform-output
       config:
@@ -111,18 +111,18 @@ meta:
           path: sh
           dir: aws-concourse/terraform/deploy
           args:
-          - -exc
-          - |
-            cp ../../../terraform-config/terraform.tf .
-            cp ../../../terraform-config/terraform.tfvars .
-            terraform init
-            terraform workspace show
-            terraform output -json > ../../../terraform-output/outputs.json
+            - -exc
+            - |
+              cp ../../../terraform-config/terraform.tf .
+              cp ../../../terraform-config/terraform.tfvars .
+              terraform init
+              terraform workspace show
+              terraform output -json > ../../../terraform-output/outputs.json
         inputs:
-        - name: aws-concourse
-        - name: terraform-config
+          - name: aws-concourse
+          - name: terraform-config
         outputs:
-        - name: terraform-output
+          - name: terraform-output
     concourse-smoke-tests:
       task: concourse-smoke-tests
       config:
@@ -163,28 +163,28 @@ meta:
         run:
           path: sh
           args:
-          - -exc
-          - |
-            cat <<EOF> .aws/credentials
-            [default]
-            aws_access_key_id = $AWS_ACCESS_KEY_ID
-            aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
-            [${AWS_PROFILE}]
-            role_arn = arn:aws:iam::${AWS_ACC}:role/${AWS_PROFILE}
-            source_profile = default
-            EOF
-            cat <<EOF> .aws/config
-            [default]
-            region = eu-west-2
-            [profile ${AWS_PROFILE}]
-            region = eu-west-2
-            s3 =
-              max_concurrent_requests = 5
-              signature_version = s3v4
-              addressing_style = virtual
-            EOF
-    generate-positive-proxy-test-manifest:
-      task: generate-positive-proxy-test-manifest
+            - -exc
+            - |
+              cat <<EOF> .aws/credentials
+              [default]
+              aws_access_key_id = $AWS_ACCESS_KEY_ID
+              aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+              [${AWS_PROFILE}]
+              role_arn = arn:aws:iam::${AWS_ACC}:role/${AWS_PROFILE}
+              source_profile = default
+              EOF
+              cat <<EOF> .aws/config
+              [default]
+              region = eu-west-2
+              [profile ${AWS_PROFILE}]
+              region = eu-west-2
+              s3 =
+                max_concurrent_requests = 5
+                signature_version = s3v4
+                addressing_style = virtual
+              EOF
+    proxy-test:
+      task: proxy-test
       config:
         platform: linux
         image_resource:
@@ -199,101 +199,42 @@ meta:
           path: sh
           dir: positive-proxy-test-manifest
           args:
-          - -exc
-          - |
-            cat << EOF > manifest.json
-            {
-                "required_endpoints": {
-                  "GitHub":  "https://github.com",
-                }
-            }
-            EOF
-            cat manifest.json
-    generate-negative-proxy-test-manifest:
-      task: generate-negative-proxy-test-manifest
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        outputs:
-          - name: negative-proxy-test-manifest
-        run:
-          path: sh
-          dir: negative-proxy-test-manifest
-          args:
-          - -exc
-          - |
-            cat << EOF > manifest.json
-            {
-              "required_endpoints": {
-                "MSN": "https://msn.com"
+            - -exc
+            - |
+              cat << EOF > manifest.json
+              {
+                  "required_endpoints": {
+                    "GitHub":  "https://github.com",
+                  }
               }
-            }
-            EOF
-            cat manifest.json
-    run-positive-proxy-test:
-      task: run-positive-proxy-test
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        inputs:
-          - name: positive-proxy-test-manifest
-          - name: .aws
-        params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
-        run:
-          path: sh
-          args:
-          - -exc
-          - |
-            echo "Test that whitelisted URLs are accessible through proxy"
-            aws lambda invoke --function-name packer_egress_test \
-              --invocation-type RequestResponse \
-              --payload file://positive-proxy-test-manifest/manifest.json \
-              --cli-connect-timeout 600 \
-              --cli-read-timeout 600 \
-            output.json
+              EOF
+              cat positive-manifest.json
+              |
+              cat << EOF > manifest.json
+              {
+                "required_endpoints": {
+                  "MSN": "https://msn.com"
+                }
+              }
+              EOF
+              cat negative-manifest.json
+              |
+              echo "Test that whitelisted URLs are accessible through proxy"
+              aws lambda invoke --function-name packer_egress_test \
+                --invocation-type RequestResponse \
+                --payload file://positive-proxy-test-manifest/positive-manifest.json \
+                --cli-connect-timeout 600 \
+                --cli-read-timeout 600 \
+              output.json
 
-            cat output.json | jq -eC 'if .errorMessage? then error(.errorMessage) else true end'
-    run-negative-proxy-test:
-      task: run-negative-proxy-test
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        inputs:
-          - name: negative-proxy-test-manifest
-          - name: .aws
-        params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
-        run:
-          path: sh
-          args:
-          - -exc
-          - |
-            echo "Test that URLs not in the whitelist aren't accessible through proxy"
-            aws lambda invoke --function-name packer_egress_test \
-              --invocation-type RequestResponse \
-              --payload file://negative-proxy-test-manifest/manifest.json \
-              --cli-connect-timeout 600 \
-              --cli-read-timeout 600 \
-            output.json
+              cat output.json | jq -eC 'if .errorMessage? then error(.errorMessage) else true end'
+              |
+              echo "Test that URLs not in the whitelist aren't accessible through proxy"
+              aws lambda invoke --function-name packer_egress_test \
+                --invocation-type RequestResponse \
+                --payload file://negative-proxy-test-manifest/negative-manifest.json \
+                --cli-connect-timeout 600 \
+                --cli-read-timeout 600 \
+              output.json
 
-            cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
+              cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
