@@ -2,3 +2,6 @@ roles:
   - name: member
     oidc:
       groups: ["dataworks"]
+  - name: member
+    github:
+      teams: ["dip:devops"]
