@@ -74,6 +74,10 @@ module "concourse_web" {
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))},${local.enterprise_github_url}"
   }
+  enterprise_github_certs = [
+    "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
+    "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
+  ]
 }
 
 module "concourse_web_log_group" {
@@ -129,6 +133,10 @@ module "concourse_worker" {
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))},${local.enterprise_github_url}"
   }
+  enterprise_github_certs = [
+    "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
+    "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
+  ]
   worker = {
     instance_type        = "m4.large"
     count                = 1
