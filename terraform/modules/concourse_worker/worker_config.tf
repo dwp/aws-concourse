@@ -50,6 +50,7 @@ locals {
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy
       no_proxy                = var.proxy.no_proxy
+      enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
     }
   )
 
@@ -102,7 +103,7 @@ write_files:
     content: ${base64encode(local.healthcheck_file)}
     owner: root:root
     path: /home/root/healthcheck.sh
-    permissions: '0700' 
+    permissions: '0700'
 EOF
   }
 

@@ -193,48 +193,48 @@ meta:
             repository: ((docker-awscli.repository))
             version: ((docker-awscli.version))
             tag: ((docker-awscli.version))
-        outputs:
-          - name: positive-proxy-test-manifest
+        inputs:
+          - name: .aws
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
         run:
           path: sh
-          dir: positive-proxy-test-manifest
           args:
             - -exc
             - |
-              cat << EOF > manifest.json
+              cat << EOF > positive-manifest.json
               {
-                  "required_endpoints": {
-                    "GitHub":  "https://github.com",
-                  }
+                "required_endpoints": 
+              {
+                  "Github": "https://github.com"
+                }
               }
               EOF
               cat positive-manifest.json
-              |
-              cat << EOF > manifest.json
+              cat << EOF > negative-manifest.json
               {
-                "required_endpoints": {
+                "required_endpoints": 
+              {
                   "MSN": "https://msn.com"
                 }
               }
               EOF
               cat negative-manifest.json
-              |
               echo "Test that whitelisted URLs are accessible through proxy"
               aws lambda invoke --function-name packer_egress_test \
                 --invocation-type RequestResponse \
-                --payload file://positive-proxy-test-manifest/positive-manifest.json \
+                --payload file://positive-manifest.json \
                 --cli-connect-timeout 600 \
                 --cli-read-timeout 600 \
               output.json
-
               cat output.json | jq -eC 'if .errorMessage? then error(.errorMessage) else true end'
-              |
               echo "Test that URLs not in the whitelist aren't accessible through proxy"
               aws lambda invoke --function-name packer_egress_test \
                 --invocation-type RequestResponse \
-                --payload file://negative-proxy-test-manifest/negative-manifest.json \
+                --payload file://negative-manifest.json \
                 --cli-connect-timeout 600 \
                 --cli-read-timeout 600 \
               output.json
-
               cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
