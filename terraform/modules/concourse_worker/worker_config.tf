@@ -15,6 +15,7 @@ locals {
       CONCOURSE_TSA_HOST               = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
       CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
       CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
+      CONCOURSE_CERTS_DIR              = "/etc/ssl/certs"
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy
