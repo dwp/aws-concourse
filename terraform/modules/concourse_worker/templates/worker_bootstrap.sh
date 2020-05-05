@@ -14,6 +14,13 @@ mkdir /etc/concourse
 aws ssm get-parameter --with-decryption --name ${tsa_host_pub_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/tsa_host_key.pub
 aws ssm get-parameter --with-decryption --name ${worker_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/worker_key
 
+for cert in ${enterprise_github_certs}
+do
+    aws s3 cp $cert /etc/pki/ca-trust/source/anchors
+done
+
+update-ca-trust
+
 touch /var/spool/cron/root
 echo "*/3 * * * * /home/root/healthcheck.sh" >> /var/spool/cron/root
 
