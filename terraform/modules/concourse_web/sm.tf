@@ -1,5 +1,5 @@
 data "aws_secretsmanager_secret" "concourse-github-auth" {
-  name = "/concourse/dataworks/dataworks-secret"
+  name = "/concourse/dataworks/dataworks-secrets"
 }
 
 data "aws_secretsmanager_secret_version" "concourse-github-auth" {
