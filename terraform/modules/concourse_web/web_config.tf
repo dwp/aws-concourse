@@ -42,7 +42,7 @@ locals {
 
       # UC GitHub Auth
       CONCOURSE_GITHUB_CLIENT_ID     = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["enterprise_github_oauth_client_id"]
-      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["enterprise_github_oath_client_secret"]
+      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["enterprise_github_oauth_client_secret"]
 
       CONCOURSE_METRICS_HOST_NAME     = "${local.name}"
       CONCOURSE_CAPTURE_ERROR_METRICS = true
