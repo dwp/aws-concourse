@@ -50,7 +50,7 @@ locals {
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy
       no_proxy                = var.proxy.no_proxy
-      enterprise_github_certs = var.enterprise_github_certs
+      enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
     }
   )
 

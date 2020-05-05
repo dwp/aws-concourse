@@ -74,7 +74,7 @@ module "concourse_web" {
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = local.no_proxy
   }
-  enterprise_github_certs = ["local.enterprise_github_certs"]
+  enterprise_github_certs = local.enterprise_github_certs
 }
 
 module "concourse_web_log_group" {
@@ -130,7 +130,7 @@ module "concourse_worker" {
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     no_proxy    = local.no_proxy
   }
-  enterprise_github_certs = ["local.enterprise_github_certs"]
+  enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
     instance_type        = "m4.large"

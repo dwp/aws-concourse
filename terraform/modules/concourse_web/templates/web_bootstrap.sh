@@ -15,9 +15,11 @@ aws ssm get-parameter --with-decryption --name ${session_signing_key_ssm_id} | j
 aws ssm get-parameter --with-decryption --name ${tsa_host_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/host_key
 aws ssm get-parameter --with-decryption --name ${authorized_worker_keys_ssm_id} | jq -r .Parameter.Value > /etc/concourse/authorized_worker_keys
 
-%{ for cert in ${enterprise_github_certs} }
-aws s3 cp ${cert} /etc/pki/ca-trust/source/anchors
-%{ endfor }
+for cert in ${enterprise_github_certs}
+do
+    aws s3 cp $cert /etc/pki/ca-trust/source/anchors
+done
+
 update-ca-trust
 
 if [[ "$(rpm -qf /sbin/init)" == upstart* ]];
