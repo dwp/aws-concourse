@@ -133,7 +133,7 @@ module "concourse_worker" {
   enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
-    instance_type        = "m4.large"
+    instance_type        = "c4.2xlarge"
     count                = 1
     environment_override = {}
   }
