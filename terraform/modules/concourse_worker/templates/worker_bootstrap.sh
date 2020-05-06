@@ -20,6 +20,8 @@ do
 done
 
 update-ca-trust
+# some check-resource containers seem to want to only check ca-certificates.crt
+cp /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
 
 touch /var/spool/cron/root
 echo "*/3 * * * * /home/root/healthcheck.sh" >> /var/spool/cron/root
