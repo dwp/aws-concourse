@@ -12,18 +12,10 @@ $HOME/bin/fly --target ${target} login \
 
 team_check=`$HOME/bin/fly -t aws-concourse teams | grep -v name | grep -v main`
 
-if [ -z "$team_check" ]; then
-    for team in $(ls $HOME/teams); do
-        echo "--- Creating $team ---"
-        /root/bin/fly -t ${target} set-team \
-        --non-interactive \
-        --team-name=$team \
-        --config=/root/teams/$team/team.yml
-    done
-else
-    echo "--- Updating $team ---"
+for team in $(ls $HOME/teams); do
+    echo "--- $team ---"
     /root/bin/fly -t ${target} set-team \
     --non-interactive \
     --team-name=$team \
     --config=/root/teams/$team/team.yml
-fi
+done
