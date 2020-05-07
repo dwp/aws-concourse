@@ -119,3 +119,13 @@ resource "aws_security_group_rule" "web_lb_in_metrics" {
   # CHANGE BELOW TO PROMETHEUS LOCATION/SUBNET
   cidr_blocks = var.vpc.aws_subnets_private.*.cidr_block
 }
+
+resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
+  description       = "web outbound enterprise github connectivity for auth"
+  from_port         = 443
+  protocol          = "all"
+  security_group_id = aws_security_group.web.id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = [var.github_cidr_block]
+}
