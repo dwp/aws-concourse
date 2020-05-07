@@ -259,9 +259,9 @@ meta:
           args:
             - -exc
             - |
-              INSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId'`
+              INSTANCE_IDS=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId'`
 
-              for GETINSTANCE_ID in INSTANCE_ID
+              for INSTANCE_ID in INSTANCE_IDS
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
@@ -286,9 +286,9 @@ meta:
           args:
             - -exc
             - |
-              INSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId'`
+              INSTANCE_IDS=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId'`
 
-              for GETINSTANCE_ID in INSTANCE_ID
+              for INSTANCE_ID in INSTANCE_IDS
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
