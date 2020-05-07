@@ -1,15 +1,17 @@
 spruce:
-- base: ci/meta.yml
-  prune:
-  - meta
-  merge:
-  - with_in: ci/
-    regexp: ".*yml"
-  - with_in: ci/jobs/
-    except:
-    - management-dev.yml.j2
-    - management.yml.j2
-  to: aviator_pipeline.yml
+  - base: ci/meta.yml
+    prune:
+      - meta
+    merge:
+      - with_in: ci/
+        regexp: ".*yml"
+      - with_in: ci/jobs/
+        except:
+          - management-dev.yml.j2
+          - management.yml.j2
+          - reboot-web-management.yml.j2
+          - reboot-worker-management.yml.j2
+    to: aviator_pipeline.yml
 fly:
   name: aws-concourse
   target: concourse

@@ -8,6 +8,3 @@ jobs:
       params:
         AWS_ACC: "{{accounts['management']}}"
   - .: (( inject meta.plan.reboot-worker-nodes ))
-    config:
-      params:
-        AWS_ACC: "{{accounts['management']}}"
