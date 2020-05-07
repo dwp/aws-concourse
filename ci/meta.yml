@@ -252,14 +252,16 @@ meta:
           - name: .aws
         params:
           AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
         run:
           path: sh
           args:
             - -exc
             - |
-              GETINSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId'`
+              INSTANCE_IDS=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId'`
 
-              for INSTANCE_ID in GETINSTANCE_ID
+              for INSTANCE_ID in INSTANCE_IDS
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
@@ -277,14 +279,16 @@ meta:
           - name: .aws
         params:
           AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
         run:
           path: sh
           args:
             - -exc
             - |
-              GETINSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId'`
+              INSTANCE_IDS=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId'`
 
-              for INSTANCE_ID in GETINSTANCE_ID
+              for INSTANCE_ID in INSTANCE_IDS
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done

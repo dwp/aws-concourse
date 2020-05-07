@@ -3,7 +3,8 @@ jobs:
   plan:
   - get: aws-concourse
     trigger: false
-  - .: (( inject meta.plan.reboot-web-nodes ))
+  - .: (( inject meta.plan.create-aws-profiles ))
     config:
       params:
         AWS_ACC: "{{accounts['management']}}"
+  - .: (( inject meta.plan.reboot-web-nodes ))
