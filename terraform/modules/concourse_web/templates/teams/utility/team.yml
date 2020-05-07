@@ -2,6 +2,5 @@ roles:
   - name: viewer
     oidc:
       groups: ["dataworks"]
-  - name: viewer
     github:
       teams: ["dip:devops"]
