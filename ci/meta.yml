@@ -238,3 +238,57 @@ meta:
                 --cli-read-timeout 600 \
               output.json
               cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
+    reboot-worker-nodes:
+      task: reboot-worker-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: .aws
+        params:
+          AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
+          AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
+          AWS_PROFILE: ci
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              GETINSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId'`
+
+              for INSTANCE_ID in GETINSTANCE_ID
+              do
+                aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
+              done
+    reboot-web-nodes:
+      task: reboot-web-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: .aws
+        params:
+          AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
+          AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
+          AWS_PROFILE: ci
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              GETINSTANCE_ID=`aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId'`
+
+              for INSTANCE_ID in GETINSTANCE_ID
+              do
+                aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
+              done
