@@ -1,8 +1,14 @@
 groups:
-- name: master
-  jobs:
-  - management
-  - management-dev
-- name: pull-request
-  jobs:
-  - aws-concourse-pr
+  - name: master
+    jobs:
+      - management
+      - management-dev
+  - name: pull-request
+    jobs:
+      - aws-concourse-pr
+  - name: reboot-worker-nodes
+    jobs:
+      - reboot-management-worker-nodes
+  - name: reboot-web-nodes
+    jobs:
+      - reboot-management-web-nodes
