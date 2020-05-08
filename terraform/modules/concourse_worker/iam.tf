@@ -119,6 +119,11 @@ resource "aws_iam_role_policy_attachment" "worker_r53_full_access" {
   role       = aws_iam_role.worker.id
 }
 
+resource "aws_iam_role_policy_attachment" "worker_secretsmanager_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+  role       = aws_iam_role.worker.id
+}
+
 resource "aws_iam_role_policy_attachment" "worker_ci_custom" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CICustom"
   role       = aws_iam_role.worker.id
