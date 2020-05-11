@@ -79,52 +79,22 @@ resource "aws_iam_role_policy_attachment" "concourse_autoscaling_worker" {
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "worker_ec2_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "worker_guard_duty_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonGuardDutyFullAccess"
+resource "aws_iam_role_policy_attachment" "TerraformDependenciesWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/TerraformDependencies"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "worker_cloudfront_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
+resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraformWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
   role       = aws_iam_role.worker.id
 }
 
-resource "aws_iam_role_policy_attachment" "worker_acmpca_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerPrivateCAFullAccess"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_securityhub_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AWSSecurityHubFullAccess"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_apigateway_administrator" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_vpc_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_r53_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_ci_custom" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CICustom"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "worker_deny_cloud_trail_logs" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/DenyCloudTrailLogs"
+resource "aws_iam_role_policy_attachment" "RemoteStateWriteWorker" {
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/RemoteStateWrite"
   role       = aws_iam_role.worker.id
 }
