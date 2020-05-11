@@ -69,7 +69,7 @@ resource "aws_launch_template" "worker" {
   }
 
   iam_instance_profile {
-    arn = aws_iam_instance_profile.worker.arn
+    arn = aws_iam_instance_profile.concourse_worker.arn
   }
 
   tag_specifications {

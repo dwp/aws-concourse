@@ -92,3 +92,8 @@ variable "enterprise_github_certs" {
   description = "A list of certificates that make up the full CA chain that sign the Enterprise GitHub TlS certificates"
   default     = []
 }
+
+variable "concourse_worker_role" {
+  type        = string
+  description = "Role name for the worker's instance profile"
+}

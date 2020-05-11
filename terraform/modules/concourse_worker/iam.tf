@@ -1,35 +1,20 @@
-resource "aws_iam_role" "worker" {
-  name               = local.name
-  assume_role_policy = data.aws_iam_policy_document.worker.json
-  tags               = var.tags
+data "aws_iam_role" "worker" {
+  name = var.concourse_worker_role
 }
 
-resource "aws_iam_instance_profile" "worker" {
-  name = aws_iam_role.worker.name
-  role = aws_iam_role.worker.id
+resource "aws_iam_instance_profile" "concourse_worker" {
+  name = data.aws_iam_role.worker.name
+  role = data.aws_iam_role.worker.name
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-  role       = aws_iam_role.worker.id
+  role       = data.aws_iam_role.worker.id
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-  role       = aws_iam_role.worker.id
-}
-
-data "aws_iam_policy_document" "worker" {
-  statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
+  role       = data.aws_iam_role.worker.id
 }
 
 data "aws_iam_policy_document" "concourse_parameters_worker" {
@@ -44,17 +29,16 @@ data "aws_iam_policy_document" "concourse_parameters_worker" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "concourse_parameters_worker" {
-  policy_arn = aws_iam_policy.concourse_parameters_worker.arn
-  role       = aws_iam_role.worker.id
-}
-
 resource "aws_iam_policy" "concourse_parameters_worker" {
   name        = "${local.name}ParameterStoreAccess"
   description = "Access to SSM for Web Nodes"
   policy      = data.aws_iam_policy_document.concourse_parameters_worker.json
 }
 
+resource "aws_iam_role_policy_attachment" "concourse_parameters_worker" {
+  policy_arn = aws_iam_policy.concourse_parameters_worker.arn
+  role       = data.aws_iam_role.worker.id
+}
 
 data "aws_iam_policy_document" "concourse_autoscaling_worker" {
   statement {
@@ -76,25 +60,5 @@ resource "aws_iam_policy" "concourse_autoscaling_worker" {
 
 resource "aws_iam_role_policy_attachment" "concourse_autoscaling_worker" {
   policy_arn = aws_iam_policy.concourse_autoscaling_worker.arn
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWorker" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "TerraformDependenciesWorker" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/TerraformDependencies"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "AllowCiToRunTerraformWorker" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/AllowCiToRunTerraform"
-  role       = aws_iam_role.worker.id
-}
-
-resource "aws_iam_role_policy_attachment" "RemoteStateWriteWorker" {
-  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/RemoteStateWrite"
-  role       = aws_iam_role.worker.id
+  role       = data.aws_iam_role.worker.id
 }
