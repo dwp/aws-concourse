@@ -125,6 +125,7 @@ module "concourse_worker" {
   github_cidr_block     = var.github_vpc.cidr_block
   s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
   concourse_web         = module.concourse_web.outputs
+  concourse_worker_role = "concourse-worker"
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
