@@ -20,5 +20,6 @@ module "vpc" {
   secretsmanager_endpoint                    = true
   ecrapi_endpoint                            = true
   ecrdkr_endpoint                            = true
+  ecs_endpoint                               = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
