@@ -35,7 +35,7 @@ data "aws_secretsmanager_secret_version" "dataworks" {
 
 locals {
   amazon_region_domain  = "${data.aws_region.current.name}.amazonaws.com"
-  endpoint_services     = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs"]
+  endpoint_services     = ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2", "kms", "logs", "api.ecr", "dkr.ecr"]
   enterprise_github_url = jsondecode(data.aws_secretsmanager_secret_version.dataworks.secret_binary)["enterprise_github_url"]
 }
 
