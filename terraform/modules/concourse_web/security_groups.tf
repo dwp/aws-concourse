@@ -82,7 +82,7 @@ resource "aws_security_group_rule" "db_web_in" {
 resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
   description       = "web inbound https connectivity"
   from_port         = 443
-  protocol          = "all"
+  protocol          = "tcp"
   security_group_id = aws_security_group.web.id
   to_port           = 443
   type              = "ingress"
@@ -123,7 +123,7 @@ resource "aws_security_group_rule" "web_lb_in_metrics" {
 resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   description       = "web outbound enterprise github connectivity for auth"
   from_port         = 443
-  protocol          = "all"
+  protocol          = "tcp"
   security_group_id = aws_security_group.web.id
   to_port           = 443
   type              = "egress"
