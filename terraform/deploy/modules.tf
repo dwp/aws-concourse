@@ -135,7 +135,7 @@ module "concourse_worker" {
 
   worker = {
     instance_type        = "c4.2xlarge"
-    count                = 1
+    count                = 3
     environment_override = {}
   }
 }
