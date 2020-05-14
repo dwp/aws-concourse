@@ -18,5 +18,7 @@ module "vpc" {
   ssm_endpoint                               = true
   ssmmessages_endpoint                       = true
   secretsmanager_endpoint                    = true
+  ecrapi_endpoint                            = true
+  ecrdkr_endpoint                            = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
