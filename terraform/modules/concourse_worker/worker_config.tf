@@ -16,6 +16,8 @@ locals {
       CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
       CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
       CONCOURSE_CERTS_DIR              = "/etc/ssl/certs"
+      CONCOURSE_GARDEN_NETWORK_POOL    = "172.16.0.0/21"
+      CONCOURSE_GARDEN_MAX_CONTAINERS  = "350"
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy
