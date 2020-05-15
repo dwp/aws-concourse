@@ -59,7 +59,7 @@ resource "aws_launch_template" "worker" {
       encrypted             = true
       volume_type           = "io1"
       iops                  = 2000
-      volume_size           = 40
+      volume_size           = 100
     }
   }
 
