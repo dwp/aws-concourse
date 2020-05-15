@@ -41,11 +41,11 @@ variable "asg_night" {
     desired_capacity = number
     time             = string
   })
-
+  # TODO: 3's are not the correct night time value
   default = {
-    min_size         = 1
-    max_size         = 1
-    desired_capacity = 1
+    min_size         = 3
+    max_size         = 3
+    desired_capacity = 3
     time             = "0 19 * * 1-5"
   }
 }
@@ -61,9 +61,9 @@ variable "asg_day" {
   })
 
   default = {
-    min_size         = 1
+    min_size         = 3
     max_size         = 3
-    desired_capacity = 1
+    desired_capacity = 3
     time             = "0 7 * * 1-5"
   }
 }
