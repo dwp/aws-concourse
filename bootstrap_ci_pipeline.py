@@ -46,6 +46,10 @@ def main():
         template = jinja2.Template(in_template.read())
     with open('ci/jobs/reboot-worker-management.yml', 'w+') as pipeline:
         pipeline.write(template.render(config_data))
+    with open('ci/jobs/reboot-worker-management-dev.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/reboot-worker-management-dev.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
     print("Concourse pipeline config successfully created")
 
 
