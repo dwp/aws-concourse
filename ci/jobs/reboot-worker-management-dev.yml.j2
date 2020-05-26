@@ -8,4 +8,11 @@ jobs:
       params:
         AWS_ACC: "{{accounts['management-dev']}}"
   - .: (( inject meta.plan.fetch-credentials ))
-  - .: (( inject meta.plan.reboot-worker-nodes-dev ))
+    config:
+      params:
+        USERNAME_KEY: "/ci/2f0968b1-63a9-a026-102c-36550c89e0ca-user"
+        PASSWORD_KEY: "/ci/2f0968b1-63a9-a026-102c-36550c89e0ca-password"
+  - .: (( inject meta.plan.reboot-worker-nodes ))
+    config:
+      params:
+        CONCOURSE_URI: "https://ci.wip.dataworks.dwp.gov.uk/"
