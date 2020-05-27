@@ -289,8 +289,8 @@ meta:
             - -exc
             - |
               mkdir -p credentials
-              aws ssm get-parameter --name $USERNAME_KEY --with-decryption > credentials/username
-              aws ssm get-parameter --name $PASSWORD_KEY --with-decryption > credentials/password
+              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks-secrets)
+              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
 
     reboot-worker-nodes:
       task: reboot-worker-nodes
@@ -312,8 +312,8 @@ meta:
               curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.1.0/fly-6.1.0-linux-amd64.tgz"
               tar -xvf fly.tgz
               chmod +x fly
-              USERNAME=$(cat credentials/username | jq -r '.Parameter.Value')
-              PASSWORD=$(cat credentials/password | jq -r '.Parameter.Value')
+              USERNAME=$(cat credentials/dataworks-secrets.json | jq -r .concourse_user)
+              PASSWORD=$(cat credentials/dataworks-secrets.json | jq -r .concourse_password)
               ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $USERNAME -p $PASSWORD
               ./fly --target concourse workers
               for worker in $(./fly --target concourse workers  --json | jq -r .[].name);

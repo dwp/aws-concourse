@@ -8,10 +8,6 @@ jobs:
       params:
         AWS_ACC: "{{accounts['management']}}"
   - .: (( inject meta.plan.fetch-credentials ))
-    config:
-      params:
-        USERNAME_KEY: "/ci/0df691ef-5c06-e638-ae85-d14bb1e0703f-user"
-        PASSWORD_KEY: "/ci/0df691ef-5c06-e638-ae85-d14bb1e0703f-password"
   - .: (( inject meta.plan.reboot-worker-nodes ))
     config:
       params:
