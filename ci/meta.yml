@@ -206,7 +206,7 @@ meta:
             - |
               cat << EOF > positive-manifest.json
               {
-                "required_endpoints": 
+                "required_endpoints":
               {
                   "Github": "https://github.com"
                 }
@@ -215,7 +215,7 @@ meta:
               cat positive-manifest.json
               cat << EOF > negative-manifest.json
               {
-                "required_endpoints": 
+                "required_endpoints":
               {
                   "MSN": "https://msn.com"
                 }
@@ -238,31 +238,7 @@ meta:
                 --cli-read-timeout 600 \
               output.json
               cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
-    reboot-worker-nodes:
-      task: reboot-worker-nodes
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        inputs:
-          - name: .aws
-        params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-worker | jq -r '.Reservations[].Instances[].InstanceId');
-              do
-                aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
-              done
+
     reboot-web-nodes:
       task: reboot-web-nodes
       config:
@@ -287,4 +263,60 @@ meta:
               for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId');
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
+              done
+
+    fetch-credentials:
+      task: fetch-credentials
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: .aws
+        outputs:
+          - name: credentials
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              mkdir -p credentials
+              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks-secrets)
+              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
+
+    reboot-worker-nodes:
+      task: reboot-worker-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/alpine-jq-curl
+            version: 0.0.4
+            tag: 0.0.4
+        inputs:
+          - name: credentials
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.1.0/fly-6.1.0-linux-amd64.tgz"
+              tar -xvf fly.tgz
+              chmod +x fly
+              USERNAME=$(cat credentials/dataworks-secrets.json | jq -r .concourse_user)
+              PASSWORD=$(cat credentials/dataworks-secrets.json | jq -r .concourse_password)
+              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $USERNAME -p $PASSWORD
+              ./fly --target concourse workers
+              for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
+              do
+                ./fly --target concourse land-worker --worker $worker;
               done

@@ -12,3 +12,6 @@ groups:
   - name: reboot-web-nodes
     jobs:
       - reboot-management-web-nodes
+  - name: reboot-worker-nodes-dev
+    jobs:
+      - reboot-management-dev-worker-nodes

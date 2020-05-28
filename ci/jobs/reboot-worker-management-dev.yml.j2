@@ -1,14 +1,14 @@
 jobs:
-- name: reboot-management-worker-nodes
+- name: reboot-management-dev-worker-nodes
   plan:
   - get: aws-concourse
     trigger: false
   - .: (( inject meta.plan.create-aws-profiles ))
     config:
       params:
-        AWS_ACC: "{{accounts['management']}}"
+        AWS_ACC: "{{accounts['management-dev']}}"
   - .: (( inject meta.plan.fetch-credentials ))
   - .: (( inject meta.plan.reboot-worker-nodes ))
     config:
       params:
-        CONCOURSE_URI: "https://ci.dataworks.dwp.gov.uk/"
+        CONCOURSE_URI: "https://ci.wip.dataworks.dwp.gov.uk/"
