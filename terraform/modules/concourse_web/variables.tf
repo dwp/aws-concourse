@@ -11,9 +11,7 @@ variable "tags" {
 variable "ami_id" {}
 variable "concourse" {}
 variable "concourse_keys" {}
-variable "concourse_secrets" {}
 variable "database" {}
-variable "database_secrets" {}
 variable "internal_loadbalancer" {}
 variable "loadbalancer" {}
 variable "log_group" {}

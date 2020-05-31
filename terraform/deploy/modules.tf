@@ -52,9 +52,7 @@ module "concourse_web" {
   ami_id                = module.amis.ami_id
   concourse             = var.concourse
   concourse_keys        = module.concourse_keys.outputs
-  concourse_secrets     = module.concourse_secrets.outputs
   database              = module.database.outputs
-  database_secrets      = module.database_secrets.outputs
   internal_loadbalancer = module.concourse_internal_lb.outputs
   loadbalancer          = module.concourse_lb.outputs
   log_group             = module.concourse_web_log_group.outputs
@@ -148,24 +146,13 @@ module "concourse_worker_log_group" {
   retention_in_days = 30
 }
 
-module "concourse_secrets" {
-  source           = "../modules/user_password"
-  credentials_type = "concourse"
-}
-
 module "database" {
   source = "../modules/database"
 
   name = var.name
   tags = local.tags
 
-  secrets = module.database_secrets.outputs
   vpc     = module.vpc.outputs
-}
-
-module "database_secrets" {
-  source           = "../modules/user_password"
-  credentials_type = "database"
 }
 
 module "vpc" {
