@@ -152,7 +152,7 @@ module "database" {
   name = var.name
   tags = local.tags
 
-  vpc     = module.vpc.outputs
+  vpc = module.vpc.outputs
 }
 
 module "vpc" {
