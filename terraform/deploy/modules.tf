@@ -149,7 +149,7 @@ module "concourse_worker_log_group" {
 }
 
 module "concourse_secrets" {
-  source = "../modules/user_password"
+  source           = "../modules/user_password"
   credentials_type = "concourse"
 }
 
