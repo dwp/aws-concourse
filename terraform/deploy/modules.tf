@@ -8,8 +8,6 @@ module "amis" {
 
 module "concourse_keys" {
   source = "../modules/concourse_keys"
-
-  ssm_name_prefix = var.name
 }
 
 module "concourse_lb" {
@@ -152,8 +150,7 @@ module "concourse_worker_log_group" {
 
 module "concourse_secrets" {
   source = "../modules/user_password"
-
-  ssm_name_prefix = var.name
+  credentials_type = "concourse"
 }
 
 module "database" {
@@ -168,8 +165,7 @@ module "database" {
 
 module "database_secrets" {
   source = "../modules/user_password"
-
-  ssm_name_prefix = var.name
+  credentials_type = "database"
 }
 
 module "vpc" {

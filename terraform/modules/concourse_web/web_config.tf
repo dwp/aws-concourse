@@ -12,13 +12,13 @@ locals {
       CONCOURSE_CLUSTER_NAME = var.name
       CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
 
-      CONCOURSE_ADD_LOCAL_USER       = "${data.aws_ssm_parameter.concourse_user.value}:${data.aws_ssm_parameter.concourse_password.value}"
-      CONCOURSE_MAIN_TEAM_LOCAL_USER = data.aws_ssm_parameter.concourse_user.value
+      CONCOURSE_ADD_LOCAL_USER       = "${var.concourse_secrets.username}:${var.concourse_secrets.password}"
+      CONCOURSE_MAIN_TEAM_LOCAL_USER = var.concourse_secrets.username
 
       CONCOURSE_POSTGRES_DATABASE = var.database.database_name
       CONCOURSE_POSTGRES_HOST     = var.database.endpoint
-      CONCOURSE_POSTGRES_PASSWORD = data.aws_ssm_parameter.database_password.value
-      CONCOURSE_POSTGRES_USER     = data.aws_ssm_parameter.database_user.value
+      CONCOURSE_POSTGRES_PASSWORD = var.database_secrets.password
+      CONCOURSE_POSTGRES_USER     = var.database_secrets.username
 
       CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
       CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
@@ -111,8 +111,8 @@ locals {
     {
       target             = "aws-concourse"
       concourse_version  = var.concourse.version
-      concourse_username = data.aws_ssm_parameter.concourse_user.value
-      concourse_password = data.aws_ssm_parameter.concourse_password.value
+      concourse_username = var.concourse_secrets.username
+      concourse_password = var.concourse_secrets.password
     }
   )
 

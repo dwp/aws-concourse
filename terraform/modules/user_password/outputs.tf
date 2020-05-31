@@ -1,6 +1,6 @@
 output "outputs" {
   value = {
-    user_ssm_name     = aws_ssm_parameter.user.name
-    password_ssm_name = aws_ssm_parameter.password.name
+    username = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)[join("_", [var.credentials_type, "user"])]
+    password = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)[join("_", [var.credentials_type, "password"])]
   }
 }
