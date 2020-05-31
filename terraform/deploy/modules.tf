@@ -164,7 +164,7 @@ module "database" {
 }
 
 module "database_secrets" {
-  source = "../modules/user_password"
+  source           = "../modules/user_password"
   credentials_type = "database"
 }
 
