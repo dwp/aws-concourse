@@ -8,8 +8,8 @@ resource "aws_rds_cluster" "cluster" {
   engine_version            = var.database.engine_version
   availability_zones        = local.zone_names
   database_name             = var.name
-  master_username           = var.secrets.username
-  master_password           = var.secrets.password
+  master_username           = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_user"]
+  master_password           = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_password"]
   backup_retention_period   = 14
   preferred_backup_window   = "01:00-03:00"
   apply_immediately         = true
