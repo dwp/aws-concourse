@@ -12,7 +12,7 @@ rm $concourse_tarball
 mkdir /etc/concourse
 
 aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .session_signing_key > /etc/concourse/session_signing_key
-aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .host_key > /etc/concourse/host_key
+aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .tsa_host_key > /etc/concourse/host_key
 aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .authorized_worker_keys > /etc/concourse/authorized_worker_keys
 
 for cert in ${enterprise_github_certs}
