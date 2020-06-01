@@ -94,15 +94,12 @@ locals {
   web_bootstrap_file = templatefile(
     "${path.module}/templates/web_bootstrap.sh",
     {
-      authorized_worker_keys_ssm_id = var.concourse_keys.authorized_worker_keys
-      aws_default_region            = data.aws_region.current.name
-      concourse_version             = var.concourse.version
-      session_signing_key_ssm_id    = var.concourse_keys.session_signing_key
-      tsa_host_key_ssm_id           = var.concourse_keys.tsa_host_key
-      http_proxy                    = var.proxy.http_proxy
-      https_proxy                   = var.proxy.https_proxy
-      no_proxy                      = var.proxy.no_proxy
-      enterprise_github_certs       = "${join(" ", var.enterprise_github_certs)}"
+      aws_default_region      = data.aws_region.current.name
+      concourse_version       = var.concourse.version
+      http_proxy              = var.proxy.http_proxy
+      https_proxy             = var.proxy.https_proxy
+      no_proxy                = var.proxy.no_proxy
+      enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
     }
   )
 
