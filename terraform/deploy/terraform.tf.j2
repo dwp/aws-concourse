@@ -1,5 +1,9 @@
 terraform {
   required_version = "{{terraform_12_version}}"
+  required_providers {
+    random = "~> 2.0"
+    tls    = "~> 2.0"
+  }
 
   backend "s3" {
     bucket         = "{{state_file_bucket}}"
@@ -119,5 +123,5 @@ locals {
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
   ]
-  
+
 }
