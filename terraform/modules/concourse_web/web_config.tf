@@ -12,13 +12,13 @@ locals {
       CONCOURSE_CLUSTER_NAME = var.name
       CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
 
-      CONCOURSE_ADD_LOCAL_USER       = "${data.aws_ssm_parameter.concourse_user.value}:${data.aws_ssm_parameter.concourse_password.value}"
-      CONCOURSE_MAIN_TEAM_LOCAL_USER = data.aws_ssm_parameter.concourse_user.value
+      CONCOURSE_ADD_LOCAL_USER       = "${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]}:${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_password"]}"
+      CONCOURSE_MAIN_TEAM_LOCAL_USER = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
 
       CONCOURSE_POSTGRES_DATABASE = var.database.database_name
       CONCOURSE_POSTGRES_HOST     = var.database.endpoint
-      CONCOURSE_POSTGRES_PASSWORD = data.aws_ssm_parameter.database_password.value
-      CONCOURSE_POSTGRES_USER     = data.aws_ssm_parameter.database_user.value
+      CONCOURSE_POSTGRES_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_password"]
+      CONCOURSE_POSTGRES_USER     = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_user"]
 
       CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
       CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
@@ -41,8 +41,8 @@ locals {
       CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
 
       # UC GitHub Auth
-      CONCOURSE_GITHUB_CLIENT_ID     = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["enterprise_github_oauth_client_id"]
-      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.concourse-github-auth.secret_binary)["enterprise_github_oauth_client_secret"]
+      CONCOURSE_GITHUB_CLIENT_ID     = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["enterprise_github_oauth_client_id"]
+      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["enterprise_github_oauth_client_secret"]
       CONCOURSE_GITHUB_HOST          = jsondecode(data.aws_secretsmanager_secret_version.concourse-secrets.secret_binary)["enterprise_github_url"]
 
       CONCOURSE_METRICS_HOST_NAME     = "${local.name}"
@@ -111,8 +111,8 @@ locals {
     {
       target             = "aws-concourse"
       concourse_version  = var.concourse.version
-      concourse_username = data.aws_ssm_parameter.concourse_user.value
-      concourse_password = data.aws_ssm_parameter.concourse_password.value
+      concourse_username = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
+      concourse_password = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_password"]
     }
   )
 

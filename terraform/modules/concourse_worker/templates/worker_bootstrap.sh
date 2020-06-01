@@ -11,8 +11,8 @@ rm $concourse_tarball
 
 mkdir /etc/concourse
 
-aws ssm get-parameter --with-decryption --name ${tsa_host_pub_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/tsa_host_key.pub
-aws ssm get-parameter --with-decryption --name ${worker_key_ssm_id} | jq -r .Parameter.Value > /etc/concourse/worker_key
+aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -D | jq -r .tsa_host_key > /etc/concourse/tsa_host_key.pub
+aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -D | jq -r .worker_key > /etc/concourse/worker_key
 
 for cert in ${enterprise_github_certs}
 do

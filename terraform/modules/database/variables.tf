@@ -8,7 +8,6 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "secrets" {}
 variable "vpc" {}
 
 variable "database" {
