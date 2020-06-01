@@ -83,7 +83,7 @@ resource "aws_iam_policy" "concourse_secrets_read" {
   policy      = data.aws_iam_policy_document.concourse_secrets_read.json
 }
 
-resource "aws_iam_role_policy_attachment" "concourse_web_secrets" {
+resource "aws_iam_role_policy_attachment" "concourse_worker_secrets" {
   policy_arn = aws_iam_policy.concourse_secrets_read.arn
   role       = data.aws_iam_role.worker.id
 }
