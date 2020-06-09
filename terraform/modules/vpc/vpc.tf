@@ -21,5 +21,6 @@ module "vpc" {
   ecrapi_endpoint                            = true
   ecrdkr_endpoint                            = true
   ecs_endpoint                               = true
+  elasticloadbalancing_endpoint              = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
