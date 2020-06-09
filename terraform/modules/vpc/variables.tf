@@ -27,6 +27,10 @@ variable "subnets" {
   }
 }
 
+variable "prometheus_cidr_block" {
+  type = string
+}
+
 variable "whitelist_cidr_blocks" {
   description = "list of allowed cidr blocks"
   type        = list(string)

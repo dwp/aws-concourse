@@ -24,3 +24,10 @@ resource "aws_route" "concourse_ui_to_client" {
   destination_cidr_block = local.route_table_cidr_combinations[count.index].cidr
   nat_gateway_id         = aws_nat_gateway.nat[count.index % local.zone_count].id
 }
+
+resource "aws_route" "concourse_ui_to_prometheus" {
+  count                     = local.zone_count
+  route_table_id            = aws_route_table.private[count.index].id
+  destination_cidr_block    = var.prometheus_cidr_block
+  vpc_peering_connection_id = data.aws_vpc_peering_connection.prometheus_pcx.id
+}

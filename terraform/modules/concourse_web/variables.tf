@@ -92,6 +92,10 @@ variable "github_cidr_block" {
   default = ""
 }
 
+variable "prometheus_cidr_block" {
+  type = string
+}
+
 variable "s3_prefix_list_id" {
   type    = string
   default = ""

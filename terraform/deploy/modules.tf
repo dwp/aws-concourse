@@ -65,6 +65,7 @@ module "concourse_web" {
   cognito_domain        = module.cognito.outputs.user_pool_domain
   cognito_issuer        = module.cognito.outputs.issuer
   cognito_name          = module.cognito.outputs.name
+  prometheus_cidr_block = local.cidr_block[local.environment].mon-master-vpc
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
@@ -165,6 +166,7 @@ module "vpc" {
   internet_proxy_fqdn         = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
+  prometheus_cidr_block       = local.cidr_block[local.environment].mon-master-vpc
 }
 
 module "concourse_waf_log_group" {
