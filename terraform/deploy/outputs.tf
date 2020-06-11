@@ -9,3 +9,7 @@ output "cognito" {
 output "route_tables" {
   value = module.vpc.outputs.route_tables_private
 }
+
+output "concourse_web_sg" {
+  value = module.concourse_web.outputs.security_group.id
+}
