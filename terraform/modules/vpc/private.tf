@@ -29,5 +29,5 @@ resource "aws_route" "concourse_ui_to_prometheus" {
   count                     = local.zone_count
   route_table_id            = aws_route_table.private[count.index].id
   destination_cidr_block    = var.prometheus_cidr_block
-  vpc_peering_connection_id = data.aws_vpc_peering_connection.prometheus_pcx.id
+  vpc_peering_connection_id = var.prometheus_pcx
 }

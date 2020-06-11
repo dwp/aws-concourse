@@ -27,6 +27,10 @@ variable "subnets" {
   }
 }
 
+variable "prometheus_pcx" {
+  type = string
+}
+
 variable "prometheus_cidr_block" {
   type = string
 }
