@@ -5,3 +5,7 @@ output "loadbalancer" {
 output "cognito" {
   value = module.cognito.outputs
 }
+
+output "route_table" {
+  value = module.vpc.outputs.route_tables_private
+}
