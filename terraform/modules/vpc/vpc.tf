@@ -1,6 +1,6 @@
 module "vpc" {
   source                                     = "dwp/vpc/aws"
-  version                                    = "2.0.7"
+  version                                    = "2.0.10"
   vpc_name                                   = "ci-cd"
   region                                     = data.aws_region.current.name
   vpc_cidr_block                             = var.vpc_cidr_block
@@ -22,5 +22,7 @@ module "vpc" {
   ecrdkr_endpoint                            = true
   ecs_endpoint                               = true
   elasticloadbalancing_endpoint              = true
+  events_endpoint                            = true
+  application_autoscaling_endpoint           = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
