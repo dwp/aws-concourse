@@ -36,7 +36,7 @@ locals {
   endpoint_services = join(",", concat(
     ["secretsmanager", "ec2messages", "s3", "monitoring", "ssm", "ssmmessages", "ec2"],
     ["kms", "logs", "api.ecr", "dkr.ecr", "ecs", "elasticloadbalancing", "events"],
-    ["application-autoscaling", "kinesis-firehose"]
+    ["application-autoscaling", "kinesis-firehose", "elasticmapreduce", "glue"]
   ))
   enterprise_github_url = jsondecode(data.aws_secretsmanager_secret_version.dataworks.secret_binary)["enterprise_github_url"]
 }
