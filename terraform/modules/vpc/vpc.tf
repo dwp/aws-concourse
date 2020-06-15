@@ -25,5 +25,7 @@ module "vpc" {
   events_endpoint                            = true
   application_autoscaling_endpoint           = true
   kinesis_firehose_endpoint                  = true
+  glue_endpoint                              = true
+  emr_endpoint                               = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
