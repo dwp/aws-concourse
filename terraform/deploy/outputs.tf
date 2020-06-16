@@ -17,3 +17,7 @@ output "concourse_web_sg" {
 output "endpoint_services" {
   value = local.endpoint_services
 }
+
+output "vpc_id" {
+  value = module.vpc.outputs.aws_vpc.id
+}
