@@ -51,7 +51,7 @@ resource "aws_security_group_rule" "worker_outbound_s3_http" {
 
 resource "aws_security_group_rule" "web_outbound_dynamodb_https" {
   security_group_id = aws_security_group.worker.id
-  description       = "s3 outbound https connectivity"
+  description       = "dynamodb outbound https connectivity"
   type              = "egress"
   prefix_list_ids   = [var.dynamodb_prefix_list_id]
   protocol          = "tcp"
@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "web_outbound_dynamodb_https" {
 
 resource "aws_security_group_rule" "web_outbound_dynamodb_http" {
   security_group_id = aws_security_group.worker.id
-  description       = "s3 outbound http connectivity (for YUM updates)"
+  description       = "dynamodb outbound http connectivity (for YUM updates)"
   type              = "egress"
   prefix_list_ids   = [var.dynamodb_prefix_list_id]
   protocol          = "tcp"
