@@ -27,5 +27,6 @@ module "vpc" {
   kinesis_firehose_endpoint                  = true
   glue_endpoint                              = true
   emr_endpoint                               = true
+  dynamodb_endpoint                          = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
