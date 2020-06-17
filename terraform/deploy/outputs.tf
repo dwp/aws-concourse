@@ -18,6 +18,6 @@ output "endpoint_services" {
   value = local.endpoint_services
 }
 
-output "vpc_id" {
-  value = module.vpc.outputs.aws_vpc.id
+output "aws_vpc" {
+  value = module.vpc.outputs.aws_vpc
 }
