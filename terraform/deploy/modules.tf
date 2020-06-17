@@ -112,18 +112,19 @@ module "concourse_worker" {
     }
   )
 
-  ami_id                = module.amis.ami_id
-  concourse             = var.concourse
-  concourse_keys        = module.concourse_keys.outputs
-  internal_loadbalancer = module.concourse_internal_lb.outputs
-  loadbalancer          = module.concourse_lb.outputs
-  log_group             = module.concourse_worker_log_group.outputs
-  vpc                   = module.vpc.outputs
-  ssm_name_prefix       = var.name
-  github_cidr_block     = var.github_vpc.cidr_block
-  s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
-  concourse_web         = module.concourse_web.outputs
-  concourse_worker_role = "concourse-worker"
+  ami_id                  = module.amis.ami_id
+  concourse               = var.concourse
+  concourse_keys          = module.concourse_keys.outputs
+  internal_loadbalancer   = module.concourse_internal_lb.outputs
+  loadbalancer            = module.concourse_lb.outputs
+  log_group               = module.concourse_worker_log_group.outputs
+  vpc                     = module.vpc.outputs
+  ssm_name_prefix         = var.name
+  github_cidr_block       = var.github_vpc.cidr_block
+  s3_prefix_list_id       = module.vpc.outputs.s3_prefix_list_id
+  dynamodb_prefix_list_id = module.vpc.outputs.dynamodb_prefix_list_id
+  concourse_web           = module.concourse_web.outputs
+  concourse_worker_role   = "concourse-worker"
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"

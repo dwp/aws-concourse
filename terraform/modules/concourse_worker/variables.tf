@@ -97,3 +97,8 @@ variable "concourse_worker_role" {
   type        = string
   description = "Role name for the worker's instance profile"
 }
+
+variable "dynamodb_prefix_list_id" {
+  type    = string
+  default = ""
+}
