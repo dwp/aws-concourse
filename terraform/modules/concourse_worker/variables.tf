@@ -87,6 +87,11 @@ variable "s3_prefix_list_id" {
   default = ""
 }
 
+variable "dynamodb_prefix_list_id" {
+  type    = string
+  default = ""
+}
+
 variable "enterprise_github_certs" {
   type        = list(string)
   description = "A list of certificates that make up the full CA chain that sign the Enterprise GitHub TlS certificates"
@@ -98,7 +103,3 @@ variable "concourse_worker_role" {
   description = "Role name for the worker's instance profile"
 }
 
-variable "dynamodb_prefix_list_id" {
-  type    = string
-  default = ""
-}
