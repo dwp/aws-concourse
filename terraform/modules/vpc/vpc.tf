@@ -1,6 +1,6 @@
 module "vpc" {
   source                                     = "dwp/vpc/aws"
-  version                                    = "2.0.12"
+  version                                    = "2.0.14"
   vpc_name                                   = "ci-cd"
   region                                     = data.aws_region.current.name
   vpc_cidr_block                             = var.vpc_cidr_block
@@ -28,5 +28,6 @@ module "vpc" {
   glue_endpoint                              = true
   emr_endpoint                               = true
   dynamodb_endpoint                          = true
+  efs_endpoint                               = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
