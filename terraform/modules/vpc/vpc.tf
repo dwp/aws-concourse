@@ -28,5 +28,6 @@ module "vpc" {
   glue_endpoint                              = true
   emr_endpoint                               = true
   dynamodb_endpoint                          = true
+  efs_endpoint                               = true
   common_tags                                = merge(var.tags, { Name = var.name })
 }
