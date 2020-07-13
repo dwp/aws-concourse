@@ -1,0 +1,9 @@
+jobs:
+  - name: management-dev-user-creation
+    plan:
+      - get: aws-concourse-users
+        trigger: true
+      - .: (( inject meta.plan.create-users ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci

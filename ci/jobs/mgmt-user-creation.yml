@@ -1,0 +1,8 @@
+jobs:
+  - name: management-user-creation
+    plan:
+      - get: aws-concourse-users
+        passed:
+          - management-dev-user-creation
+        trigger: true
+      - .: (( inject meta.plan.create-users ))
