@@ -332,6 +332,9 @@ meta:
             version: ((docker-awscli.version))
             tag: ((docker-awscli.version))
         params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
         inputs:
@@ -343,7 +346,7 @@ meta:
             - |
               set +x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
-              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -D >> users.json
+              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               for COGNAME in $(cat users.json| jq -r '.Users[] | .Username');
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.Username | test($COGNAME)) | .email');
