@@ -350,7 +350,8 @@ meta:
               for COGNAME in $(cat users.json| jq -r '.Users[] | .Username');
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.Username | test($COGNAME)) | .email');
-                if [[ $(aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username') != ${COGNAME} ]]; then
+                aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
+                if [[ -z $(grep ${COGNAME} user.parse) ]]; then
                     aws cognito-idp admin-create-user \
                     --user-pool-id $COGNITO_USER_POOL \
                     --username $COGNAME
