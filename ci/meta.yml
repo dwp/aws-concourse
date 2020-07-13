@@ -335,7 +335,7 @@ meta:
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
         inputs:
-          - name: credentials
+          - name: .aws
         run:
           path: sh
           args:

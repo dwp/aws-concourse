@@ -7,5 +7,4 @@ jobs:
     config:
       params:
         AWS_ACC: "{{accounts['management-dev']}}"
-  - .: (( inject meta.plan.fetch-credentials ))
   - .: (( inject meta.plan.create-users ))
