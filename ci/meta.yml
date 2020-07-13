@@ -328,21 +328,19 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: dwpdigital/awscli
-            version: 0.0.6
-            tag: 0.0.6
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
-          AWS_DEFAULT_REGION: eu-west-2
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
+        inputs:
+          - name: credentials
         run:
           path: sh
           args:
             - -exc
             - |
-              export AWS_DEFAULT_REGION
-              source /assume-role
               set +x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -D >> users.json
