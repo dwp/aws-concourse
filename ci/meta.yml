@@ -344,16 +344,17 @@ meta:
           args:
             - -exc
             - |
-              set +x
+              set -x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               for COGNAME in $(cat users.json| jq -r '.Users[] | .Username');
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.Username | test($COGNAME)) | .email');
-                aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username'
-                aws cognito-idp admin-create-user \
-                --user-pool-id $COGNITO_USER_POOL \
-                --username $COGNAME
-                --user-attributes Name=email,Value=$COGEMAIL \
-                --message-action SUPPRESS
+                if [[ $(aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username') != ${COGNAME} ]]; then
+                    aws cognito-idp admin-create-user \
+                    --user-pool-id $COGNITO_USER_POOL \
+                    --username $COGNAME
+                    --user-attributes Name=email,Value=$COGEMAIL \
+                    --message-action SUPPRESS
+                fi
               done
