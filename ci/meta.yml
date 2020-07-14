@@ -347,11 +347,11 @@ meta:
               set +x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
+              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
               for COGNAME in $(cat users.json| jq -r '.Users[] | .username');
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .email');
                 COGPHONE=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .phone');
-                aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
                 if [[ -z $(grep ${COGNAME} user.parse) ]]; then
                     aws cognito-idp admin-create-user \
                     --user-pool-id $COGNITO_USER_POOL \
@@ -388,10 +388,10 @@ meta:
               set +x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
+              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
               for COGNAME in $(cat users.json| jq -r '.Users[] | select(.disabled | test("true")) | .username');
               do
-                aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
-                if [[ -z $(grep ${COGNAME} user.parse) ]]; then
+                if [[ ! -z $(grep ${COGNAME} user.parse) ]]; then
                     aws cognito-idp admin-delete-user \
                     --user-pool-id $COGNITO_USER_POOL \
                     --username $COGNAME
