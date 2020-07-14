@@ -27,7 +27,7 @@ resources:
       branch: master
       private_key: ((svc-dip.private_key))
       uri: git@github.ucds.io:dip/dataworks-secrets.git
-      path:
+      paths:
         - concourse/dataworks/concourse-cognito/**
     check_every: 720h
     webhook_token: ((ucfs-github.webhook-token))
