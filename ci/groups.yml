@@ -15,7 +15,7 @@ groups:
   - name: reboot-worker-nodes-dev
     jobs:
       - reboot-management-dev-worker-nodes
-  - name: user-creation
+  - name: user-administration
     jobs:
-      - management-user-creation
-      - management-dev-user-creation
+      - management-user-admin
+      - management-dev-user-admin

@@ -1,12 +1,11 @@
 jobs:
-- name: management-user-creation
+- name: management-dev-user-admin
   plan:
   - get: aws-concourse-users
-    passed:
-      - management-dev-user-creation
     trigger: true
   - .: (( inject meta.plan.create-aws-profiles ))
     config:
       params:
-        AWS_ACC: "{{accounts['management']}}"
+        AWS_ACC: "{{accounts['management-dev']}}"
   - .: (( inject meta.plan.create-users ))
+  - .: (( inject meta.plan.delete-users ))
