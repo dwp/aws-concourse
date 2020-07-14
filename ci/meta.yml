@@ -358,7 +358,7 @@ meta:
                     --username $COGNAME \
                     --user-attributes Name=email,Value=$COGEMAIL Name=email_verified,Value=true Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
                     --desired-delivery-mediums SMS \
-                    --message-action SUPPRESS
+                    --message-action RESEND
                 fi
               done
 
