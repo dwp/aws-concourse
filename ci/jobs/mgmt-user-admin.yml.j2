@@ -3,7 +3,7 @@ jobs:
   plan:
   - get: aws-concourse-users
     passed:
-      - management-dev-user-creation
+      - management-dev-user-admin
     trigger: true
   - .: (( inject meta.plan.create-aws-profiles ))
     config:
