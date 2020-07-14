@@ -337,6 +337,7 @@ meta:
           AWS_CONFIG_FILE: .aws/config
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
+          MESSAGE_ACTION: RESEND
         inputs:
           - name: .aws
         run:
@@ -344,7 +345,7 @@ meta:
           args:
             - -exc
             - |
-              set +x
+              set -x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
@@ -358,7 +359,7 @@ meta:
                     --username $COGNAME \
                     --user-attributes Name=email,Value=$COGEMAIL Name=email_verified,Value=true Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
                     --desired-delivery-mediums SMS \
-                    --message-action RESEND
+                    --message-action $MESSAGE_ACTION
                 fi
               done
 
@@ -385,7 +386,7 @@ meta:
           args:
             - -exc
             - |
-              set +x
+              set -x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
