@@ -74,6 +74,14 @@ locals {
   github_metadata = jsondecode(data.http.github.body)
 }
 
+data "aws_secretsmanager_secret_version" "internet_ingress" {
+  secret_id = "/concourse/dataworks/internet-ingress"
+}
+
+locals {
+ithc_cidr_blocks = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_whitelisted_ranges"]
+}
+
 locals {
   account = { {% for key, value in accounts.items() %}
     {{key}} = "{{value}}"{% endfor %}
