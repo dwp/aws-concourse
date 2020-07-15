@@ -1,6 +1,6 @@
 assume_role = "administrator"
 parent_domain_name    = "{{dataworks_domain_name}}"
-whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}{{pen['cidr_blocks']}}"]
+whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}, {{pen['cidr_blocks']}}"]
 ami_filter_values = ["dw-concourse-ami-*"]
 ami_owners        = ["{{accounts['management']}}"]
 
