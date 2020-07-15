@@ -29,11 +29,6 @@ variable "whitelist_cidr_blocks" {
   type        = list(string)
 }
 
-variable "ithc_cidr_blocks" {
-  description = "list of allowed ITHC cidr blocks"
-  type        = list(string)
-}
-
 variable "ami_filter_name" {
   type    = string
   default = "name"

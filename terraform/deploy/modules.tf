@@ -21,7 +21,7 @@ module "concourse_lb" {
   parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
-  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks, var.ithc_cidr_blocks)
+  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks, local.ithc_cidr_blocks)
 }
 
 data "aws_secretsmanager_secret" "dataworks" {
