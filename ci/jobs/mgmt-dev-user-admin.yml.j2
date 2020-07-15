@@ -10,5 +10,5 @@ jobs:
   - .: (( inject meta.plan.create-users ))
     config:
       params:
-        MESSAGE_ACTION: SUPPRESS
+        NOTIFY: false
   - .: (( inject meta.plan.delete-users ))
