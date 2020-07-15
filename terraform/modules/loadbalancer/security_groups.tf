@@ -14,5 +14,5 @@ resource "aws_security_group_rule" "lb_external_https_in" {
   security_group_id = aws_security_group.lb.id
   to_port           = 443
   type              = "ingress"
-  cidr_blocks       = var.whitelist_cidr_blocks
+  cidr_blocks       = [var.whitelist_cidr_blocks]
 }
