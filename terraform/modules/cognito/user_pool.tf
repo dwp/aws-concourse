@@ -1,11 +1,10 @@
 resource aws_cognito_user_pool concourse {
   name                     = local.name
   auto_verified_attributes = ["email"]
-  mfa_configuration        = "OFF"
+  mfa_configuration        = "OPTIONAL"
 
   admin_create_user_config {
     allow_admin_create_user_only = true
-    unused_account_validity_days = 1
   }
 
   email_configuration {
@@ -27,5 +26,7 @@ resource aws_cognito_user_pool concourse {
 
   verification_message_template {
     default_email_option = "CONFIRM_WITH_CODE"
+    email_subject        = "DWP DataWorks - Your temporary password"
+    email_message        = file("${path.module}/templates/email_message.html")
   }
 }
