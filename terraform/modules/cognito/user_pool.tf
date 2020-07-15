@@ -5,6 +5,11 @@ resource aws_cognito_user_pool concourse {
 
   admin_create_user_config {
     allow_admin_create_user_only = true
+    invite_message_template {
+      email_subject = "DWP DataWorks - Your temporary password"
+      email_message = file("${path.module}/templates/email_message.html")
+      sms_message   = "Your username is {username} and temporary password is {####}."
+    }
   }
 
   email_configuration {
