@@ -12,3 +12,5 @@ ci/jobs/management.yml
 ci/jobs/reboot-web-management.yml
 ci/jobs/reboot-worker-management.yml
 ci/jobs/reboot-worker-management-dev.yml
+ci/jobs/mgmt-user-admin.yml
+ci/jobs/mgmt-dev-user-admin.yml
