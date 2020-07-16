@@ -9,9 +9,11 @@ spruce:
         except:
           - management-dev.yml.j2
           - management.yml.j2
+          - mgmt-dev-user-admin.yml.j2
+          - mgmt-user-admin.yml.j2
           - reboot-web-management.yml.j2
-          - reboot-worker-management.yml.j2
           - reboot-worker-management-dev.yml.j2
+          - reboot-worker-management.yml.j2
     to: aviator_pipeline.yml
 fly:
   name: aws-concourse
