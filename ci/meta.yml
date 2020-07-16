@@ -353,19 +353,30 @@ meta:
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .email');
                 COGPHONE=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .phone');
+                COGGROUP=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .groups[]');
                 if [[ -z $(grep ${COGNAME} user.parse) ]] && [[ ${NOTIFY} == "false" ]]; then
                     aws cognito-idp admin-create-user \
                     --user-pool-id $COGNITO_USER_POOL \
                     --username $COGNAME \
                     --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
                     --desired-delivery-mediums EMAIL \
-                    --message-action SUPPRESS
+                    --message-action SUPPRESS \
+                    && \
+                    aws cognito-idp admin-add-user-to-group \
+                    --user-pool-id $COGNITO_USER_POOL \
+                    --username $COGNAME \
+                    --group-name $COGGROUP
                 elif [[ -z $(grep ${COGNAME} user.parse) ]] && [[ ${NOTIFY} == "true" ]]; then
                     aws cognito-idp admin-create-user \
                     --user-pool-id $COGNITO_USER_POOL \
                     --username $COGNAME \
                     --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
-                    --desired-delivery-mediums EMAIL
+                    --desired-delivery-mediums EMAIL \
+                    && \
+                    aws cognito-idp admin-add-user-to-group \
+                    --user-pool-id $COGNITO_USER_POOL \
+                    --username $COGNAME \
+                    --group-name $COGGROUP
                 fi
               done
 
