@@ -29,6 +29,20 @@ data "terraform_remote_state" "internet_egress" {
   }
 }
 
+data "terraform_remote_state" "internet_ingress" {
+  backend   = "s3"
+  workspace = terraform.workspace
+
+  config = {
+    bucket         = "{{state_file_bucket}}"
+    key            = "terraform/dataworks/dataworks-internet-ingress.tfstate"
+    region         = "{{state_file_region}}"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:{{state_file_region}}:{{state_file_account}}:key/{{state_file_kms_key}}"
+    dynamodb_table = "remote_state_locks"
+  }
+}
+
 data "terraform_remote_state" "security-tools" {
   backend = "s3"
   workspace = local.environment
@@ -52,8 +66,18 @@ variable "region" {
 }
 
 provider "aws" {
-  version = "~> 2.57.0"
+  version = "~> 2.62.0"
   region  = var.region
+
+  assume_role {
+    role_arn = "arn:aws:iam::${lookup(local.account, local.environment)}:role/${var.assume_role}"
+  }
+}
+
+provider "aws" {
+  version = "~> 2.62.0"
+  region  = "{{provider_region}}"
+  alias   = "ssh_bastion"
 
   assume_role {
     role_arn = "arn:aws:iam::${lookup(local.account, local.environment)}:role/${var.assume_role}"
@@ -89,6 +113,8 @@ locals {
 }
 
 locals {
+  name = "aws-concourse"
+
   parent_domain_name = {
     management-dev = "wip.${var.parent_domain_name}"
     management = var.parent_domain_name
