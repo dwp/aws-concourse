@@ -58,7 +58,7 @@ resource "aws_security_group_rule" "egress_internet_proxy" {
   from_port                = 3128
   to_port                  = 3128
   protocol                 = "tcp"
-  source_security_group_id = module.vpc.outputs.internet_egress_sg.sg_id
+  source_security_group_id = module.vpc.outputs.internet_egress_sg.id
   security_group_id        = aws_security_group.kali.0.id
 }
 
@@ -70,7 +70,7 @@ resource "aws_security_group_rule" "ingress_internet_proxy" {
   to_port                  = 3128
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.kali.0.id
-  security_group_id        = module.vpc.outputs.internet_egress_sg.sg_id
+  security_group_id        = module.vpc.outputs.internet_egress_sg.id
 }
 
 resource "aws_security_group_rule" "kali_allow_all_egress" {
