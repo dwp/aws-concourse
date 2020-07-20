@@ -113,7 +113,7 @@ resource "aws_vpc_peering_connection" "ssh_bastion" {
 
   tags = merge(
     local.common_tags,
-    { Name = "Concoure to Internet Ingress (${local.environment})" }
+    { Name = "Concourse to Internet Ingress (${local.environment})" }
   )
 }
 
