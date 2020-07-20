@@ -1,5 +1,5 @@
 terraform {
   required_providers {
-    aws = ">= 2.41.0"
+    aws = ">= 2.62.0"
   }
 }

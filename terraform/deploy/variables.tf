@@ -70,3 +70,8 @@ variable "github_vpc" {
     region     = ""
   }
 }
+
+variable "costcode" {
+  type    = string
+  default = ""
+}
