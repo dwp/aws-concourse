@@ -95,6 +95,10 @@ resource "aws_instance" "kali" {
     }
   )
 
+  root_block_device {
+    volume_size = "100"
+  }
+
   tags = merge(
     local.common_tags,
     { Name = "Kali (ITHC)" }
