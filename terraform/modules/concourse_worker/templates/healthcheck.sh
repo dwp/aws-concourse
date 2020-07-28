@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 HEADERS=$(curl -Is --connect-timeout 5 http://127.0.0.1:8888)
 CURLSTATUS=$?
-REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document|grep region|awk -F\" '{print $4}')
-INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
+TOKEN=$(curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token")
+REGION=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/dynamic/instance-identity/document|grep region|awk -F\" '{print $4}')
+INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
 
 # Check for timeout or dead process
 if [ $CURLSTATUS -eq 28 -o -z "$HEADERS" ]
