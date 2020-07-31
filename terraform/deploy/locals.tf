@@ -29,7 +29,7 @@ locals {
 
   deploy_ithc_infra = {
     management-dev = false
-    management     = true
+    management     = false
   }
 
   kali_users = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_users"]
