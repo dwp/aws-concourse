@@ -32,6 +32,7 @@ module "vpc" {
     "elasticfilesystem",
     "sns",
     "athena",
+    "sqs",
   ]
   common_tags = merge(var.tags, { Name = var.name })
 }
