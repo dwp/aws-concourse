@@ -9,7 +9,7 @@ module "vpc" {
   gateway_vpce_route_table_ids             = aws_route_table.private.*.id
 
   aws_vpce_services = [
-    "ec2autoscaling",
+    "autoscaling",
     "ec2",
     "ec2messages",
     "kms",
@@ -19,17 +19,17 @@ module "vpc" {
     "ssm",
     "ssmmessages",
     "secretsmanager",
-    "ecrapi",
+    "ecr.api",
     "ecr.dkr",
     "ecs",
     "elasticloadbalancing",
     "events",
-    "application_autoscaling",
-    "kinesis_firehose",
+    "application-autoscaling",
+    "kinesis-firehose",
     "glue",
-    "emr",
+    "elasticmapreduce",
     "dynamodb",
-    "efs",
+    "elasticfilesystem",
     "sns",
     "athena",
   ]
