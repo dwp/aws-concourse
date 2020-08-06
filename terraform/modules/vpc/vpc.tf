@@ -31,7 +31,7 @@ module "vpc" {
     "dynamodb",
     "efs",
     "sns",
-    "athena"
+    "athena",
   ]
   common_tags = merge(var.tags, { Name = var.name })
 }
