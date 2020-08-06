@@ -175,7 +175,7 @@ locals {
 
   cognito_domain = local.environment == "management" ? "concourse-dataworks" : "concourse-dataworks-dev"
 
-  no_proxy    = "169.254.169.254,${join(",", formatlist("%s.%s", local.endpoint_services, local.amazon_region_domain))},${local.enterprise_github_url}"
+  no_proxy    = "169.254.169.254,[${module.vpc.outputs.no_proxy_list}],${local.enterprise_github_url}"
 
   enterprise_github_certs = [
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
