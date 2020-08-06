@@ -175,8 +175,8 @@ locals {
 
   cognito_domain = local.environment == "management" ? "concourse-dataworks" : "concourse-dataworks-dev"
 
-  # Todo - fix up the VPC module to output the wildcarded variant of S3's domain
-  no_proxy = "169.254.169.254,${join(",", module.vpc.outputs.no_proxy_list)}, .s3.${var.region}.amazonaws.com, ${local.enterprise_github_url}"
+  # Todo - fix up the VPC module to output both variants of S3's domain, and DynamoDB's domain
+  no_proxy = "169.254.169.254,${join(",",module.vpc.outputs.no_proxy_list)},s3.${var.region}.amazonaws.com,.s3.${var.region}.amazonaws.com,dynamodb.${var.region}.amazonaws.com,${local.enterprise_github_url}"
 
   enterprise_github_certs = [
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
