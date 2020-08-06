@@ -14,10 +14,6 @@ output "concourse_web_sg" {
   value = module.concourse_web.outputs.security_group.id
 }
 
-output "endpoint_services" {
-  value = local.endpoint_services
-}
-
 output "aws_vpc" {
   value = module.vpc.outputs.aws_vpc
 }
