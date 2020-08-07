@@ -87,3 +87,24 @@ resource "aws_iam_role_policy_attachment" "concourse_worker_secrets" {
   policy_arn = aws_iam_policy.concourse_secrets_read.arn
   role       = data.aws_iam_role.worker.id
 }
+
+data "aws_iam_policy_document" "concourse_lambda_invoke" {
+  statement {
+    actions = [
+      "lambda:Invoke"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "concourse_lambda_invoke" {
+  name        = "${local.name}LambdaInvocation"
+  description = "Invoke Lambdas (for CI tests, etc.)"
+  policy      = data.aws_iam_policy_document.concourse_lambda_invoke.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_lambda_invoke" {
+  policy_arn = aws_iam_policy.concourse_lambda_invoke.arn
+  role       = data.aws_iam_role.worker.id
+}
