@@ -33,6 +33,8 @@ module "vpc" {
     "sns",
     "athena",
     "sqs",
+    "codecommit",
+    "git-codecommit",
   ]
   common_tags = merge(var.tags, { Name = var.name })
 }
