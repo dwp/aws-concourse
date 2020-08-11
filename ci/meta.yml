@@ -310,7 +310,7 @@ meta:
             - -exc
             - |
               set +x
-              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.1.0/fly-6.1.0-linux-amd64.tgz"
+              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.4.1/fly-6.4.1-linux-amd64.tgz"
               tar -xvf fly.tgz
               chmod +x fly
               USERNAME=$(cat credentials/dataworks-secrets.json | jq -r .concourse_user)
@@ -319,7 +319,7 @@ meta:
               ./fly --target concourse workers
               for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
               do
-                ./fly --target concourse land-worker --worker $worker && 
+                ./fly --target concourse land-worker --worker $worker &&
                 sleep 300;
               done
 
