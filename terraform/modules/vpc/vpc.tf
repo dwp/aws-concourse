@@ -13,6 +13,7 @@ module "vpc" {
     "athena",
     "autoscaling",
     "codecommit",
+    "config",
     "dynamodb",
     "ec2",
     "ec2messages",
