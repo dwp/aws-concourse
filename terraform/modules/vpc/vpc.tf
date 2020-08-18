@@ -1,6 +1,6 @@
 module "vpc" {
   source                                   = "dwp/vpc/aws"
-  version                                  = "3.0.7"
+  version                                  = "3.0.8"
   vpc_name                                 = "ci-cd"
   region                                   = data.aws_region.current.name
   vpc_cidr_block                           = var.vpc_cidr_block
