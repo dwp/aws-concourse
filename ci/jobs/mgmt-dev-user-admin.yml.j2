@@ -8,7 +8,4 @@ jobs:
       params:
         AWS_ACC: "{{accounts['management-dev']}}"
   - .: (( inject meta.plan.create-users ))
-    config:
-      params:
-        NOTIFY: false
   - .: (( inject meta.plan.delete-users ))
