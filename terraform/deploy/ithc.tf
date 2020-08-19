@@ -8,6 +8,10 @@ data "aws_ami" "kali" {
   }
 }
 
+data "aws_route53_zone" "main" {
+  name = var.parent_domain_name
+}
+
 resource "aws_security_group" "kali" {
   count       = local.deploy_ithc_infra[local.environment] ? 1 : 0
   name        = "kali"
@@ -106,13 +110,12 @@ resource "aws_instance" "kali" {
 }
 
 resource "aws_route53_record" "kali" {
-  count    = local.deploy_ithc_infra[local.environment] ? 1 : 0
-  zone_id  = data.terraform_remote_state.management_dns.outputs.dataworks_zone.id
-  name     = "kali.ci-cd.${local.dw_domain}"
-  type     = "A"
-  ttl      = "60"
-  records  = [aws_instance.kali[0].private_ip]
-  provider = aws.management_dns
+  count   = local.deploy_ithc_infra[local.environment] ? 1 : 0
+  zone_id = data.aws_route53_zone.main.id
+  name    = "kali.ci-cd.${local.parent_domain_name[local.environment]}"
+  type    = "A"
+  ttl     = "60"
+  records = [aws_instance.kali[0].private_ip]
 }
 
 resource "aws_vpc_peering_connection" "ssh_bastion" {
