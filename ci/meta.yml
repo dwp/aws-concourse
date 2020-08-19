@@ -347,7 +347,7 @@ meta:
           args:
             - -exc
             - |
-              set +x
+              set x
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
@@ -355,31 +355,20 @@ meta:
               do
                 COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .email');
                 COGPHONE=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .phone');
-                COGGROUP=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .groups[]');
-                if [[ -z $(grep ${COGNAME} user.parse) ]] && [[ ${NOTIFY} == "false" ]]; then
+                COGGROUPS=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .groups[]');
+                if [[ -z $(grep ${COGNAME} user.parse) ]]; then
                     aws cognito-idp admin-create-user \
                     --user-pool-id $COGNITO_USER_POOL \
                     --username $COGNAME \
                     --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
-                    --desired-delivery-mediums EMAIL \
-                    --message-action SUPPRESS \
-                    && \
-                    aws cognito-idp admin-add-user-to-group \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME \
-                    --group-name $COGGROUP
-                elif [[ -z $(grep ${COGNAME} user.parse) ]] && [[ ${NOTIFY} == "true" ]]; then
-                    aws cognito-idp admin-create-user \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME \
-                    --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
-                    --desired-delivery-mediums EMAIL \
-                    && \
-                    aws cognito-idp admin-add-user-to-group \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME \
-                    --group-name $COGGROUP
+                    --desired-delivery-mediums EMAIL
                 fi
+                for COGGROUP in $COGGROUPS; do
+                  aws cognito-idp admin-add-user-to-group \
+                  --user-pool-id $COGNITO_USER_POOL \
+                  --username $COGNAME \
+                  --group-name $COGGROUP
+                done
               done
 
     delete-users:
