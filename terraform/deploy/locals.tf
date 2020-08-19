@@ -25,8 +25,6 @@ locals {
     management     = "mgt."
   }
 
-  dw_domain = "${local.env_prefix[local.environment]}dataworks.dwp.gov.uk"
-
   deploy_ithc_infra = {
     management-dev = false
     management     = false
