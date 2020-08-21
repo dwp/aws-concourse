@@ -102,3 +102,9 @@ variable "enterprise_github_certs" {
   description = "A list of certificates that make up the full CA chain that sign the Enterprise GitHub TlS certificates"
   default     = []
 }
+
+variable "auth_duration" {
+  type        = string
+  description = "Length of time for which tokens are valid. Afterwards, users will have to log back in"
+  default     = "12h"
+}
