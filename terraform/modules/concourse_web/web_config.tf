@@ -9,8 +9,9 @@ locals {
 
   service_env_vars = merge(
     {
-      CONCOURSE_CLUSTER_NAME = var.name
-      CONCOURSE_EXTERNAL_URL = "https://${var.loadbalancer.fqdn}"
+      CONCOURSE_CLUSTER_NAME  = var.name
+      CONCOURSE_EXTERNAL_URL  = "https://${var.loadbalancer.fqdn}"
+      CONCOURSE_AUTH_DURATION = var.auth_duration
 
       CONCOURSE_ADD_LOCAL_USER       = "${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]}:${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_password"]}"
       CONCOURSE_MAIN_TEAM_LOCAL_USER = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
