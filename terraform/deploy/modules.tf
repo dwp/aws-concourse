@@ -154,7 +154,14 @@ module "database" {
 
   vpc = module.vpc.outputs
 
-  count = length(data.aws_availability_zones.available.zone_ids)
+  database = {
+    instance_type           = "db.t3.medium"
+    db_count                = length(data.aws_availability_zones.available.zone_ids)
+    engine                  = "aurora-postgresql"
+    engine_version          = "10.7"
+    backup_retention_period = 14
+    preferred_backup_window = "01:00-03:00"
+  }
 }
 
 module "vpc" {

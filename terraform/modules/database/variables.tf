@@ -15,7 +15,7 @@ variable "database" {
 
   type = object({
     instance_type           = string
-    count                   = number
+    db_count                = number
     engine                  = string
     engine_version          = string
     backup_retention_period = number
@@ -24,7 +24,7 @@ variable "database" {
 
   default = {
     instance_type           = "db.t3.medium"
-    count                   = 1
+    db_count                = 1
     engine                  = "aurora-postgresql"
     engine_version          = "10.7"
     backup_retention_period = 14

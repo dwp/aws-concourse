@@ -20,7 +20,7 @@ resource "aws_rds_cluster" "cluster" {
 }
 
 resource "aws_rds_cluster_instance" "cluster" {
-  count              = var.database.count
+  count              = var.database.db_count
   identifier_prefix  = "${var.name}-${local.zone_names[count.index]}-"
   engine             = aws_rds_cluster.cluster.engine
   engine_version     = aws_rds_cluster.cluster.engine_version
