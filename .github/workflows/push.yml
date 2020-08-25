@@ -45,6 +45,8 @@ jobs:
       - name: "Terraform Init"
         id: init
         run: terraform init
+        env:
+          TF_LOG: DEBUG
 
       - name: "Terraform Plan"
         id: plan
