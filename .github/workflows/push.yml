@@ -1,0 +1,55 @@
+name: "Push Checks"
+on: push
+defaults:
+  run:
+    working-directory: terraform/deploy/
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+          role-to-assume: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
+          role-external-id: ${{ secrets.AWS_GHA_EXTERNAL_ID }}
+          role-duration-seconds: 3600
+          role-session-name: Concourse-GHA
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.19
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        id: deps
+        run: pip install Jinja2 PyYAML boto3
+
+      - name: "Bootstrap"
+        id: bootstrap
+        run: python bootstrap_terraform.py
+        working-directory: .
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_GHA_ROLE_MGMT }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Format"
+        id: fmt
+        run: terraform fmt
+        continue-on-error: true
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init
+
+      - name: "Terraform Plan"
+        id: plan
+        run: terraform plan
+        continue-on-error: true
+        env:
+          TF_WORKSPACE: management
