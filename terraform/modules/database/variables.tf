@@ -24,7 +24,7 @@ variable "database" {
 
   default = {
     instance_type           = "db.t3.medium"
-    count                   = local.zone_count
+    count                   = 1
     engine                  = "aurora-postgresql"
     engine_version          = "10.7"
     backup_retention_period = 14

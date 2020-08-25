@@ -153,6 +153,8 @@ module "database" {
   tags = local.tags
 
   vpc = module.vpc.outputs
+
+  count = length(data.aws_availability_zones.available.zone_ids)
 }
 
 module "vpc" {
