@@ -18,7 +18,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
           role-external-id: ${{ secrets.AWS_GHA_EXTERNAL_ID }}
           role-duration-seconds: 3600
-          role-session-name: Concourse-GHA
+          # role-session-name: Concourse-GHA
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.12.19
