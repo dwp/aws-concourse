@@ -35,7 +35,6 @@ jobs:
         run: python bootstrap_terraform.py
         working-directory: .
         env:
-          AWS_ROLE_ARN: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
           AWS_DEFAULT_REGION: eu-west-2
 
       - name: "Terraform Format"
