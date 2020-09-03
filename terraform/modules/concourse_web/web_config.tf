@@ -119,6 +119,13 @@ locals {
     {}
   )
 
+  identity = templatefile(
+    "${path.module}/templates/teams/identity/team.yml",
+    {
+      identity_owner = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
+    }
+  )
+
   utility = templatefile(
     "${path.module}/templates/teams/utility/team.yml",
     {}
@@ -174,6 +181,11 @@ write_files:
     path: /root/teams/dataworks/team.yml
     permissions: '0600'
   - encoding: b64
+    content: ${base64encode(local.identity)}
+    owner: root:root
+    path: /root/teams/identity/team.yml
+    permissions: '0600'
+  - encoding: b64
     content: ${base64encode(local.utility)}
     owner: root:root
     path: /root/teams/utility/team.yml
@@ -199,6 +211,11 @@ EOF
   part {
     content_type = "text/plain"
     content      = local.dataworks
+  }
+
+  part {
+    content_type = "text/plain"
+    content      = local.identity
   }
 
   part {
