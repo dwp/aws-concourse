@@ -41,7 +41,6 @@ jobs:
         id: init
         run: terraform init
         env:
-          TF_LOG: DEBUG
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
