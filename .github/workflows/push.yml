@@ -23,7 +23,9 @@ jobs:
 
       - name: "Bootstrap"
         id: bootstrap
-        run: python bootstrap_terraform.py
+        run: |
+          python bootstrap_terraform.py
+          sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
