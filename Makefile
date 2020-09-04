@@ -12,7 +12,6 @@ help:
 .PHONY: bootstrap
 bootstrap: ## Bootstrap local environment for first use
 	make git-hooks
-	pip3 install --user Jinja2 PyYAML boto3
 	@{ \
 		export AWS_PROFILE=$(aws_profile); \
 		export AWS_REGION=$(aws_region); \
