@@ -17,6 +17,12 @@ resource "aws_rds_cluster" "cluster" {
   skip_final_snapshot       = false
   vpc_security_group_ids    = [aws_security_group.db.id]
   tags                      = merge(var.tags, { Name = "${var.name}-db" })
+
+  lifecycle {
+    ignore_changes = [
+      engine_version
+    ]
+  }
 }
 
 resource "aws_rds_cluster_instance" "cluster" {
