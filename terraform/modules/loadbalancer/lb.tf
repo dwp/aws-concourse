@@ -5,6 +5,12 @@ resource "aws_lb" "lb" {
   subnets            = var.vpc.aws_subnets_public[*].id
   security_groups    = [aws_security_group.lb.id]
   tags               = merge(var.tags, { Name = "${var.name}-lb" })
+
+  access_logs {
+    bucket  = var.logging_bucket
+    prefix  = "ELBLogs/${var.name}"
+    enabled = true
+  }
 }
 
 resource "aws_wafregional_web_acl_association" "lb" {
