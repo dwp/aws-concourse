@@ -4,6 +4,12 @@ resource "aws_lb" "lb" {
   load_balancer_type = "network"
   subnets            = var.vpc.aws_subnets_private[*].id
   tags               = merge(var.tags, { Name = "${var.name}-int-lb" })
+
+  access_logs {
+    bucket  = var.logging_bucket
+    prefix  = "ELBLogs/${var.name}"
+    enabled = true
+  }
 }
 
 resource "aws_lb_listener" "ssh" {

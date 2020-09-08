@@ -22,6 +22,7 @@ module "concourse_lb" {
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
   whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks, local.ithc_cidr_blocks)
+  logging_bucket         = data.terraform_remote_state.security-tools.outputs.logstore_bucket.id
 }
 
 data "aws_secretsmanager_secret" "dataworks" {
@@ -95,6 +96,8 @@ module "concourse_internal_lb" {
   vpc                                   = module.vpc.outputs
   whitelist_cidr_blocks                 = var.whitelist_cidr_blocks
   concourse_internal_allowed_principals = formatlist("arn:aws:iam::%s:root", [data.aws_caller_identity.current.account_id, var.github_vpc.owner])
+  logging_bucket                        = data.terraform_remote_state.security-tools.outputs.logstore_bucket.id
+
 }
 
 module "concourse_worker" {
