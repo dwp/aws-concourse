@@ -125,11 +125,6 @@ module "concourse_worker" {
   dynamodb_prefix_list_id = module.vpc.outputs.dynamodb_prefix_list_id
   concourse_web           = module.concourse_web.outputs
   concourse_worker_role   = "concourse-worker"
-  proxy = {
-    http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
-    no_proxy    = local.no_proxy
-  }
   enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
