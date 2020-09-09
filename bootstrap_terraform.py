@@ -9,21 +9,12 @@ import yaml
 
 
 def main():
-    region_name = os.environ.get('AWS_DEFAULT_REGION')
     if 'AWS_PROFILE' in os.environ:
-        session = boto3.Session(profile_name=os.environ['AWS_PROFILE'])
-    elif 'AWS_ROLE_ARN' in os.environ:
-        sts = boto3.client('sts')
-        response = sts.assume_role(
-            RoleArn=os.environ['AWS_ROLE_ARN'],
-            RoleSessionName='Bootstrap')
-        session = boto3.Session(
-            aws_access_key_id=response['Credentials']['AccessKeyId'],
-            aws_secret_access_key=response['Credentials']['SecretAccessKey'],
-            aws_session_token=response['Credentials']['SessionToken'])
+        boto3.setup_default_session(profile_name=os.environ['AWS_PROFILE'])
+    if 'AWS_REGION' in os.environ:
+        ssm = boto3.client('ssm', region_name=os.environ['AWS_REGION'])
     else:
-        session = boto3.Session()
-    ssm = boto3.client('ssm', region_name=region_name)
+        ssm = boto3.client('ssm')
 
     try:
         parameter = ssm.get_parameter(
@@ -39,15 +30,35 @@ def main():
 
     config_data = yaml.load(
         parameter['Parameter']['Value'], Loader=yaml.FullLoader)
-    with open('terraform/deploy/terraform.tf.j2') as in_template:
+    with open('ci/jobs/management-dev.yml.j2') as in_template:
         template = jinja2.Template(in_template.read())
-    with open('terraform/deploy/terraform.tf', 'w+') as terraform_tf:
-        terraform_tf.write(template.render(config_data))
-    with open('terraform/deploy/terraform.tfvars.j2') as in_template:
+    with open('ci/jobs/management-dev.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/management.yml.j2') as in_template:
         template = jinja2.Template(in_template.read())
-    with open('terraform/deploy/terraform.tfvars', 'w+') as terraform_tfvars:
-        terraform_tfvars.write(template.render(config_data))
-    print("Terraform config successfully created")
+    with open('ci/jobs/management.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/reboot-web-management.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/reboot-web-management.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/reboot-worker-management.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/reboot-worker-management.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/reboot-worker-management-dev.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/reboot-worker-management-dev.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/mgmt-dev-user-admin.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/mgmt-dev-user-admin.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    with open('ci/jobs/mgmt-user-admin.yml.j2') as in_template:
+        template = jinja2.Template(in_template.read())
+    with open('ci/jobs/mgmt-user-admin.yml', 'w+') as pipeline:
+        pipeline.write(template.render(config_data))
+    print("Concourse pipeline config successfully created")
 
 
 if __name__ == "__main__":
