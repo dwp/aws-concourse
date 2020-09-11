@@ -154,6 +154,11 @@ module "database" {
     backup_retention_period = 14
     preferred_backup_window = "01:00-03:00"
   }
+
+  database_credentials = {
+    username = var.concourse_web_config.database_username,
+    password = var.concourse_web_config.database_password,
+  }
 }
 
 module "vpc" {
