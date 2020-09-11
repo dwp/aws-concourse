@@ -3,6 +3,7 @@ resource "aws_vpc_peering_connection" "ucfs_github" {
   peer_vpc_id   = var.github_vpc.id
   peer_region   = var.github_vpc.region
   vpc_id        = module.vpc.outputs.aws_vpc.id
+  auto_accept   = true
 
   requester {
     allow_classic_link_to_remote_vpc = false
