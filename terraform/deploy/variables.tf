@@ -19,6 +19,41 @@ variable "concourse" {
   }
 }
 
+variable "concourse_username" {
+  type        = string
+  description = "Username for local admin user"
+}
+
+variable "concourse_password" {
+  type        = string
+  description = "Password for local admin user"
+}
+
+variable "database_username" {
+  type        = string
+  description = "Username for Concourse database"
+}
+
+variable "database_password" {
+  type        = string
+  description = "Password for concourse database"
+}
+
+variable "enterprise_github_oauth_client_id" {
+  type        = string
+  description = "Password for local admin user"
+}
+
+variable "enterprise_github_oauth_client_secret" {
+  type        = string
+  description = "Username for Concourse database"
+}
+
+variable "enterprise_github_url" {
+  type        = string
+  description = "Password for concourse database"
+}
+
 variable "parent_domain_name" {
   description = "parent domain name for CI"
   type        = string

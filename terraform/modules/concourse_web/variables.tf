@@ -23,6 +23,41 @@ variable "cognito_domain" {}
 variable "cognito_issuer" {}
 variable "cognito_name" {}
 
+variable "concourse_username" {
+  type        = string
+  description = "Username for local admin user"
+}
+
+variable "concourse_password" {
+  type        = string
+  description = "Password for local admin user"
+}
+
+variable "database_username" {
+  type        = string
+  description = "Username for Concourse database"
+}
+
+variable "database_password" {
+  type        = string
+  description = "Password for concourse database"
+}
+
+variable "enterprise_github_oauth_client_id" {
+  type        = string
+  description = "Username for Concourse database"
+}
+
+variable "enterprise_github_oauth_client_secret" {
+  type        = string
+  description = "Password for concourse database"
+}
+
+variable "enterprise_github_url" {
+  type        = string
+  description = "Password for concourse database"
+}
+
 
 variable "web" {
   description = "atc/tsa configuration options"
