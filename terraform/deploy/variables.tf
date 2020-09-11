@@ -31,6 +31,18 @@ variable "concourse_web_config" {
   })
 }
 
+variable "concourse_keys" {
+  type = object({
+    session_signing_key     = string,
+    session_signing_pub_key = string,
+    tsa_host_key            = string,
+    tsa_host_pub_key        = string,
+    worker_key              = string,
+    worker_pub_key          = string,
+    authorized_worker_keys  = string,
+  })
+}
+
 variable "parent_domain_name" {
   description = "parent domain name for CI"
   type        = string

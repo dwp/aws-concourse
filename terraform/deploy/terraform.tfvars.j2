@@ -14,6 +14,23 @@ concourse_web_config = {
   enterprise_github_url = "{{enterprise_github_url}}"
 }
 
+concourse_keys = {
+  session_signing_key     = <<EOT
+{{session_signing_key}}EOT
+  session_signing_pub_key = <<EOT
+{{session_signing_pub_key}}EOT
+  tsa_host_key            = <<EOT
+{{tsa_host_key}}EOT
+  tsa_host_pub_key        = <<EOT
+{{tsa_host_pub_key}}EOT
+  worker_key              = <<EOT
+{{worker_key}}EOT
+  worker_pub_key          = <<EOT
+{{worker_pub_key}}EOT
+  authorized_worker_keys  = <<EOT
+{{authorized_worker_keys}}EOT
+}
+
 github_vpc = {
 {%- for k, v in ucfs['github']['vpc'].items() %}
   {{ k }} = "{{ v }}"{% endfor %}

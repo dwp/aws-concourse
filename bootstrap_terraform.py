@@ -45,6 +45,13 @@ def main():
     config_data['enterprise_github_oauth_client_id'] = json.loads(dataworks_secret['SecretBinary'])["enterprise_github_oauth_client_id"]
     config_data['enterprise_github_oauth_client_secret'] = json.loads(dataworks_secret['SecretBinary'])["enterprise_github_oauth_client_secret"]
     config_data['enterprise_github_url'] = json.loads(concourse_secret['SecretBinary'])["enterprise_github_url"]
+    config_data['session_signing_key'] = json.loads(dataworks_secret['SecretBinary'])["session_signing_key"]
+    config_data['session_signing_pub_key'] = json.loads(dataworks_secret['SecretBinary'])["session_signing_pub_key"]
+    config_data['tsa_host_key'] = json.loads(dataworks_secret['SecretBinary'])["tsa_host_key"]
+    config_data['tsa_host_pub_key'] = json.loads(dataworks_secret['SecretBinary'])["tsa_host_pub_key"]
+    config_data['worker_key'] = json.loads(dataworks_secret['SecretBinary'])["worker_key"]
+    config_data['worker_pub_key'] = json.loads(dataworks_secret['SecretBinary'])["worker_pub_key"]
+    config_data['authorized_worker_keys'] = json.loads(dataworks_secret['SecretBinary'])["authorized_worker_keys"]
     with open('terraform/deploy/terraform.tf.j2') as in_template:
         template = jinja2.Template(in_template.read())
     with open('terraform/deploy/terraform.tf', 'w+') as terraform_tf:

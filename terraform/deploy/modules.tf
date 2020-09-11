@@ -6,10 +6,6 @@ module "amis" {
   ami_owners        = var.ami_owners
 }
 
-module "concourse_keys" {
-  source = "../modules/concourse_keys"
-}
-
 module "concourse_lb" {
   source = "../modules/loadbalancer"
 
@@ -26,7 +22,7 @@ module "concourse_lb" {
 }
 
 locals {
-  amazon_region_domain  = "${data.aws_region.current.name}.amazonaws.com"
+  amazon_region_domain = "${data.aws_region.current.name}.amazonaws.com"
 }
 
 module "concourse_web" {
@@ -43,7 +39,7 @@ module "concourse_web" {
 
   ami_id                = module.amis.ami_id
   concourse             = var.concourse
-  concourse_keys        = module.concourse_keys.outputs
+  concourse_keys        = var.concourse_keys
   concourse_web_config  = var.concourse_web_config
   database              = module.database.outputs
   internal_loadbalancer = module.concourse_internal_lb.outputs
@@ -107,7 +103,7 @@ module "concourse_worker" {
 
   ami_id                  = module.amis.ami_id
   concourse               = var.concourse
-  concourse_keys          = module.concourse_keys.outputs
+  concourse_keys          = var.concourse_keys
   internal_loadbalancer   = module.concourse_internal_lb.outputs
   loadbalancer            = module.concourse_lb.outputs
   log_group               = module.concourse_worker_log_group.outputs
