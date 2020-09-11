@@ -3,13 +3,16 @@ parent_domain_name    = "{{dataworks_domain_name}}"
 whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}"]
 ami_filter_values = ["dw-concourse-ami-*"]
 ami_owners        = ["{{accounts['management']}}"]
-concourse_username = "{{concourse_username}}"
-concourse_password = "{{concourse_password}}"
-database_username = "{{database_username}}"
-database_password = "{{database_password}}"
-enterprise_github_oauth_client_id = "{{enterprise_github_oauth_client_id}}"
-enterprise_github_oauth_client_secret = "{{enterprise_github_oauth_client_secret}}"
-enterprise_github_url = "{{enterprise_github_url}}"
+
+concourse_web_config = {
+  concourse_username = "{{concourse_username}}"
+  concourse_password = "{{concourse_password}}"
+  database_username = "{{database_username}}"
+  database_password = "{{database_password}}"
+  enterprise_github_oauth_client_id = "{{enterprise_github_oauth_client_id}}"
+  enterprise_github_oauth_client_secret = "{{enterprise_github_oauth_client_secret}}"
+  enterprise_github_url = "{{enterprise_github_url}}"
+}
 
 github_vpc = {
 {%- for k, v in ucfs['github']['vpc'].items() %}

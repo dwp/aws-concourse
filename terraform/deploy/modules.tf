@@ -49,29 +49,23 @@ module "concourse_web" {
     }
   )
 
-  ami_id                                = module.amis.ami_id
-  concourse                             = var.concourse
-  concourse_keys                        = module.concourse_keys.outputs
-  concourse_username                    = var.concourse_username
-  concourse_password                    = var.concourse_password
-  database_username                     = var.database_username
-  database_password                     = var.database_password
-  enterprise_github_oauth_client_id     = var.enterprise_github_oauth_client_id
-  enterprise_github_oauth_client_secret = var.enterprise_github_oauth_client_secret
-  enterprise_github_url                 = var.enterprise_github_url
-  database                              = module.database.outputs
-  internal_loadbalancer                 = module.concourse_internal_lb.outputs
-  loadbalancer                          = module.concourse_lb.outputs
-  log_group                             = module.concourse_web_log_group.outputs
-  vpc                                   = module.vpc.outputs
-  ssm_name_prefix                       = var.name
-  github_cidr_block                     = var.github_vpc.cidr_block
-  s3_prefix_list_id                     = module.vpc.outputs.s3_prefix_list_id
-  cognito_client_secret                 = module.cognito.outputs.app_client.client_secret
-  cognito_client_id                     = module.cognito.outputs.app_client.id
-  cognito_domain                        = module.cognito.outputs.user_pool_domain
-  cognito_issuer                        = module.cognito.outputs.issuer
-  cognito_name                          = module.cognito.outputs.name
+  ami_id                = module.amis.ami_id
+  concourse             = var.concourse
+  concourse_keys        = module.concourse_keys.outputs
+  concourse_web_config  = var.concourse_web_config
+  database              = module.database.outputs
+  internal_loadbalancer = module.concourse_internal_lb.outputs
+  loadbalancer          = module.concourse_lb.outputs
+  log_group             = module.concourse_web_log_group.outputs
+  vpc                   = module.vpc.outputs
+  ssm_name_prefix       = var.name
+  github_cidr_block     = var.github_vpc.cidr_block
+  s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
+  cognito_client_secret = module.cognito.outputs.app_client.client_secret
+  cognito_client_id     = module.cognito.outputs.app_client.id
+  cognito_domain        = module.cognito.outputs.user_pool_domain
+  cognito_issuer        = module.cognito.outputs.issuer
+  cognito_name          = module.cognito.outputs.name
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
