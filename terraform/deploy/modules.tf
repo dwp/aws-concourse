@@ -25,16 +25,8 @@ module "concourse_lb" {
   logging_bucket         = data.terraform_remote_state.security-tools.outputs.logstore_bucket.id
 }
 
-data "aws_secretsmanager_secret" "dataworks" {
-  name = "/concourse/dataworks/dataworks"
-}
-data "aws_secretsmanager_secret_version" "dataworks" {
-  secret_id = data.aws_secretsmanager_secret.dataworks.id
-}
-
 locals {
   amazon_region_domain  = "${data.aws_region.current.name}.amazonaws.com"
-  enterprise_github_url = jsondecode(data.aws_secretsmanager_secret_version.dataworks.secret_binary)["enterprise_github_url"]
 }
 
 module "concourse_web" {
