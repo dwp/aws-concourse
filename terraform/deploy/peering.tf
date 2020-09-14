@@ -9,6 +9,10 @@ resource "aws_vpc_peering_connection" "ucfs_github" {
     allow_remote_vpc_dns_resolution  = true
     allow_vpc_to_remote_classic_link = false
   }
+  
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route" "ucfs_github" {

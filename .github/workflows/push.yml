@@ -16,24 +16,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.12.19
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-
-      - name: "Install dependencies"
-        id: deps
-        run: pip install Jinja2 PyYAML boto3
-
-      - name: "Bootstrap"
-        id: bootstrap
-        run: |
-          python bootstrap_terraform.py
-          sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
-        working-directory: .
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-2
 
       - name: "Terraform Format"
         id: fmt
