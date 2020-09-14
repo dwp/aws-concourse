@@ -23,6 +23,18 @@ variable "cognito_domain" {}
 variable "cognito_issuer" {}
 variable "cognito_name" {}
 
+variable "concourse_web_config" {
+  type = object({
+    concourse_username                    = string,
+    concourse_password                    = string,
+    database_username                     = string,
+    database_password                     = string,
+    enterprise_github_oauth_client_id     = string,
+    enterprise_github_oauth_client_secret = string,
+    enterprise_github_url                 = string,
+  })
+}
+
 
 variable "web" {
   description = "atc/tsa configuration options"

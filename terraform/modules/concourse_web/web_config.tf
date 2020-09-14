@@ -13,13 +13,13 @@ locals {
       CONCOURSE_EXTERNAL_URL  = "https://${var.loadbalancer.fqdn}"
       CONCOURSE_AUTH_DURATION = var.auth_duration
 
-      CONCOURSE_ADD_LOCAL_USER       = "${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]}:${jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_password"]}"
-      CONCOURSE_MAIN_TEAM_LOCAL_USER = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
+      CONCOURSE_ADD_LOCAL_USER       = "${var.concourse_web_config.concourse_username}:${var.concourse_web_config.concourse_password}"
+      CONCOURSE_MAIN_TEAM_LOCAL_USER = var.concourse_web_config.concourse_username
 
       CONCOURSE_POSTGRES_DATABASE = var.database.database_name
       CONCOURSE_POSTGRES_HOST     = var.database.endpoint
-      CONCOURSE_POSTGRES_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_password"]
-      CONCOURSE_POSTGRES_USER     = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["database_user"]
+      CONCOURSE_POSTGRES_PASSWORD = var.concourse_web_config.database_password
+      CONCOURSE_POSTGRES_USER     = var.concourse_web_config.database_username
 
       CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
       CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
@@ -32,6 +32,7 @@ locals {
       CONCOURSE_AWS_SECRETSMANAGER_REGION = data.aws_region.current.name
       CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
       CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
+      CONCOURSE_SECRET_CACHE_DURATION = "1m"
 
       # Cognito Auth
       CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito_name
@@ -42,11 +43,11 @@ locals {
       CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
 
       # UC GitHub Auth
-      CONCOURSE_GITHUB_CLIENT_ID     = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["enterprise_github_oauth_client_id"]
-      CONCOURSE_GITHUB_CLIENT_SECRET = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["enterprise_github_oauth_client_secret"]
-      CONCOURSE_GITHUB_HOST          = jsondecode(data.aws_secretsmanager_secret_version.concourse-secrets.secret_binary)["enterprise_github_url"]
+      CONCOURSE_GITHUB_CLIENT_ID     = var.concourse_web_config.enterprise_github_oauth_client_id
+      CONCOURSE_GITHUB_CLIENT_SECRET = var.concourse_web_config.enterprise_github_oauth_client_secret
+      CONCOURSE_GITHUB_HOST          = var.concourse_web_config.enterprise_github_url
 
-      CONCOURSE_METRICS_HOST_NAME     = "${local.name}"
+      CONCOURSE_METRICS_HOST_NAME     = local.name
       CONCOURSE_CAPTURE_ERROR_METRICS = true
 
       #TODO: Audit logging
@@ -100,7 +101,7 @@ locals {
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy
       no_proxy                = var.proxy.no_proxy
-      enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
+      enterprise_github_certs = join(" ", var.enterprise_github_certs)
     }
   )
 
@@ -109,8 +110,8 @@ locals {
     {
       target             = "aws-concourse"
       concourse_version  = var.concourse.version
-      concourse_username = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
-      concourse_password = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_password"]
+      concourse_username = var.concourse_web_config.concourse_username
+      concourse_password = var.concourse_web_config.concourse_password
     }
   )
 
@@ -122,7 +123,7 @@ locals {
   identity = templatefile(
     "${path.module}/templates/teams/identity/team.yml",
     {
-      identity_owner = jsondecode(data.aws_secretsmanager_secret_version.dataworks-secrets.secret_binary)["concourse_user"]
+      identity_owner = var.concourse_web_config.concourse_username
     }
   )
 
