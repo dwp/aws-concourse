@@ -12,6 +12,8 @@ jobs:
       - .: (( inject meta.plan.terraform-bootstrap ))
         input_mapping:
           aws-concourse: aws-concourse-pr
+        params:
+          AWS_SECRETS_ROLE: arn:aws:iam::((aws_account.management)):role/ci
       - task: terraform-plan
         config:
           platform: linux

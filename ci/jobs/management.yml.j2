@@ -8,6 +8,8 @@ jobs:
     passed:
     - management-dev
   - .: (( inject meta.plan.terraform-bootstrap ))
+    params:
+      AWS_SECRETS_ROLE: arn:aws:iam::((aws_account.management)):role/ci
   - .: (( inject meta.plan.terraform-apply ))
     params:
       TF_WORKSPACE: management
