@@ -1,6 +1,6 @@
-name: "Push Checks"
+name: "Pull Request"
 on:
-  push:
+  pull_request:
     paths:
       - "terraform/**"
 defaults:
@@ -39,3 +39,23 @@ jobs:
         id: fmt
         run: terraform fmt
         continue-on-error: true
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init
+        env:
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Plan"
+        id: plan
+        run: terraform plan
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: default
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
