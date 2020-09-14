@@ -3,7 +3,6 @@ jobs:
   plan:
   - get: aws-concourse
     trigger: true
-  - get: packer-egress-test-release
   - .: (( inject meta.plan.terraform-bootstrap ))
   - .: (( inject meta.plan.terraform-apply ))
   - .: (( inject meta.plan.terraform-plan ))
@@ -13,4 +12,3 @@ jobs:
     config:
       params:
         AWS_ACC: "{{accounts['management-dev']}}"
-  - .: (( inject meta.plan.proxy-test ))

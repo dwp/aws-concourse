@@ -5,7 +5,6 @@ jobs:
     passed:
     - management-dev
     trigger: true
-  - get: packer-egress-test-release
     passed:
     - management-dev
   - .: (( inject meta.plan.terraform-bootstrap ))
@@ -23,4 +22,3 @@ jobs:
     config:
       params:
         AWS_ACC: "{{accounts['management']}}"
-  - .: (( inject meta.plan.proxy-test ))
