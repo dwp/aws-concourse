@@ -2,6 +2,7 @@ name: "Pull Request"
 on:
   pull_request:
     paths:
+      - ".github/pull-request.yml" #for testing
       - "terraform/**"
 defaults:
   run:
