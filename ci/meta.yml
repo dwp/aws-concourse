@@ -1,0 +1,288 @@
+meta:
+  plan:
+    terraform-bootstrap:
+      task: terraform-bootstrap
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/jinja-yaml-aws
+            version: 0.0.5
+            tag: 0.0.5
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              python bootstrap_terraform.py
+              sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
+              cp terraform/deploy/terraform.tf ../terraform-config
+              cp terraform/deploy/terraform.tfvars ../terraform-config
+          dir: aws-concourse
+        inputs:
+          - name: aws-concourse
+        outputs:
+          - name: terraform-config
+      params:
+        AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
+        AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
+        AWS_REGION: eu-west-2
+        AWS_SECRETS_ROLE: arn:aws:iam::((aws_account.management-dev)):role/ci
+    terraform-output:
+      task: terraform-output
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((terraform.repository))
+            version: ((terraform12.version))
+            tag: ((terraform12.version))
+        params:
+          AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
+          AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
+        run:
+          path: sh
+          dir: aws-concourse/terraform/deploy
+          args:
+            - -exc
+            - |
+              cp ../../../terraform-config/terraform.tf .
+              cp ../../../terraform-config/terraform.tfvars .
+              terraform init
+              terraform workspace show
+              terraform output -json > ../../../terraform-output/outputs.json
+        inputs:
+          - name: aws-concourse
+          - name: terraform-config
+        outputs:
+          - name: terraform-output
+    concourse-smoke-tests:
+      task: concourse-smoke-tests
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/alpine-jq-curl
+            version: 0.0.4
+            tag: 0.0.4
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              CONCOURSE_URI=$(cat ../terraform-output/outputs.json | jq -r .loadbalancer.value.outputs.fqdn)
+              curl -kIs https://${CONCOURSE_URI} | grep 'HTTP/2 200'
+              curl -ks https://${CONCOURSE_URI} | grep 'Concourse'
+          dir: concourse-smoke-tests
+        inputs:
+          - name: terraform-output
+    create-aws-profiles:
+      task: create-aws-profiles
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        outputs:
+          - name: .aws
+        params:
+          AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
+          AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
+          AWS_PROFILE: ci
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              cat <<EOF> .aws/credentials
+              [default]
+              aws_access_key_id = $AWS_ACCESS_KEY_ID
+              aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+              [${AWS_PROFILE}]
+              role_arn = arn:aws:iam::${AWS_ACC}:role/${AWS_PROFILE}
+              source_profile = default
+              EOF
+              cat <<EOF> .aws/config
+              [default]
+              region = eu-west-2
+              [profile ${AWS_PROFILE}]
+              region = eu-west-2
+              s3 =
+                max_concurrent_requests = 5
+                signature_version = s3v4
+                addressing_style = virtual
+              EOF
+
+    reboot-web-nodes:
+      task: reboot-web-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: .aws
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId');
+              do
+                aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
+              done
+
+    fetch-credentials:
+      task: fetch-credentials
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        inputs:
+          - name: .aws
+        outputs:
+          - name: credentials
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              mkdir -p credentials
+              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks-secrets)
+              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
+
+    reboot-worker-nodes:
+      task: reboot-worker-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/alpine-jq-curl
+            version: 0.0.4
+            tag: 0.0.4
+        inputs:
+          - name: credentials
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              set +x
+              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.4.1/fly-6.4.1-linux-amd64.tgz"
+              tar -xvf fly.tgz
+              chmod +x fly
+              USERNAME=$(cat credentials/dataworks-secrets.json | jq -r .concourse_user)
+              PASSWORD=$(cat credentials/dataworks-secrets.json | jq -r .concourse_password)
+              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $USERNAME -p $PASSWORD
+              ./fly --target concourse workers
+              for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
+              do
+                ./fly --target concourse land-worker --worker $worker &&
+                sleep 300;
+              done
+
+    create-users:
+      task: create-users
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+          COGNITO_USER_POOL: concourse
+          COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
+          NOTIFY: true
+        inputs:
+          - name: .aws
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              set x
+              COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
+              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
+              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
+              for COGNAME in $(cat users.json| jq -r '.Users[] | select(.disabled | test("false")) | .username');
+              do
+                COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .email');
+                COGPHONE=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .phone');
+                COGGROUPS=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .groups[]');
+                if [[ -z $(grep ${COGNAME} user.parse) ]]; then
+                    aws cognito-idp admin-create-user \
+                    --user-pool-id $COGNITO_USER_POOL \
+                    --username $COGNAME \
+                    --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true \
+                    --desired-delivery-mediums EMAIL
+                fi
+                for COGGROUP in $COGGROUPS; do
+                  aws cognito-idp admin-add-user-to-group \
+                  --user-pool-id $COGNITO_USER_POOL \
+                  --username $COGNAME \
+                  --group-name $COGGROUP
+                done
+              done
+
+    delete-users:
+      task: delete-users
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((docker-awscli.repository))
+            version: ((docker-awscli.version))
+            tag: ((docker-awscli.version))
+        params:
+          AWS_PROFILE: ci
+          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
+          AWS_CONFIG_FILE: .aws/config
+          COGNITO_USER_POOL: concourse
+          COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
+        inputs:
+          - name: .aws
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              set +x
+              COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
+              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
+              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
+              for COGNAME in $(cat users.json| jq -r '.Users[] | select(.disabled | test("true")) | .username');
+              do
+                if [[ ! -z $(grep ${COGNAME} user.parse) ]]; then
+                    aws cognito-idp admin-delete-user \
+                    --user-pool-id $COGNITO_USER_POOL \
+                    --username $COGNAME
+                fi
+              done
