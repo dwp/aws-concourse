@@ -35,8 +35,3 @@ github_vpc = {
 {%- for k, v in ucfs['github']['vpc'].items() %}
   {{ k }} = "{{ v }}"{% endfor %}
 }
-
-packer_egress_test_zip = {
-  base_path = "../../../packer-egress-test-release"
-  version   = "0.0.12"
-}

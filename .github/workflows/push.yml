@@ -1,0 +1,23 @@
+name: "Push Checks"
+on:
+  push:
+    paths:
+      - "terraform/**"
+defaults:
+  run:
+    working-directory: terraform/deploy/
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.19
+
+      - name: "Terraform Format"
+        id: fmt
+        run: terraform fmt
+        continue-on-error: true

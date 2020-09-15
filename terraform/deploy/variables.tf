@@ -73,13 +73,6 @@ variable "concourse_no_proxy" {
   default = "169.254.169.254,169.254.169.123,.amazonaws.com"
 }
 
-variable "packer_egress_test_zip" {
-  type = object({
-    base_path = string
-    version   = string
-  })
-}
-
 variable "github_vpc" {
   type = object({
     id         = string
