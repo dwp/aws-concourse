@@ -1,0 +1,17 @@
+name: "Pull Request"
+on:
+  pull_request_review:
+    types: submitted
+    paths-ignore:
+      - "terraform/**"
+
+jobs:
+  pull-request:
+    name: "Non-Terraform Pull Request"
+    runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Approved"
+        run: echo "approved"
