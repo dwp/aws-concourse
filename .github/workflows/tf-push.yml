@@ -1,6 +1,8 @@
 name: "Push Checks"
 on:
   push:
+    branches-ignore:
+      - master
     paths:
       - "terraform/**"
 defaults:
