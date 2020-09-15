@@ -38,11 +38,6 @@ jobs:
           AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
           AWS_DEFAULT_REGION: eu-west-2
 
-      - name: "Terraform Format"
-        id: fmt
-        run: terraform fmt
-        continue-on-error: true
-
       - name: "Terraform Init"
         id: init
         run: terraform init
@@ -54,7 +49,9 @@ jobs:
 
       - name: "Terraform Apply"
         id: plan
-        run: terraform apply -auto-approve
+        run: |
+          terraform plan -out terraform.plan
+          terraform apply -auto-approve terraform.plan
         continue-on-error: false
         env:
           TF_WORKSPACE: default
@@ -65,7 +62,7 @@ jobs:
 
       - name: "Terraform Plan"
         id: plan
-        run: terraform plan
+        run: terraform plan -detailed-exitcode
         continue-on-error: false
         env:
           TF_WORKSPACE: default
@@ -103,11 +100,6 @@ jobs:
           AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT }}
           AWS_DEFAULT_REGION: eu-west-2
 
-      - name: "Terraform Format"
-        id: fmt
-        run: terraform fmt
-        continue-on-error: true
-
       - name: "Terraform Init"
         id: init
         run: terraform init
@@ -119,7 +111,9 @@ jobs:
 
       # - name: "Terraform Apply"
       #   id: plan
-      #   run: terraform apply -auto-approve
+      #   run: |
+      #     terraform plan -out terraform.plan
+      #     terraform apply -auto-approve terraform.plan
       #   continue-on-error: false
       #   env:
       #     TF_WORKSPACE: management
@@ -130,7 +124,7 @@ jobs:
 
       - name: "Terraform Plan"
         id: plan
-        run: terraform plan
+        run: terraform plan -detailed-exitcode
         continue-on-error: false
         env:
           TF_WORKSPACE: management

@@ -36,11 +36,6 @@ jobs:
           AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT }}
           AWS_DEFAULT_REGION: eu-west-2
 
-      - name: "Terraform Format"
-        id: fmt
-        run: terraform fmt
-        continue-on-error: true
-
       - name: "Terraform Init"
         id: init
         run: terraform init
