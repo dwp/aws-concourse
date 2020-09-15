@@ -33,7 +33,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
-          AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
+          AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT }}
           AWS_DEFAULT_REGION: eu-west-2
 
       - name: "Terraform Format"
@@ -55,7 +55,7 @@ jobs:
         run: terraform plan
         continue-on-error: false
         env:
-          TF_WORKSPACE: default
+          TF_WORKSPACE: management
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
