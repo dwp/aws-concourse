@@ -1,11 +1,4 @@
 resources:
-  - name: aws-concourse-pr
-    type: pull-request
-    source:
-      access_token: ((github_com.token))
-      repo: dwp/aws-concourse
-      uri: https://github.com/dwp/aws-concourse.git
-    check_every: 15m
   - name: aws-concourse
     type: git
     source:

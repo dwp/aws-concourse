@@ -30,14 +30,6 @@ def main():
 
     config_data = yaml.load(
         parameter['Parameter']['Value'], Loader=yaml.FullLoader)
-    with open('ci/jobs/management-dev.yml.j2') as in_template:
-        template = jinja2.Template(in_template.read())
-    with open('ci/jobs/management-dev.yml', 'w+') as pipeline:
-        pipeline.write(template.render(config_data))
-    with open('ci/jobs/management.yml.j2') as in_template:
-        template = jinja2.Template(in_template.read())
-    with open('ci/jobs/management.yml', 'w+') as pipeline:
-        pipeline.write(template.render(config_data))
     with open('ci/jobs/reboot-web-management.yml.j2') as in_template:
         template = jinja2.Template(in_template.read())
     with open('ci/jobs/reboot-web-management.yml', 'w+') as pipeline:
