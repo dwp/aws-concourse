@@ -31,3 +31,10 @@ variable "database" {
     preferred_backup_window = "01:00-03:00"
   }
 }
+
+variable "database_credentials" {
+  type = object({
+    username = string,
+    password = string,
+  })
+}
