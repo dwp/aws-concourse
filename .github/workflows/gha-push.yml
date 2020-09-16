@@ -16,3 +16,7 @@ jobs:
       - uses: nwisbeta/validate-yaml-schema@v1.0
         env:
           GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}/.github
+
+      - name: "Copy workflows"
+        id: copy
+        run: cp .github/workflows/*.yml workflows/

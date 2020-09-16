@@ -1,7 +1,7 @@
 {
     "yaml.schemas": {
         "http://json.schemastore.org/github-workflow": [
-            "./github/workflows/*.yml"
+            "workflows/*.yml"
         ]
     }
 }
