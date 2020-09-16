@@ -6,9 +6,6 @@ on:
     paths:
       - ".github/workflows/**"
       - ".vscode/**"
-defaults:
-  run:
-    working-directory: .github/workflows/
 
 jobs:
   push:
@@ -16,11 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ansible/ansible-lint-action@master
-        with:
-          files-to-validate: '[
-          {
-            "path": ".github/workflows/**",
-            "schema": ".github/workflows/schema.json"
-          }
-        ]'
+      - uses: nwisbeta/validate-yaml-schema@v1.0
+        env:
+          GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}/.github
