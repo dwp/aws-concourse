@@ -19,6 +19,7 @@ jobs:
 
   validate:
     name: "Validate workflows"
+    runs-on: ubuntu-latest
     needs: copy
     steps:
       - uses: nwisbeta/validate-yaml-schema@v1.0
