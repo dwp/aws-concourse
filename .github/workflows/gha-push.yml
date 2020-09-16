@@ -8,15 +8,17 @@ on:
       - ".vscode/**"
 
 jobs:
-  push:
-    name: "On GHA Push"
+  copy:
+    name: "Copy workflows"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: nwisbeta/validate-yaml-schema@v1.0
-        env:
-          GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}/.github
-
       - name: "Copy workflows"
         id: copy
-        run: cp .github/workflows/*.yml workflows/
+        run: mkdir workflows && cp .github/workflows/*.yml workflows/
+
+  validate:
+    name: "Validate workflows"
+    needs: copy
+    steps:
+      - uses: nwisbeta/validate-yaml-schema@v1.0
