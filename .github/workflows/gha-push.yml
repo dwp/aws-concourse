@@ -16,11 +16,6 @@ jobs:
         id: arc
         run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
       - uses: actions/checkout@v2
-      - name: "arc list workflows"
-        id: list
-        run: |
-          act -l
       - name: "arc dry-run"
         id: dry-run
-        run: |
-          act -n
+        run: act -n
