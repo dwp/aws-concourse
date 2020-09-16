@@ -16,5 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: nwisbeta/validate-yaml-schema@v1.0
-        run: cd $GITHUB_WORKSPACE/.github
+      - uses: ansible/ansible-lint-action@master
+        with:
+          files-to-validate: [
+          {
+            path: ".github/workflows/**",
+            schema: ".github/workflows/schema.json"
+          }
+        ]
