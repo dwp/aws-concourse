@@ -6,6 +6,9 @@ on:
     paths:
       - ".github/workflows/**"
       - ".vscode/**"
+defaults:
+  run:
+    working-directory: .github/workflows/
 
 jobs:
   push:
