@@ -48,7 +48,7 @@ jobs:
           AWS_DEFAULT_REGION: eu-west-2
 
       - name: "Terraform Apply"
-        id: plan
+        id: apply
         run: |
           terraform plan -out terraform.plan
           terraform apply -auto-approve terraform.plan
@@ -110,7 +110,7 @@ jobs:
           AWS_DEFAULT_REGION: eu-west-2
 
       # - name: "Terraform Apply"
-      #   id: plan
+      #   id: apply
       #   run: |
       #     terraform plan -out terraform.plan
       #     terraform apply -auto-approve terraform.plan
