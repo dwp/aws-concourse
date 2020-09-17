@@ -3,6 +3,6 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = var.retention_in_days
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
