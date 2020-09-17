@@ -56,6 +56,7 @@ jobs:
         continue-on-error: false
         env:
           TF_WORKSPACE: default
+          TF_INPUT: false
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
@@ -67,6 +68,7 @@ jobs:
         continue-on-error: false
         env:
           TF_WORKSPACE: default
+          TF_INPUT: false
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
@@ -118,6 +120,7 @@ jobs:
         continue-on-error: false
         env:
           TF_WORKSPACE: management
+          TF_INPUT: false
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
@@ -129,6 +132,7 @@ jobs:
         continue-on-error: false
         env:
           TF_WORKSPACE: management
+          TF_INPUT: false
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
