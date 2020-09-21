@@ -3,8 +3,9 @@ resource "aws_db_subnet_group" "cluster" {
 }
 
 resource "aws_kms_key" "aurora" {
-  enable_key_rotation = true
-  tags                = merge(var.tags, { Name = "${var.name}-db-key" })
+  enable_key_rotation     = true
+  deletion_window_in_days = 7
+  tags                    = merge(var.tags, { Name = "${var.name}-db-key", ProtectsSensitiveData = true })
 }
 
 resource "aws_kms_alias" "aurora" {
