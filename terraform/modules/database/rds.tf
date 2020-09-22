@@ -14,8 +14,9 @@ resource "aws_kms_alias" "aurora" {
 }
 
 data "aws_db_cluster_snapshot" "cluster" {
-  db_cluster_snapshot_identifier = var.name
-  most_recent                    = true
+  db_cluster_identifier = var.name
+  snapshot_type         = "automated"
+  most_recent           = true
 }
 
 resource "aws_rds_cluster" "cluster" {
@@ -30,9 +31,9 @@ resource "aws_rds_cluster" "cluster" {
   preferred_backup_window   = "01:00-03:00"
   apply_immediately         = true
   db_subnet_group_name      = aws_db_subnet_group.cluster.id
-  final_snapshot_identifier = var.name
+  final_snapshot_identifier = "${var.name}-final-snapshot"
   skip_final_snapshot       = false
-  snapshot_identifier       = var.name
+  snapshot_identifier       = data.aws_db_cluster_snapshot.cluster.id
   storage_encrypted         = true
   kms_key_id                = aws_kms_key.aurora.arn
   vpc_security_group_ids    = [aws_security_group.db.id]
