@@ -27,7 +27,7 @@ resource "aws_rds_cluster" "cluster" {
   master_username           = var.database_credentials.username
   master_password           = var.database_credentials.password
   backup_retention_period   = 14
-  preferred_backup_window   = "01:00-03:00"
+  preferred_backup_window   = "06:00-08:00"
   apply_immediately         = true
   db_subnet_group_name      = aws_db_subnet_group.cluster.id
   final_snapshot_identifier = "${var.name}-final-snapshot"
