@@ -15,7 +15,6 @@ resource "aws_kms_alias" "aurora" {
 
 data "aws_db_cluster_snapshot" "cluster" {
   db_cluster_identifier = var.name
-  snapshot_type         = "automated"
   most_recent           = true
 }
 
