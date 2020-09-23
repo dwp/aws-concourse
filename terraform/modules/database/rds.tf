@@ -41,7 +41,7 @@ resource "aws_rds_cluster" "cluster" {
   lifecycle {
     ignore_changes = [
       engine_version,
-      snapshot_identifier
+      snapshot_identifier,
     ]
   }
 }
