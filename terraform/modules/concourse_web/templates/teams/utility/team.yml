@@ -1,5 +1,5 @@
 roles:
-  - name: viewer
+  - name: member
     oidc:
       groups: ["dataworks"]
     github:
