@@ -150,7 +150,7 @@ module "database" {
     instance_type           = "db.t3.medium"
     db_count                = length(data.aws_availability_zones.available.zone_ids)
     engine                  = "aurora-postgresql"
-    engine_version          = "10.7"
+    engine_version          = "10.11"
     backup_retention_period = 14
     preferred_backup_window = "01:00-03:00"
   }
@@ -168,7 +168,7 @@ module "vpc" {
   tags                        = local.tags
   vpc_cidr_block              = local.cidr_block[local.environment].ci-cd-vpc
   whitelist_cidr_blocks       = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
-  internet_proxy_fqdn         = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.dns_name
+  internet_proxy_fqdn         = module.vpc.outputs.internet_proxy_endpoint
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
 }
