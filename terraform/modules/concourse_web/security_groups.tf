@@ -29,24 +29,14 @@ resource "aws_security_group_rule" "lb_web_out_http" {
   source_security_group_id = aws_security_group.web.id
 }
 
-resource "aws_security_group_rule" "web_int_lb_in_http" {
-  description              = "inbound traffic to web nodes from internal lb"
-  from_port                = 8080
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.web.id
-  to_port                  = 8080
-  type                     = "ingress"
-  source_security_group_id = var.internal_loadbalancer.security_group_id
-}
-
-resource "aws_security_group_rule" "int_lb_web_out_http" {
-  description              = "outbound traffic from web nodes to internal lb"
-  from_port                = 8080
-  protocol                 = "tcp"
-  security_group_id        = var.internal_loadbalancer.security_group_id
-  to_port                  = 8080
-  type                     = "egress"
-  source_security_group_id = aws_security_group.web.id
+resource "aws_security_group_rule" "int_lb_web_in_http" {
+  description       = "inbound traffic to web nodes from internal lb"
+  from_port         = 8080
+  protocol          = "tcp"
+  cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
+  to_port           = 8080
+  type              = "ingress"
+  security_group_id = aws_security_group.web.id
 }
 
 resource "aws_security_group_rule" "web_internal_in_tcp" {
