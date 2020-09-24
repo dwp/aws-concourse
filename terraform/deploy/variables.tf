@@ -15,7 +15,7 @@ variable "concourse" {
   type        = map(string)
 
   default = {
-    version = "6.5.1"
+    version = "6.4.1"
   }
 }
 
