@@ -10,7 +10,7 @@ groups:
       - reboot-management-dev-worker-nodes
   - name: reboot-web-nodes-dev
     jobs:
-      - reboot-management-dev-web-node
+      - reboot-management-dev-web-nodes
   - name: user-administration
     jobs:
       - management-user-admin
