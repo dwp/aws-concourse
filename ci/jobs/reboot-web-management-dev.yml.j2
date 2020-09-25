@@ -1,0 +1,10 @@
+jobs:
+- name: reboot-management-dev-web-nodes
+  plan:
+  - get: aws-concourse
+    trigger: false
+  - .: (( inject meta.plan.create-aws-profiles ))
+    config:
+      params:
+        AWS_ACC: "{{accounts['management-dev']}}"
+  - .: (( inject meta.plan.reboot-web-nodes ))

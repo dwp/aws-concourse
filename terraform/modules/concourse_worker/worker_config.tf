@@ -18,6 +18,7 @@ locals {
       CONCOURSE_CERTS_DIR              = "/etc/ssl/certs"
       CONCOURSE_GARDEN_NETWORK_POOL    = "172.16.0.0/21"
       CONCOURSE_GARDEN_MAX_CONTAINERS  = "350"
+      CONCOURSE_LOG_LEVEL              = "error"
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy

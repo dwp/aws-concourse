@@ -24,15 +24,17 @@ locals {
       CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
       CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
       CONCOURSE_TSA_HOST_KEY        = "/etc/concourse/host_key"
+      CONCOURSE_TSA_LOG_LEVEL       = "error"
+      CONCOURSE_LOG_LEVEL           = "error"
 
       #TODO: Setup Monitoring !10
       CONCOURSE_PROMETHEUS_BIND_IP   = "0.0.0.0"
       CONCOURSE_PROMETHEUS_BIND_PORT = 9090
 
-      CONCOURSE_AWS_SECRETSMANAGER_REGION = data.aws_region.current.name
-      CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
-      CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE : "/concourse/{{.Team}}/{{.Secret}}"
-      CONCOURSE_SECRET_CACHE_DURATION = "1m"
+      CONCOURSE_AWS_SECRETSMANAGER_REGION                   = data.aws_region.current.name
+      CONCOURSE_AWS_SECRETSMANAGER_PIPELINE_SECRET_TEMPLATE = "/concourse/{{.Team}}/{{.Pipeline}}/{{.Secret}}"
+      CONCOURSE_AWS_SECRETSMANAGER_TEAM_SECRET_TEMPLATE     = "/concourse/{{.Team}}/{{.Secret}}"
+      CONCOURSE_SECRET_CACHE_DURATION                       = "1m"
 
       # Cognito Auth
       CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito_name
@@ -51,15 +53,15 @@ locals {
       CONCOURSE_CAPTURE_ERROR_METRICS = true
 
       #TODO: Audit logging
-      #CONCOURSE_ENABLE_BUILD_AUDITING     = true
-      #CONCOURSE_ENABLE_CONTAINER_AUDITING = true
-      #CONCOURSE_ENABLE_JOB_AUDITING       = true
-      #CONCOURSE_ENABLE_PIPELINE_AUDITING  = true
-      #CONCOURSE_ENABLE_RESOURCE_AUDITING  = true
-      #CONCOURSE_ENABLE_SYSTEM_AUDITING    = true
-      #CONCOURSE_ENABLE_TEAM_AUDITING      = true
-      #CONCOURSE_ENABLE_WORKER_AUDITING    = true
-      #CONCOURSE_ENABLE_VOLUME_AUDITING    = true
+      CONCOURSE_ENABLE_BUILD_AUDITING     = true
+      CONCOURSE_ENABLE_CONTAINER_AUDITING = true
+      CONCOURSE_ENABLE_JOB_AUDITING       = true
+      CONCOURSE_ENABLE_PIPELINE_AUDITING  = true
+      CONCOURSE_ENABLE_RESOURCE_AUDITING  = true
+      CONCOURSE_ENABLE_SYSTEM_AUDITING    = true
+      CONCOURSE_ENABLE_TEAM_AUDITING      = true
+      CONCOURSE_ENABLE_WORKER_AUDITING    = true
+      CONCOURSE_ENABLE_VOLUME_AUDITING    = true
 
       CONCOURSE_CONTAINER_PLACEMENT_STRATEGY : "random"
 
