@@ -103,13 +103,19 @@ locals {
   teams = templatefile(
     "${path.module}/templates/teams.sh",
     {
-      target            = "aws-concourse"
-      concourse_version = var.concourse.version
+      aws_default_region = data.aws_region.current.name
+      target             = "aws-concourse"
+      concourse_version  = var.concourse.version
     }
   )
 
   dataworks = templatefile(
     "${path.module}/templates/teams/dataworks/team.yml",
+    {}
+  )
+
+  identity = templatefile(
+    "${path.module}/templates/teams/identity/team.yml",
     {}
   )
 
@@ -168,6 +174,7 @@ write_files:
     path: /root/teams/dataworks/team.yml
     permissions: '0600'
   - encoding: b64
+    content: ${base64encode(local.identity)}
     owner: root:root
     path: /root/teams/identity/team.yml
     permissions: '0600'
@@ -197,6 +204,11 @@ EOF
   part {
     content_type = "text/plain"
     content      = local.dataworks
+  }
+
+  part {
+    content_type = "text/plain"
+    content      = local.identity
   }
 
   part {

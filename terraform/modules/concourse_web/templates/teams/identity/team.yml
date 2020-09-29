@@ -1,7 +1,4 @@
 roles:
-  - name: owner
-    local:
-      users: ["${CONCOURSE_USER}"]
   - name: viewer
     oidc:
       groups: ["dataworks"]
