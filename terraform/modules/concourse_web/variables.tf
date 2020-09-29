@@ -10,7 +10,6 @@ variable "tags" {
 
 variable "ami_id" {}
 variable "concourse" {}
-variable "concourse_keys" {}
 variable "database" {}
 variable "internal_loadbalancer" {}
 variable "loadbalancer" {}
@@ -25,13 +24,9 @@ variable "cognito_name" {}
 
 variable "concourse_web_config" {
   type = object({
-    concourse_username                    = string,
-    concourse_password                    = string,
-    database_username                     = string,
-    database_password                     = string,
-    enterprise_github_oauth_client_id     = string,
-    enterprise_github_oauth_client_secret = string,
-    enterprise_github_url                 = string,
+    database_username     = string,
+    database_password     = string,
+    enterprise_github_url = string,
   })
 }
 

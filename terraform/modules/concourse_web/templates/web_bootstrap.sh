@@ -3,6 +3,20 @@
 set -euxo pipefail
 
 export AWS_DEFAULT_REGION=${aws_default_region}
+export CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_user)
+export CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
+
+cat <<EOF >> /etc/systemd/system/concourse-web.env
+CONCOURSE_POSTGRES_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .database_password)
+CONCOURSE_POSTGRES_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .database_user)
+CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_user)
+CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
+CONCOURSE_ADD_LOCAL_USER=$CONCOURSE_USER:$CONCOURSE_PASSWORD
+CONCOURSE_GITHUB_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_id)
+CONCOURSE_GITHUB_CLIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_secret)
+CONCOURSE_MAIN_TEAM_LOCAL_USER=$CONCOURSE_USER
+EOF
+
 
 concourse_tarball="concourse-${concourse_version}-linux-amd64.tgz"
 https_proxy="${https_proxy}" curl -s -L -O https://github.com/concourse/concourse/releases/download/v${concourse_version}/$concourse_tarball

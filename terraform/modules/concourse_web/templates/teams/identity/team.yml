@@ -1,7 +1,4 @@
 roles:
-  - name: owner
-    local:
-      users: ["${identity_owner}"]
   - name: viewer
     oidc:
       groups: ["dataworks"]

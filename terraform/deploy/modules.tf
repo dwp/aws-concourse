@@ -39,7 +39,6 @@ module "concourse_web" {
 
   ami_id                = module.amis.ami_id
   concourse             = var.concourse
-  concourse_keys        = var.concourse_keys
   concourse_web_config  = var.concourse_web_config
   database              = module.database.outputs
   internal_loadbalancer = module.concourse_internal_lb.outputs
@@ -103,7 +102,6 @@ module "concourse_worker" {
 
   ami_id                  = module.amis.ami_id
   concourse               = var.concourse
-  concourse_keys          = var.concourse_keys
   internal_loadbalancer   = module.concourse_internal_lb.outputs
   loadbalancer            = module.concourse_lb.outputs
   log_group               = module.concourse_worker_log_group.outputs
@@ -156,8 +154,8 @@ module "database" {
   }
 
   database_credentials = {
-    username = var.concourse_web_config.database_username,
-    password = var.concourse_web_config.database_password,
+    username = var.concourse_web_config.database_username
+    password = var.concourse_web_config.database_password
   }
 }
 

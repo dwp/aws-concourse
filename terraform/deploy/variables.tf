@@ -21,25 +21,9 @@ variable "concourse" {
 
 variable "concourse_web_config" {
   type = object({
-    concourse_username                    = string,
-    concourse_password                    = string,
-    database_username                     = string,
-    database_password                     = string,
-    enterprise_github_oauth_client_id     = string,
-    enterprise_github_oauth_client_secret = string,
-    enterprise_github_url                 = string,
-  })
-}
-
-variable "concourse_keys" {
-  type = object({
-    session_signing_key     = string,
-    session_signing_pub_key = string,
-    tsa_host_key            = string,
-    tsa_host_pub_key        = string,
-    worker_key              = string,
-    worker_pub_key          = string,
-    authorized_worker_keys  = string,
+    database_username     = string,
+    database_password     = string,
+    enterprise_github_url = string,
   })
 }
 
