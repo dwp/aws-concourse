@@ -5,6 +5,7 @@ After=basic.target network.target
 # OnFailure=poweroff.target
 
 [Service]
+EnvironmentFile=/etc/systemd/system/concourse-web.env
 %{ for key, value in environment_vars ~}
 Environment=${key}=${value}
 %{ endfor ~}

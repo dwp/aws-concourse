@@ -13,13 +13,8 @@ locals {
       CONCOURSE_EXTERNAL_URL  = "https://${var.loadbalancer.fqdn}"
       CONCOURSE_AUTH_DURATION = var.auth_duration
 
-      CONCOURSE_ADD_LOCAL_USER       = "${var.concourse_web_config.concourse_username}:${var.concourse_web_config.concourse_password}"
-      CONCOURSE_MAIN_TEAM_LOCAL_USER = var.concourse_web_config.concourse_username
-
       CONCOURSE_POSTGRES_DATABASE = var.database.database_name
       CONCOURSE_POSTGRES_HOST     = var.database.endpoint
-      CONCOURSE_POSTGRES_PASSWORD = var.concourse_web_config.database_password
-      CONCOURSE_POSTGRES_USER     = var.concourse_web_config.database_username
 
       CONCOURSE_SESSION_SIGNING_KEY = "/etc/concourse/session_signing_key"
       CONCOURSE_TSA_AUTHORIZED_KEYS = "/etc/concourse/authorized_worker_keys"
@@ -45,9 +40,7 @@ locals {
       CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
 
       # UC GitHub Auth
-      CONCOURSE_GITHUB_CLIENT_ID     = var.concourse_web_config.enterprise_github_oauth_client_id
-      CONCOURSE_GITHUB_CLIENT_SECRET = var.concourse_web_config.enterprise_github_oauth_client_secret
-      CONCOURSE_GITHUB_HOST          = var.concourse_web_config.enterprise_github_url
+      CONCOURSE_GITHUB_HOST = var.concourse_web_config.enterprise_github_url
 
       CONCOURSE_METRICS_HOST_NAME     = local.name
       CONCOURSE_CAPTURE_ERROR_METRICS = true
@@ -63,7 +56,7 @@ locals {
       CONCOURSE_ENABLE_WORKER_AUDITING    = true
       CONCOURSE_ENABLE_VOLUME_AUDITING    = true
 
-      CONCOURSE_CONTAINER_PLACEMENT_STRATEGY : "random"
+      CONCOURSE_CONTAINER_PLACEMENT_STRATEGY = "random"
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy
@@ -110,23 +103,14 @@ locals {
   teams = templatefile(
     "${path.module}/templates/teams.sh",
     {
-      target             = "aws-concourse"
-      concourse_version  = var.concourse.version
-      concourse_username = var.concourse_web_config.concourse_username
-      concourse_password = var.concourse_web_config.concourse_password
+      target            = "aws-concourse"
+      concourse_version = var.concourse.version
     }
   )
 
   dataworks = templatefile(
     "${path.module}/templates/teams/dataworks/team.yml",
     {}
-  )
-
-  identity = templatefile(
-    "${path.module}/templates/teams/identity/team.yml",
-    {
-      identity_owner = var.concourse_web_config.concourse_username
-    }
   )
 
   utility = templatefile(
@@ -184,7 +168,6 @@ write_files:
     path: /root/teams/dataworks/team.yml
     permissions: '0600'
   - encoding: b64
-    content: ${base64encode(local.identity)}
     owner: root:root
     path: /root/teams/identity/team.yml
     permissions: '0600'
@@ -214,11 +197,6 @@ EOF
   part {
     content_type = "text/plain"
     content      = local.dataworks
-  }
-
-  part {
-    content_type = "text/plain"
-    content      = local.identity
   }
 
   part {

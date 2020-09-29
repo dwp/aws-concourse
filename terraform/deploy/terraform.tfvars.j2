@@ -5,30 +5,9 @@ ami_filter_values = ["dw-al2-concourse-ami-*"]
 ami_owners        = ["{{accounts['management']}}"]
 
 concourse_web_config = {
-  concourse_username = "{{concourse_username}}"
-  concourse_password = "{{concourse_password}}"
   database_username = "{{database_username}}"
   database_password = "{{database_password}}"
-  enterprise_github_oauth_client_id = "{{enterprise_github_oauth_client_id}}"
-  enterprise_github_oauth_client_secret = "{{enterprise_github_oauth_client_secret}}"
   enterprise_github_url = "{{enterprise_github_url}}"
-}
-
-concourse_keys = {
-  session_signing_key     = <<EOT
-{{session_signing_key}}EOT
-  session_signing_pub_key = <<EOT
-{{session_signing_pub_key}}EOT
-  tsa_host_key            = <<EOT
-{{tsa_host_key}}EOT
-  tsa_host_pub_key        = <<EOT
-{{tsa_host_pub_key}}EOT
-  worker_key              = <<EOT
-{{worker_key}}EOT
-  worker_pub_key          = <<EOT
-{{worker_pub_key}}EOT
-  authorized_worker_keys  = <<EOT
-{{authorized_worker_keys}}EOT
 }
 
 github_vpc = {
