@@ -47,7 +47,6 @@ locals {
   worker_bootstrap_file = templatefile(
     "${path.module}/templates/worker_bootstrap.sh",
     {
-      concourse_version       = var.concourse.version
       aws_default_region      = data.aws_region.current.name
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy

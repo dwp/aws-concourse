@@ -92,7 +92,6 @@ locals {
     "${path.module}/templates/web_bootstrap.sh",
     {
       aws_default_region      = data.aws_region.current.name
-      concourse_version       = var.concourse.version
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy
       no_proxy                = var.proxy.no_proxy
@@ -105,7 +104,6 @@ locals {
     {
       aws_default_region = data.aws_region.current.name
       target             = "aws-concourse"
-      concourse_version  = var.concourse.version
     }
   )
 

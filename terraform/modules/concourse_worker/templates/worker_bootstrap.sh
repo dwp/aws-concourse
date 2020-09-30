@@ -4,11 +4,6 @@ set -euxo pipefail
 
 export AWS_DEFAULT_REGION=${aws_default_region}
 
-concourse_tarball="concourse-${concourse_version}-linux-amd64.tgz"
-https_proxy="${https_proxy}" curl -s -L -O https://github.com/concourse/concourse/releases/download/v${concourse_version}/$concourse_tarball
-tar -xzf $concourse_tarball -C /usr/local
-rm $concourse_tarball
-
 mkdir /etc/concourse
 
 aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .tsa_host_pub_key > /etc/concourse/tsa_host_key.pub
