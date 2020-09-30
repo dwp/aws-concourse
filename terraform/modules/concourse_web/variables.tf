@@ -9,7 +9,6 @@ variable "tags" {
 }
 
 variable "ami_id" {}
-variable "concourse" {}
 variable "database" {}
 variable "internal_loadbalancer" {}
 variable "loadbalancer" {}
