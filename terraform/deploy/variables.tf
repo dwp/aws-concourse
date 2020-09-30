@@ -10,15 +10,6 @@ variable "lb_name" {
   default     = "ci"
 }
 
-variable "concourse" {
-  description = "concourse version to install"
-  type        = map(string)
-
-  default = {
-    version = "6.4.1"
-  }
-}
-
 variable "concourse_web_config" {
   type = object({
     database_username     = string,
