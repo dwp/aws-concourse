@@ -33,16 +33,6 @@ variable "ami_filter_name" {
   default = "name"
 }
 
-variable "ami_filter_values" {
-  type    = list(string)
-  default = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
-}
-
-variable "ami_owners" {
-  type    = list(string)
-  default = ["self", "amazon"]
-}
-
 variable "concourse_no_proxy" {
   type    = string
   default = "169.254.169.254,169.254.169.123,.amazonaws.com"

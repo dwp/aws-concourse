@@ -2,8 +2,8 @@ module "amis" {
   source = "../modules/amis"
 
   ami_filter_name   = var.ami_filter_name
-  ami_filter_values = var.ami_filter_values
-  ami_owners        = var.ami_owners
+  ami_filter_values = local.ami_filter_values
+  ami_owners        = local.ami_owners
 }
 
 module "concourse_lb" {

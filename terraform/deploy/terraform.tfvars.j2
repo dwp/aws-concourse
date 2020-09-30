@@ -1,8 +1,6 @@
 assume_role = "administrator"
 parent_domain_name    = "{{dataworks_domain_name}}"
 whitelist_cidr_blocks = ["{{ucfs['team_cidr_block']}}"]
-ami_filter_values = ["dw-al2-concourse-ami-*"]
-ami_owners        = ["{{accounts['management']}}"]
 
 concourse_web_config = {
   database_username = "{{database_username}}"
