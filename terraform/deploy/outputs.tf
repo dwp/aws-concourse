@@ -17,3 +17,15 @@ output "concourse_web_sg" {
 output "aws_vpc" {
   value = module.vpc.outputs.aws_vpc
 }
+
+output "subnets_private" {
+  value = module.vpc.outputs.aws_subnets_private
+}
+
+output "s3_prefix_list_id" {
+  value = module.vpc.outputs.s3_prefix_list_id
+}
+
+output "interface_vpce_sg_id" {
+  value = module.vpc.outputs.interface_vpce_sg_id
+}

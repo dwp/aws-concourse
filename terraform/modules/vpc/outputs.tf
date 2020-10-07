@@ -12,5 +12,6 @@ output "outputs" {
     dynamodb_prefix_list_id = module.vpc.prefix_list_ids.dynamodb
     route_tables_private    = aws_route_table.private
     no_proxy_list           = module.vpc.no_proxy_list
+    interface_vpce_sg_id    = module.vpc.interface_vpce_sg_id
   }
 }
