@@ -58,3 +58,23 @@ resource "aws_security_group_rule" "web_outbound_dynamodb_https" {
   from_port         = 443
   to_port           = 443
 }
+
+resource "aws_security_group_rule" "worker_packer_cli_ssh" {
+  description       = "Allow Packer CLI to send SSH traffic"
+  type              = "egress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  self              = true
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "worker_ec2_packer_ssh" {
+  description       = "Allow EC2 instances to receive SSH traffic"
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  self              = true
+  security_group_id = aws_security_group.worker.id
+}
