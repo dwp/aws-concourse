@@ -73,7 +73,7 @@ locals {
     {
       environment_vars = merge(local.service_env_vars,
         {
-          CONCOURSE_PEER_ADDRESS = "%H"
+          CONCOURSE_PEER_ADDRESS = "127.0.0.1"
       })
     }
   )
