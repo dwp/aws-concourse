@@ -30,7 +30,7 @@ jobs:
       - name: "Bootstrap"
         id: bootstrap
         run: |
-          python bootstrap_terraform.py
+          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
           sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
@@ -41,7 +41,7 @@ jobs:
 
       - name: "Terraform Init"
         id: init
-        run: terraform init
+        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         env:
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
@@ -51,8 +51,8 @@ jobs:
       - name: "Terraform Apply"
         id: apply
         run: |
-          terraform plan -out terraform.plan
-          terraform apply -auto-approve terraform.plan
+          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         continue-on-error: false
         env:
           TF_WORKSPACE: default
@@ -64,7 +64,7 @@ jobs:
 
       - name: "Terraform Plan"
         id: plan
-        run: terraform plan -detailed-exitcode
+        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         continue-on-error: false
         env:
           TF_WORKSPACE: default
@@ -73,6 +73,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-2
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mgmt-dev-workflow-log
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
 
   management:
     name: "Terraform Apply Mangement"
@@ -94,7 +100,7 @@ jobs:
       - name: "Bootstrap"
         id: bootstrap
         run: |
-          python bootstrap_terraform.py
+          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
           sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
@@ -105,7 +111,7 @@ jobs:
 
       - name: "Terraform Init"
         id: init
-        run: terraform init
+        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         env:
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
@@ -115,8 +121,8 @@ jobs:
       - name: "Terraform Apply"
         id: apply
         run: |
-          terraform plan -out terraform.plan
-          terraform apply -auto-approve terraform.plan
+          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         continue-on-error: false
         env:
           TF_WORKSPACE: management
@@ -128,7 +134,7 @@ jobs:
 
       - name: "Terraform Plan"
         id: plan
-        run: terraform plan -detailed-exitcode
+        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         continue-on-error: false
         env:
           TF_WORKSPACE: management
@@ -137,3 +143,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-2
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mgmt-workflow-log
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
