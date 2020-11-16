@@ -12,6 +12,7 @@ module "vpc" {
     "application-autoscaling",
     "athena",
     "autoscaling",
+    "cloudformation",
     "codecommit",
     "config",
     "dynamodb",
