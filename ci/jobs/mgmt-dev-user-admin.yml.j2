@@ -9,3 +9,4 @@ jobs:
         AWS_ACC: "{{accounts['management-dev']}}"
   - .: (( inject meta.plan.create-users ))
   - .: (( inject meta.plan.delete-users ))
+  - .: (( inject meta.plan.admin-reset-password ))
