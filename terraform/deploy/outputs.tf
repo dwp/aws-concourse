@@ -14,6 +14,10 @@ output "concourse_web_sg" {
   value = module.concourse_web.outputs.security_group.id
 }
 
+output "concourse_worker_sg" {
+  value = module.concourse_worker.outputs.security_group.id
+}
+
 output "aws_vpc" {
   value = module.vpc.outputs.aws_vpc
 }
