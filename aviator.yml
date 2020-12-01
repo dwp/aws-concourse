@@ -18,3 +18,4 @@ fly:
   target: concourse
   expose: false
   config: aviator_pipeline.yml
+  check_creds: true
