@@ -3,6 +3,14 @@
 set -euxo pipefail
 
 export AWS_DEFAULT_REGION=${aws_default_region}
+export DATE=$(date +%H%M%S%d%m%y)
+export HOSTNAME=${name}-$DATE
+TOKEN=$(curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token")
+export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
+
+hostnamectl set-hostname $HOSTNAME
+aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Name,Value=$HOSTNAME
+
 
 mkdir /etc/concourse
 
