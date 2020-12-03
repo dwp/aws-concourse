@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "web_http" {
   }
 
   stickiness {
-    enabled = true
+    enabled = false
     type    = "lb_cookie"
   }
 
