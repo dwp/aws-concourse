@@ -32,6 +32,7 @@ module "vpc" {
     "logs",
     "monitoring",
     "rds",
+    "rds-data",
     "s3",
     "secretsmanager",
     "sns",
