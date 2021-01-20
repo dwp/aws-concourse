@@ -1,44 +1,27 @@
 meta:
   plan:
-    create-aws-profiles:
-      task: create-aws-profiles
+    fetch-credentials:
+      task: fetch-credentials
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         outputs:
-          - name: .aws
+          - name: credentials
         params:
-          AWS_ACCESS_KEY_ID: ((ci.aws_access_key_id))
-          AWS_SECRET_ACCESS_KEY: ((ci.aws_secret_access_key))
-          AWS_PROFILE: ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
           args:
             - -exc
             - |
-              cat <<EOF> .aws/credentials
-              [default]
-              aws_access_key_id = $AWS_ACCESS_KEY_ID
-              aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
-              [${AWS_PROFILE}]
-              role_arn = arn:aws:iam::${AWS_ACC}:role/${AWS_PROFILE}
-              source_profile = default
-              EOF
-              cat <<EOF> .aws/config
-              [default]
-              region = eu-west-2
-              [profile ${AWS_PROFILE}]
-              region = eu-west-2
-              s3 =
-                max_concurrent_requests = 5
-                signature_version = s3v4
-                addressing_style = virtual
-              EOF
+              source /assume-role
+              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks/dataworks-secrets)
+              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
 
     reboot-web-nodes:
       task: reboot-web-nodes
@@ -47,51 +30,21 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        inputs:
-          - name: .aws
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
           args:
             - -exc
             - |
+              source /assume-role
               for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=concourse-web | jq -r '.Reservations[].Instances[].InstanceId');
               do
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
-
-    fetch-credentials:
-      task: fetch-credentials
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
-        inputs:
-          - name: .aws
-        outputs:
-          - name: credentials
-        params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              mkdir -p credentials
-              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks/dataworks-secrets)
-              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
 
     reboot-worker-nodes:
       task: reboot-worker-nodes
@@ -100,17 +53,19 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-jq-curl.repository))
-            tag: ((docker-jq-curl.version))
-            version: ((docker-jq-curl.version))
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         inputs:
           - name: credentials
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
           args:
             - -exc
             - |
-              set +x
+              source /assume-role
               curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v6.6.0/fly-6.6.0-linux-amd64.tgz"
               tar -xvf fly.tgz
               chmod +x fly
@@ -131,24 +86,20 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
           NOTIFY: true
-        inputs:
-          - name: .aws
         run:
           path: sh
           args:
             - -exc
             - |
-              set x
+              source /assume-role
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
@@ -179,22 +130,19 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
-        inputs:
-          - name: .aws
         run:
           path: sh
           args:
             - -exc
             - |
+              source /assume-role
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
@@ -214,22 +162,19 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((docker-awscli.repository))
-            version: ((docker-awscli.version))
-            tag: ((docker-awscli.version))
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
         params:
-          AWS_PROFILE: ci
-          AWS_SHARED_CREDENTIALS_FILE: .aws/credentials
-          AWS_CONFIG_FILE: .aws/config
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
           COGNITO_USER_POOL: concourse
           COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
-        inputs:
-          - name: .aws
         run:
           path: sh
           args:
             - -exc
             - |
+              source /assume-role
               COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
               aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
               aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse

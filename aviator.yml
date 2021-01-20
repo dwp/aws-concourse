@@ -15,7 +15,7 @@ spruce:
     to: aviator_pipeline.yml
 fly:
   name: aws-concourse
-  target: concourse
+  target: dev-aws-concourse
   expose: false
   config: aviator_pipeline.yml
   check_creds: true
