@@ -75,7 +75,7 @@ meta:
               ./fly --target concourse workers
               for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
               do
-                ./fly --target concourse land-worker --worker $worker &&
+                ./fly --target concourse land-worker --worker $worker
               done
 
     create-users:
