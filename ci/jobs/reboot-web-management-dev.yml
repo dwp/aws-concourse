@@ -4,3 +4,6 @@ jobs:
       - get: aws-concourse
         trigger: false
       - .: (( inject meta.plan.reboot-web-nodes ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci

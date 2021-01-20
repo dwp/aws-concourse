@@ -4,7 +4,11 @@ jobs:
       - get: aws-concourse
         trigger: false
       - .: (( inject meta.plan.fetch-credentials ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
       - .: (( inject meta.plan.reboot-worker-nodes ))
         config:
           params:
             CONCOURSE_URI: "https://ci.wip.dataworks.dwp.gov.uk/"
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
