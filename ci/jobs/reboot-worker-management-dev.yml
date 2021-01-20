@@ -1,0 +1,10 @@
+jobs:
+  - name: reboot-management-dev-worker-nodes
+    plan:
+      - get: aws-concourse
+        trigger: false
+      - .: (( inject meta.plan.fetch-credentials ))
+      - .: (( inject meta.plan.reboot-worker-nodes ))
+        config:
+          params:
+            CONCOURSE_URI: "https://ci.wip.dataworks.dwp.gov.uk/"

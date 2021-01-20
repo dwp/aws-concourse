@@ -1,0 +1,8 @@
+jobs:
+  - name: management-dev-user-admin
+    plan:
+      - get: aws-concourse-users
+        trigger: true
+      - .: (( inject meta.plan.create-users ))
+      - .: (( inject meta.plan.delete-users ))
+      - .: (( inject meta.plan.admin-reset-password ))

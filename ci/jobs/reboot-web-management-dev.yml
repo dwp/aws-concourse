@@ -1,0 +1,6 @@
+jobs:
+  - name: reboot-management-dev-web-nodes
+    plan:
+      - get: aws-concourse
+        trigger: false
+      - .: (( inject meta.plan.reboot-web-nodes ))
