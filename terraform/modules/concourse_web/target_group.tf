@@ -51,3 +51,22 @@ resource "aws_autoscaling_attachment" "web_ssh" {
   alb_target_group_arn   = aws_lb_target_group.web_ssh.id
   autoscaling_group_name = aws_autoscaling_group.web.name
 }
+
+resource "aws_lb_target_group" "int_web_http" {
+  name     = "internal-${local.name}-http"
+  port     = 8080
+  protocol = "TCP"
+  vpc_id   = var.vpc.aws_vpc.id
+
+  stickiness {
+    enabled = false
+    type    = "lb_cookie"
+  }
+
+  tags = merge(var.tags, { Name = local.name })
+}
+
+resource "aws_autoscaling_attachment" "int_web_http" {
+  alb_target_group_arn   = aws_lb_target_group.int_web_http.id
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}

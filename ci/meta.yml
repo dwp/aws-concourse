@@ -76,7 +76,6 @@ meta:
               for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
               do
                 ./fly --target concourse land-worker --worker $worker &&
-                sleep 300;
               done
 
     create-users:

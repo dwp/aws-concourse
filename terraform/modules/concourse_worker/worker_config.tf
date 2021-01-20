@@ -22,10 +22,10 @@ locals {
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy
-      NO_PROXY    = var.proxy.no_proxy
+      NO_PROXY    = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
       http_proxy  = var.proxy.http_proxy
       https_proxy = var.proxy.https_proxy
-      no_proxy    = var.proxy.no_proxy
+      no_proxy    = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
     },
     var.worker.environment_override
   )
@@ -50,7 +50,7 @@ locals {
       aws_default_region      = data.aws_region.current.name
       http_proxy              = var.proxy.http_proxy
       https_proxy             = var.proxy.https_proxy
-      no_proxy                = var.proxy.no_proxy
+      no_proxy                = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
       enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
       name                    = local.name
     }

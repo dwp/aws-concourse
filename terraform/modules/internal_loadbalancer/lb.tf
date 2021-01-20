@@ -22,3 +22,14 @@ resource "aws_lb_listener" "ssh" {
     target_group_arn = var.concourse_web.ssh_target_group_arn
   }
 }
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.lb.arn
+  port              = 8080
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = var.concourse_web.int_http_target_group_arn
+  }
+}
