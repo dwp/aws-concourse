@@ -29,6 +29,16 @@ resource "aws_security_group_rule" "worker_lb_out_ssh" {
   cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
 }
 
+resource "aws_security_group_rule" "worker_lb_out_http" {
+  description       = "outbound http traffic to web nodes from worker nodes via lb"
+  from_port         = 8080
+  protocol          = "tcp"
+  security_group_id = aws_security_group.worker.id
+  to_port           = 8080
+  type              = "egress"
+  cidr_blocks       = var.vpc.aws_subnets_private.*.cidr_block
+}
+
 resource "aws_security_group_rule" "worker_outbound_s3_https" {
   security_group_id = aws_security_group.worker.id
   description       = "s3 outbound https connectivity"

@@ -6,16 +6,10 @@ spruce:
       - with_in: ci/
         regexp: ".*yml"
       - with_in: ci/jobs/
-        except:
-          - mgmt-dev-user-admin.yml.j2
-          - mgmt-user-admin.yml.j2
-          - reboot-web-management.yml.j2
-          - reboot-worker-management-dev.yml.j2
-          - reboot-worker-management.yml.j2
     to: aviator_pipeline.yml
 fly:
-  name: aws-concourse
-  target: dev-aws-concourse
+  name: concourse-admin
+  target: aws-concourse
   expose: false
   config: aviator_pipeline.yml
   check_creds: true

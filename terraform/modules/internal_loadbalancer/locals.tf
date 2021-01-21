@@ -1,3 +1,3 @@
 locals {
-  fqdn = join(".", [var.lb_name, "int", var.parent_domain_name])
+  fqdn = join(".", [var.lb_name, "local", var.parent_domain_name])
 }
