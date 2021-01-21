@@ -10,5 +10,5 @@ jobs:
       - .: (( inject meta.plan.reboot-worker-nodes ))
         config:
           params:
-            CONCOURSE_URI: "http://ci.int.dataworks.dwp.gov.uk:8080"
+            CONCOURSE_URI: "http://ci.local.dataworks.dwp.gov.uk:8080"
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
