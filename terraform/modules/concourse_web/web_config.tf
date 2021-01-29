@@ -96,6 +96,7 @@ locals {
       https_proxy             = var.proxy.https_proxy
       no_proxy                = var.proxy.no_proxy
       enterprise_github_certs = join(" ", var.enterprise_github_certs)
+      name                    = local.name
     }
   )
 
