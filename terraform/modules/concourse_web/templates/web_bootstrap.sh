@@ -5,6 +5,12 @@ set -euxo pipefail
 export AWS_DEFAULT_REGION=${aws_default_region}
 export CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_user)
 export CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
+export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
+UUID=$(dbus-uuidgen | cut -c 1-8)
+export HOSTNAME=${name}-$UUID
+
+hostnamectl set-hostname $HOSTNAME
+aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Name,Value=$HOSTNAME
 
 cat <<EOF >> /etc/systemd/system/concourse-web.env
 CONCOURSE_POSTGRES_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .database_password)

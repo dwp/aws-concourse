@@ -80,6 +80,28 @@ resource "aws_iam_role_policy_attachment" "concourse_web_secrets" {
   role       = aws_iam_role.web.id
 }
 
+data "aws_iam_policy_document" "concourse_web_tag_ec2" {
+  statement {
+    actions = [
+      "ec2:DescribeInstances",
+      "ec2:CreateTags"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "concourse_web_tag_ec2" {
+  name        = "${local.name}EC2"
+  description = "Change Concourse Web's Tags"
+  policy      = data.aws_iam_policy_document.concourse_web_tag_ec2.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_web_tag_ec2" {
+  policy_arn = aws_iam_policy.concourse_web_tag_ec2.arn
+  role       = aws_iam_role.web.id
+}
+
 resource "aws_iam_role_policy_attachment" "CiAllowAssumeRoleWeb" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/CiAllowAssumeRole"
   role       = aws_iam_role.web.id
