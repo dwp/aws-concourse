@@ -3,6 +3,7 @@
 set -euxo pipefail
 
 export AWS_DEFAULT_REGION=${aws_default_region}
+TOKEN=$(curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token")
 export CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_user)
 export CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
 export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
@@ -19,7 +20,7 @@ CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/data
 CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
 CONCOURSE_ADD_LOCAL_USER=$CONCOURSE_USER:$CONCOURSE_PASSWORD
 CONCOURSE_GITHUB_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_id)
-CONCOURSE_GITHUB_CLIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_secret)
+CONCOURSE_GITHUB_LIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_secret)
 CONCOURSE_MAIN_TEAM_LOCAL_USER=$CONCOURSE_USER
 EOF
 
