@@ -20,7 +20,7 @@ CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/data
 CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
 CONCOURSE_ADD_LOCAL_USER=$CONCOURSE_USER:$CONCOURSE_PASSWORD
 CONCOURSE_GITHUB_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_id)
-CONCOURSE_GITHUB_LIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_secret)
+CONCOURSE_GITHUB_CLIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .enterprise_github_oauth_client_secret)
 CONCOURSE_MAIN_TEAM_LOCAL_USER=$CONCOURSE_USER
 EOF
 
