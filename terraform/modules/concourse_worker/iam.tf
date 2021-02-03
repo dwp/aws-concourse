@@ -109,3 +109,29 @@ resource "aws_iam_role_policy_attachment" "concourse_tag_ec2" {
   policy_arn = aws_iam_policy.concourse_tag_ec2.arn
   role       = data.aws_iam_role.worker.id
 }
+
+data "aws_iam_policy_document" "concourse_batch_operations" {
+  statement {
+    actions = [
+      "batch:DescribeJobs",
+      "batch:SubmitJob",
+      "batch:CancelJob",
+      "batch:TerminateJob"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "concourse_batch_operations" {
+  name        = "${local.name}Batch"
+  description = "Describe Batch jobs for monitoring"
+  policy      = data.aws_iam_policy_document.concourse_batch_operations.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_batch_operations" {
+  policy_arn = aws_iam_policy.concourse_batch_operations.arn
+  role       = data.aws_iam_role.worker.id
+}
+
+
