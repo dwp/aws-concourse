@@ -25,7 +25,8 @@ resource "aws_autoscaling_group" "web" {
   lifecycle {
     create_before_destroy = true
     ignore_changes = [
-      max_size
+      max_size,
+      target_group_arns
     ]
   }
 }
