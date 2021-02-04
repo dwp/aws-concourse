@@ -15,6 +15,12 @@ resource aws_cognito_user_pool concourse {
   email_configuration {
     email_sending_account = "COGNITO_DEFAULT"
   }
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
+  }
 
   password_policy {
     minimum_length                   = 12
