@@ -44,8 +44,8 @@ resource "aws_launch_template" "web" {
     ebs {
       delete_on_termination = true
       encrypted             = true
-      volume_type           = local.ebs_volume_type[local.environment]
-      volume_size           = local.ebs_volume_size[local.environment]
+      volume_type           = local.ebs_volume_type_worker[local.environment]
+      volume_size           = local.ebs_volume_size_worker[local.environment]
     }
   }
 
