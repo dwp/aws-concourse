@@ -1,5 +1,5 @@
 locals {
-  name         = "${var.name}-concourse-worker"
+  name = "${var.name}-concourse-worker"
 
   environment = terraform.workspace == "default" ? "management-dev" : terraform.workspace
 
