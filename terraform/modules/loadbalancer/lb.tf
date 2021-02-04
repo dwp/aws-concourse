@@ -45,7 +45,8 @@ resource "aws_lb_listener_rule" "https" {
   }
 
   condition {
-    field  = "host-header"
-    values = [local.fqdn]
+    host_header {
+        values = [local.fqdn]
+    }
   }
 }

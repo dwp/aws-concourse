@@ -30,25 +30,5 @@ locals {
     management     = false
   }
 
-  ebs_volume_size_web = {
-    management-dev = 334
-    management     = 667
-  }
-
-  ebs_volume_type_web = {
-    management-dev = "gp3"
-    management     = "gp3"
-  }
-
-  ebs_volume_size_worker = {
-    management-dev = 334
-    management     = 667
-  }
-
-  ebs_volume_type_worker = {
-    management-dev = "gp3"
-    management     = "gp3"
-  }
-
   kali_users = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_users"]
 }
