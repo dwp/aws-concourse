@@ -17,5 +17,5 @@ resources:
       uri: https://((dataworks.enterprise_github_url))/dip/dataworks-secrets.git
       paths:
         - concourse/dataworks/concourse-cognito/**
-    check_every: 720h
+    check_every: 5m
     webhook_token: ((dataworks.concourse_github_webhook_token))
