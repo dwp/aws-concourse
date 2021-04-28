@@ -17,7 +17,7 @@ module "concourse_lb" {
   parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
-  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks, local.ithc_cidr_blocks)
+  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
   logging_bucket         = data.terraform_remote_state.security-tools.outputs.logstore_bucket.id
 }
 
