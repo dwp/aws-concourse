@@ -1,4 +1,5 @@
 resource "aws_security_group" "lb" {
+  name   = "${var.name}-lb"
   vpc_id = var.vpc.aws_vpc.id
   tags   = merge(var.tags, { Name = "${var.name}-lb" })
 
