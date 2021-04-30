@@ -26,3 +26,7 @@ Destroy isn't always possible from Terraform. Manual steps found to be:
 - remove prevent destroy in [terraform/modules/cloudwatch_log_group/log_group.tf](terraform/modules/cloudwatch_log_group/log_group.tf) (still valid 11/09/20)
 - Delete NAT gateways (still valid 11/09/20)
 - The module.vpc.aws_route_table.public resource will remain, due to a peering connection to metrics infrastructure keeping everything alive. (valid 11/09/20))
+
+## GitHub Actions user
+
+Details on managing the user credentials can be found [here](https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Manual-CI-Credential-Rotation#github-actions-user)
