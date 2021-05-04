@@ -15,7 +15,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore"
   role       = aws_iam_role.web.id
 }
 
