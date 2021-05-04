@@ -1,11 +1,3 @@
-module "amis" {
-  source = "../modules/amis"
-
-  ami_filter_name   = var.ami_filter_name
-  ami_filter_values = local.ami_filter_values
-  ami_owners        = local.ami_owners
-}
-
 module "concourse_lb" {
   source = "../modules/loadbalancer"
 
@@ -37,7 +29,7 @@ module "concourse_web" {
     }
   )
 
-  ami_id                = module.amis.ami_id
+  ami_id                = local.ami_id
   concourse_web_config  = var.concourse_web_config
   database              = module.database.outputs
   internal_loadbalancer = module.concourse_internal_lb.outputs
@@ -99,7 +91,7 @@ module "concourse_worker" {
     }
   )
 
-  ami_id                  = module.amis.ami_id
+  ami_id                  = local.ami_id
   internal_loadbalancer   = module.concourse_internal_lb.outputs
   loadbalancer            = module.concourse_lb.outputs
   log_group               = module.concourse_worker_log_group.outputs
