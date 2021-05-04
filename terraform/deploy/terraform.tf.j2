@@ -149,7 +149,7 @@ locals {
 
   no_proxy = "${join(",", module.vpc.outputs.no_proxy_list)},${var.concourse_web_config.enterprise_github_url}"
 
-  ami_id = local.environment == "management" ? ["ami-0194fea19e01597db"] : ["ami-0a43b07f9f26c8cd2"]
+  ami_id = local.environment == "management" ? "ami-0194fea19e01597db" : "ami-0a43b07f9f26c8cd2"
 
   enterprise_github_certs = [
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
