@@ -185,3 +185,24 @@ meta:
                     --username $COGNAME
                 fi
               done
+
+    admin-activate-creds:
+      task: admin-activate-creds
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          GHA_ACCESS_KEY_ID: ((dataworks-secrets.gha_aws_concourse_access_key_id))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              source /assume-role
+              aws iam update-access-key --access-key-id $GHA_ACCESS_KEY_ID --status Active --user-name gha-aws-concourse

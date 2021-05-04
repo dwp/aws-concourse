@@ -1,0 +1,9 @@
+jobs:
+  - name: admin-activate-creds
+    plan:
+      - get: aws-concourse
+        trigger: false
+      - .: (( inject meta.plan.admin-activate-creds ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci

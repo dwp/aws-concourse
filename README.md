@@ -30,3 +30,5 @@ Destroy isn't always possible from Terraform. Manual steps found to be:
 ## GitHub Actions user
 
 Details on managing the user credentials can be found [here](https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Manual-CI-Credential-Rotation#github-actions-user)
+
+This user will deactivate its own credentials after every use.  In order to activate them again, you must run [this job](https://ci.dataworks.dwp.gov.uk/teams/dataworks/pipelines/concourse-admin?group=credentials).
