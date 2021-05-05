@@ -1,29 +1,6 @@
 meta:
   plan:
-    fetch-credentials:
-      task: fetch-credentials
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((dataworks.docker_awscli_repository))
-            version: ((dataworks.docker_awscli_version))
-            tag: ((dataworks.docker_awscli_version))
-        outputs:
-          - name: credentials
-        params:
-          AWS_DEFAULT_REGION: ((dataworks.aws_region))
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              source /assume-role
-              SECRETS_ID=$(aws secretsmanager list-secrets | jq -r .SecretList[].Name | grep dataworks/dataworks-secrets)
-              aws secretsmanager get-secret-value --secret-id $SECRETS_ID --query SecretBinary --output text | base64 -d > credentials/dataworks-secrets.json
-
-    reboot-web-nodes:
+   reboot-web-nodes:
       task: reboot-web-nodes
       config:
         platform: linux
@@ -56,10 +33,10 @@ meta:
             repository: ((dataworks.docker_awscli_repository))
             version: ((dataworks.docker_awscli_version))
             tag: ((dataworks.docker_awscli_version))
-        inputs:
-          - name: credentials
         params:
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          CONCOURSE_USERNAME: ((dataworks-secrets.concourse_user))
+          CONCOURSE_PASSWORD: ((dataworks-secrets.concourse_password))
         run:
           path: sh
           args:
@@ -69,9 +46,7 @@ meta:
               curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
               tar -xvf fly.tgz
               chmod +x fly
-              USERNAME=$(cat credentials/dataworks-secrets.json | jq -r .concourse_user)
-              PASSWORD=$(cat credentials/dataworks-secrets.json | jq -r .concourse_password)
-              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $USERNAME -p $PASSWORD
+              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
               ./fly --target concourse workers
               for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
               do
