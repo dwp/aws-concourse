@@ -14,12 +14,8 @@ aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Name,Value=$HOSTNAME
 cat <<EOF >> /etc/systemd/system/concourse-web.env
 CONCOURSE_POSTGRES_PASSWORD=${database_password}
 CONCOURSE_POSTGRES_USER=${database_user}
-CONCOURSE_USER=${concourse_user}
-CONCOURSE_PASSWORD=${concourse_password}
-CONCOURSE_ADD_LOCAL_USER=${concourse_user}:${concourse_password}
 CONCOURSE_GITHUB_CLIENT_ID=${enterprise_github_oauth_client_id}
 CONCOURSE_GITHUB_CLIENT_SECRET=${enterprise_github_oauth_client_secret}
-CONCOURSE_MAIN_TEAM_LOCAL_USER=${concourse_user}
 EOF
 
 mkdir /etc/concourse
