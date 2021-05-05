@@ -49,6 +49,24 @@ def main():
         dataworks_secret['SecretBinary'])["database_user"]
     config_data['database_password'] = json.loads(
         dataworks_secret['SecretBinary'])["database_password"]
+    config_data['concourse_user'] = json.loads(
+        dataworks_secret['SecretBinary'])["concourse_user"]
+    config_data['concourse_password'] = json.loads(
+        dataworks_secret['SecretBinary'])["concourse_password"]
+    config_data['enterprise_github_oauth_client_id'] = json.loads(
+        dataworks_secret['SecretBinary'])["enterprise_github_oauth_client_id"]
+    config_data['enterprise_github_oauth_client_secret'] = json.loads(
+        dataworks_secret['SecretBinary'])["enterprise_github_oauth_client_secret"]
+    config_data['session_signing_key'] = json.loads(
+        dataworks_secret['SecretBinary'])["session_signing_key"]
+    config_data['tsa_host_key'] = json.loads(
+        dataworks_secret['SecretBinary'])["tsa_host_key"]
+    config_data['authorized_worker_keys'] = json.loads(
+        dataworks_secret['SecretBinary'])["authorized_worker_keys"]
+    config_data['worker_key'] = json.loads(
+        dataworks_secret['SecretBinary'])["worker_key"]
+    config_data['tsa_host_pub_key'] = json.loads(
+        dataworks_secret['SecretBinary'])["tsa_host_pub_key"]
     config_data['enterprise_github_url'] = json.loads(
         concourse_secret['SecretBinary'])["enterprise_github_url"]
     with open('terraform/deploy/terraform.tf.j2') as in_template:

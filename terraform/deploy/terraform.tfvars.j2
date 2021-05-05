@@ -6,7 +6,20 @@ concourse_web_config = {
   database_username = "{{database_username}}"
   database_password = "{{database_password}}"
   enterprise_github_url = "{{enterprise_github_url}}"
+  concourse_user = "{{concourse_user}}"
+  concourse_password = "{{concourse_password}}"
+  enterprise_github_oauth_client_id = "{{enterprise_github_oauth_client_id}}"
+  enterprise_github_oauth_client_secret = "{{enterprise_github_oauth_client_secret}}"
+  session_signing_key = "{{session_signing_key}}"
+  tsa_host_key = "{{tsa_host_key}}"
+  authorized_worker_keys = "{{authorized_worker_keys}}"
 }
+
+concourse_worker_config = {
+  tsa_host_pub_key = "{{tsa_host_pub_key}}"
+  worker_key = "{{worker_key}}"
+}
+
 
 github_vpc = {
 {%- for k, v in ucfs['github']['vpc'].items() %}

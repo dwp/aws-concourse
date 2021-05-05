@@ -92,6 +92,7 @@ module "concourse_worker" {
   )
 
   ami_id                  = local.ami_id
+  concourse_worker_config = var.concourse_worker_config
   internal_loadbalancer   = module.concourse_internal_lb.outputs
   loadbalancer            = module.concourse_lb.outputs
   log_group               = module.concourse_worker_log_group.outputs

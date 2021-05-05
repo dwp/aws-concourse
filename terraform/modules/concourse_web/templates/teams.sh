@@ -1,8 +1,8 @@
 #!/bin/bash
 export HOME="/root"
 export AWS_DEFAULT_REGION=${aws_default_region}
-export CONCOURSE_USER=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_user)
-export CONCOURSE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/dataworks-secrets --query SecretBinary --output text | base64 -d | jq -r .concourse_password)
+export CONCOURSE_USER=${concourse_user}
+export CONCOURSE_PASSWORD=${concourse_password}
 
 fly_tarball="/usr/local/concourse/fly-assets/fly-linux-amd64.tgz"
 mkdir -p $HOME/bin
