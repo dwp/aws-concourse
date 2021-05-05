@@ -8,7 +8,7 @@ resource "aws_iam_instance_profile" "concourse_worker" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   role       = data.aws_iam_role.worker.id
 }
 
