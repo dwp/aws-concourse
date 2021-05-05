@@ -3,10 +3,6 @@ jobs:
     plan:
       - get: aws-concourse
         trigger: false
-      - .: (( inject meta.plan.fetch-credentials ))
-        config:
-          params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
       - .: (( inject meta.plan.reboot-worker-nodes ))
         config:
           params:
