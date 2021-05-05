@@ -20,21 +20,19 @@ variable "cognito_client_id" {}
 variable "cognito_domain" {}
 variable "cognito_issuer" {}
 variable "cognito_name" {}
-variable "concourse_user" {}
-variable "concourse_password" {}
-variable "enterprise_github_oauth_client_id" {}
-variable "enterprise_github_oauth_client_secret" {}
-variable "session_signing_key" {}
-variable "tsa_host_key" {}
-variable "authorized_worker_keys" {}
-variable "worker_key" {}
-variable "tsa_host_pub_key" {}
 
 variable "concourse_web_config" {
   type = object({
-    database_username     = string,
-    database_password     = string,
-    enterprise_github_url = string,
+    database_username                     = string,
+    database_password                     = string,
+    enterprise_github_url                 = string,
+    concourse_user                        = string,
+    concourse_password                    = string,
+    enterprise_github_oauth_client_id     = string,
+    enterprise_github_oauth_client_secret = string,
+    session_signing_key                   = string,
+    tsa_host_key                          = string,
+    authorized_worker_keys                = string,
   })
 }
 

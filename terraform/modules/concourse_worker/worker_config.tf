@@ -53,6 +53,8 @@ locals {
       no_proxy                = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
       enterprise_github_certs = "${join(" ", var.enterprise_github_certs)}"
       name                    = local.name
+      tsa_host_pub_key        = var.concourse_worker_config.tsa_host_pub_key
+      worker_key              = var.concourse_worker_config.worker_key
     }
   )
 

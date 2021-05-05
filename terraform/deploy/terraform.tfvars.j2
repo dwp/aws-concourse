@@ -10,14 +10,24 @@ concourse_web_config = {
   concourse_password = "{{concourse_password}}"
   enterprise_github_oauth_client_id = "{{enterprise_github_oauth_client_id}}"
   enterprise_github_oauth_client_secret = "{{enterprise_github_oauth_client_secret}}"
-  session_signing_key = "{{session_signing_key}}"
-  tsa_host_key = "{{tsa_host_key}}"
-  authorized_worker_keys = "{{authorized_worker_keys}}"
+  session_signing_key = <<-EOF
+  "{{session_signing_key}}"
+  EOF
+  tsa_host_key = <<-EOF
+  "{{tsa_host_key}}"
+  EOF
+  authorized_worker_keys = <<-EOF
+  "{{authorized_worker_keys}}"
+  EOF
 }
 
 concourse_worker_config = {
-  tsa_host_pub_key = "{{tsa_host_pub_key}}"
-  worker_key = "{{worker_key}}"
+  tsa_host_pub_key = <<-EOF
+  "{{tsa_host_pub_key}}"
+  EOF
+  worker_key = <<-EOF
+  "{{worker_key}}"
+  EOF
 }
 
 

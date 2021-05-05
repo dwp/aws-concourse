@@ -91,12 +91,21 @@ locals {
   web_bootstrap_file = templatefile(
     "${path.module}/templates/web_bootstrap.sh",
     {
-      aws_default_region      = data.aws_region.current.name
-      http_proxy              = var.proxy.http_proxy
-      https_proxy             = var.proxy.https_proxy
-      no_proxy                = var.proxy.no_proxy
-      enterprise_github_certs = join(" ", var.enterprise_github_certs)
-      name                    = local.name
+      aws_default_region                    = data.aws_region.current.name
+      http_proxy                            = var.proxy.http_proxy
+      https_proxy                           = var.proxy.https_proxy
+      no_proxy                              = var.proxy.no_proxy
+      enterprise_github_certs               = join(" ", var.enterprise_github_certs)
+      name                                  = local.name
+      concourse_user                        = var.concourse_web_config.concourse_user
+      concourse_password                    = var.concourse_web_config.concourse_password
+      database_user                         = var.concourse_web_config.database_username
+      database_password                     = var.concourse_web_config.database_password
+      enterprise_github_oauth_client_id     = var.concourse_web_config.enterprise_github_oauth_client_id
+      enterprise_github_oauth_client_secret = var.concourse_web_config.enterprise_github_oauth_client_secret
+      session_signing_key                   = var.concourse_web_config.session_signing_key
+      tsa_host_key                          = var.concourse_web_config.tsa_host_key
+      authorized_worker_keys                = var.concourse_web_config.authorized_worker_keys
     }
   )
 
@@ -105,6 +114,8 @@ locals {
     {
       aws_default_region = data.aws_region.current.name
       target             = "aws-concourse"
+      concourse_user     = var.concourse_web_config.concourse_user
+      concourse_password = var.concourse_web_config.concourse_password
     }
   )
 

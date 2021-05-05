@@ -26,8 +26,15 @@ EOF
 
 mkdir /etc/concourse
 
-echo ${session_signing_key} > /etc/concourse/session_signing_key
-echo ${tsa_host_key} > /etc/concourse/host_key
+SESSION_SIGNING_KEY= <<-EOF
+#{session_signing_key}
+EOF
+TSA_HOST_KEY= <<-EOF
+#{tsa_host_key}
+EOF
+
+echo $SESSION_SIGNING_KEY > /etc/concourse/session_signing_key
+echo $TSA_HOST_KEY > /etc/concourse/host_key
 echo ${authorized_worker_keys} > /etc/concourse/authorized_worker_keys
 
 for cert in ${enterprise_github_certs}
