@@ -1,8 +1,6 @@
 #!/bin/bash
 export HOME="/root"
 export AWS_DEFAULT_REGION=${aws_default_region}
-export CONCOURSE_USER=${concourse_user}
-export CONCOURSE_PASSWORD=${concourse_password}
 
 fly_tarball="/usr/local/concourse/fly-assets/fly-linux-amd64.tgz"
 mkdir -p $HOME/bin
@@ -10,8 +8,8 @@ tar -xzf $fly_tarball -C $HOME/bin/
 
 $HOME/bin/fly --target ${target} login \
 --concourse-url http://127.0.0.1:8080 \
---username $CONCOURSE_USER \
---password $CONCOURSE_PASSWORD
+--username ${concourse_user} \
+--password ${concourse_password}
 
 team_check=`$HOME/bin/fly -t aws-concourse teams | grep -v name | grep -v main`
 

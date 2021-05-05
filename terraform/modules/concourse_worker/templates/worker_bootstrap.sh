@@ -15,15 +15,8 @@ aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Name,Value=$HOSTNAME
 
 mkdir /etc/concourse
 
-TSA_HOST_PUB_KEY= <<-EOF
-#{concourse_worker_config.tsa_host_pub_key}
-EOF
-WORKER_KEY= <<-EOF
-#{concourse_worker_config.worker_key}
-EOF
-
-echo $TSA_HOST_PUB_KEY > /etc/concourse/tsa_host_key.pub
-echo $WORKER_KEY > /etc/concourse/worker_key
+cat > /etc/concourse/tsa_host_key.pub <<< ${tsa_host_pub_key}
+cat > /etc/concourse/worker_key <<< ${worker_key}
 
 for cert in ${enterprise_github_certs}
 do
