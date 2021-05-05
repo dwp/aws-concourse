@@ -20,3 +20,12 @@ for team in $(ls $HOME/teams); do
     --team-name=$team \
     --config=/root/teams/$team/team.yml
 done
+
+sed -i '/CONCOURSE_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_PASSWORD/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_ADD_LOCAL_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_MAIN_TEAM_LOCAL_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_USER/d' /etc/systemd/system/concourse-web.env
+sed -i '/CONCOURSE_PASSWORD/d' /etc/systemd/system/concourse-web.env
+sed -i '/CONCOURSE_ADD_LOCAL_USER/d' /etc/systemd/system/concourse-web.env
+sed -i '/CONCOURSE_MAIN_TEAM_LOCAL_USER/d' /etc/systemd/system/concourse-web.env
