@@ -4,3 +4,6 @@ roles:
       groups: ["dataworks"]
     github:
       teams: ["dip:devops"]
+  - name: owner
+    oidc:
+      groups: ["admins"]
