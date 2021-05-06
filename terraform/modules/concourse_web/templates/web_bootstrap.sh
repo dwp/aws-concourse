@@ -16,10 +16,6 @@ CONCOURSE_POSTGRES_PASSWORD=${database_password}
 CONCOURSE_POSTGRES_USER=${database_user}
 CONCOURSE_GITHUB_CLIENT_ID=${enterprise_github_oauth_client_id}
 CONCOURSE_GITHUB_CLIENT_SECRET=${enterprise_github_oauth_client_secret}
-CONCOURSE_USER=${concourse_user}
-CONCOURSE_PASSWORD=${concourse_password}
-CONCOURSE_ADD_LOCAL_USER=${concourse_user}:${concourse_password}
-CONCOURSE_MAIN_TEAM_LOCAL_USER=${concourse_user}
 EOF
 
 mkdir /etc/concourse
