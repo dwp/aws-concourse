@@ -19,6 +19,12 @@ resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.web.id
 }
 
+# This used to be provided by the deprecated SSM role, so now added explicitly
+resource "aws_iam_role_policy_attachment" "s3readonly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  role       = aws_iam_role.web.id
+}
+
 data "aws_iam_policy_document" "web" {
   statement {
     actions = [

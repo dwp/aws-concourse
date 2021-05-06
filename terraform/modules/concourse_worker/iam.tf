@@ -17,6 +17,12 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logging" {
   role       = data.aws_iam_role.worker.id
 }
 
+# This used to be provided by the deprecated SSM role, so now added explicitly
+resource "aws_iam_role_policy_attachment" "s3readonly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  role       = aws_iam_role.web.id
+}
+
 data "aws_iam_policy_document" "concourse_parameters_worker" {
   statement {
     actions = [
