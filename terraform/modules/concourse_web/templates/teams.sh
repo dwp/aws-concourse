@@ -22,3 +22,24 @@ for team in $(ls $HOME/teams); do
     --team-name=$team \
     --config=/root/teams/$team/team.yml
 done
+
+## At this point we've configured access to the teams, so the local user is no longer required.
+sed -i '/CONCOURSE_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_PASSWORD/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_ADD_LOCAL_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_MAIN_TEAM_LOCAL_USER/d' /etc/systemd/system/concourse-web.service
+sed -i '/CONCOURSE_USER/d' /etc/systemd/system/concourse-web.env
+sed -i '/CONCOURSE_PASSWORD/d' /etc/systemd/system/concourse-web.env
+sed -i '/CONCOURSE_ADD_LOCAL_USER/d' /etc/systemd/system/concourse-web.env
+sed -i 's/\(CONCOURSE_MAIN_TEAM_LOCAL_USER\)=.*/\1=not_a_real_user/' /etc/systemd/system/concourse-web.env
+
+# Restart the web service to load the new config
+systemctl dameon-reload
+systemctl stop concourse-web
+sleep 1 ; killall -9 /usr/local/concourse/binconcourse || true ; sleep 1
+systemctl start concourse-web
+
+# Nwo that the local user is gone, open up the node
+iptables -D INPUT -p tcp --dport 8080 -j DROP
+iptables -D INPUT -p tcp --dport 8080 -s 127.0.0.1 -j ACCEPT
+
