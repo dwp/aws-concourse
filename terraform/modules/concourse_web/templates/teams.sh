@@ -35,7 +35,7 @@ sed -i 's/\(CONCOURSE_MAIN_TEAM_LOCAL_USER\)=.*/\1=not_a_real_user/' /etc/system
 # Restart the web service to load the new config
 systemctl dameon-reload
 systemctl stop concourse-web
-sleep 1 ; killall -9 /usr/local/concourse/binconcourse || true ; sleep 1
+sleep 1 ; killall -9 /usr/local/concourse/bin/concourse || true ; sleep 1
 systemctl start concourse-web
 
 # Nwo that the local user is gone, open up the node
