@@ -186,6 +186,7 @@ module "cognito" {
 
   clients = [
     "dataworks",
+    "admins"
   ]
 
   root_dns_names = values(local.root_dns_name)
