@@ -16,6 +16,13 @@ variable "vpc" {}
 variable "ssm_name_prefix" {}
 variable "concourse_web" {}
 
+variable "concourse_worker_config" {
+  type = object({
+    tsa_host_pub_key = string,
+    worker_key       = string,
+  })
+}
+
 variable "worker" {
   description = "worker configuration options"
   type = object({

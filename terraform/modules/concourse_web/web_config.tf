@@ -32,12 +32,14 @@ locals {
       CONCOURSE_SECRET_CACHE_DURATION                       = "1m"
 
       # Cognito Auth
-      CONCOURSE_OIDC_DISPLAY_NAME  = var.cognito_name
-      CONCOURSE_OIDC_CLIENT_ID     = var.cognito_client_id
-      CONCOURSE_OIDC_CLIENT_SECRET = var.cognito_client_secret
-      CONCOURSE_OIDC_ISSUER        = var.cognito_issuer
-      CONCOURSE_OIDC_GROUPS_KEY    = "cognito:groups"
-      CONCOURSE_OIDC_USER_NAME_KEY = "cognito:username"
+      CONCOURSE_OIDC_DISPLAY_NAME    = var.cognito_name
+      CONCOURSE_OIDC_CLIENT_ID       = var.cognito_client_id
+      CONCOURSE_OIDC_CLIENT_SECRET   = var.cognito_client_secret
+      CONCOURSE_OIDC_ISSUER          = var.cognito_issuer
+      CONCOURSE_OIDC_GROUPS_KEY      = "cognito:groups"
+      CONCOURSE_OIDC_USER_NAME_KEY   = "cognito:username"
+      CONCOURSE_MAIN_TEAM_OIDC_USER  = var.concourse_web_config.concourse_user
+      CONCOURSE_MAIN_TEAM_OIDC_GROUP = "admins"
 
       # UC GitHub Auth
       CONCOURSE_GITHUB_HOST = var.concourse_web_config.enterprise_github_url
@@ -91,20 +93,21 @@ locals {
   web_bootstrap_file = templatefile(
     "${path.module}/templates/web_bootstrap.sh",
     {
-      aws_default_region      = data.aws_region.current.name
-      http_proxy              = var.proxy.http_proxy
-      https_proxy             = var.proxy.https_proxy
-      no_proxy                = var.proxy.no_proxy
-      enterprise_github_certs = join(" ", var.enterprise_github_certs)
-      name                    = local.name
-    }
-  )
-
-  teams = templatefile(
-    "${path.module}/templates/teams.sh",
-    {
-      aws_default_region = data.aws_region.current.name
-      target             = "aws-concourse"
+      aws_default_region                    = data.aws_region.current.name
+      http_proxy                            = var.proxy.http_proxy
+      https_proxy                           = var.proxy.https_proxy
+      no_proxy                              = var.proxy.no_proxy
+      enterprise_github_certs               = join(" ", var.enterprise_github_certs)
+      name                                  = local.name
+      concourse_user                        = var.concourse_web_config.concourse_user
+      concourse_password                    = var.concourse_web_config.concourse_password
+      database_user                         = var.concourse_web_config.database_username
+      database_password                     = var.concourse_web_config.database_password
+      enterprise_github_oauth_client_id     = var.concourse_web_config.enterprise_github_oauth_client_id
+      enterprise_github_oauth_client_secret = var.concourse_web_config.enterprise_github_oauth_client_secret
+      session_signing_key                   = var.concourse_web_config.session_signing_key
+      tsa_host_key                          = var.concourse_web_config.tsa_host_key
+      authorized_worker_keys                = var.concourse_web_config.authorized_worker_keys
     }
   )
 
@@ -163,11 +166,6 @@ write_files:
     path: /etc/systemd/system/concourse-web.service
     permissions: '0644'
   - encoding: b64
-    content: ${base64encode(local.teams)}
-    owner: root:root
-    path: /root/teams.sh
-    permissions: '0700'
-  - encoding: b64
     content: ${base64encode(local.dataworks)}
     owner: root:root
     path: /root/teams/dataworks/team.yml
@@ -193,11 +191,6 @@ EOF
   part {
     content_type = "text/x-shellscript"
     content      = local.logger_bootstrap_file
-  }
-
-  part {
-    content_type = "text/x-shellscript"
-    content      = local.teams
   }
 
   part {
