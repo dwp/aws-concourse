@@ -12,13 +12,14 @@ locals {
       CONCOURSE_EPHEMERAL = true
       CONCOURSE_WORK_DIR  = "/opt/concourse"
 
-      CONCOURSE_TSA_HOST               = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
-      CONCOURSE_TSA_PUBLIC_KEY         = "/etc/concourse/tsa_host_key.pub"
-      CONCOURSE_TSA_WORKER_PRIVATE_KEY = "/etc/concourse/worker_key"
-      CONCOURSE_CERTS_DIR              = "/etc/ssl/certs"
-      CONCOURSE_GARDEN_NETWORK_POOL    = "172.16.0.0/21"
-      CONCOURSE_GARDEN_MAX_CONTAINERS  = "350"
-      CONCOURSE_LOG_LEVEL              = "error"
+      CONCOURSE_TSA_HOST                  = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
+      CONCOURSE_TSA_PUBLIC_KEY            = "/etc/concourse/tsa_host_key.pub"
+      CONCOURSE_TSA_WORKER_PRIVATE_KEY    = "/etc/concourse/worker_key"
+      CONCOURSE_CERTS_DIR                 = "/etc/ssl/certs"
+      CONCOURSE_RUNTIME                   = "containerd"
+      CONCOURSE_CONTAINERD_NETWORK_POOL   = "172.16.0.0/16"
+      CONCOURSE_CONTAINERD_MAX_CONTAINERS = "2000"
+      CONCOURSE_LOG_LEVEL                 = "error"
 
       HTTP_PROXY  = var.proxy.http_proxy
       HTTPS_PROXY = var.proxy.https_proxy
