@@ -43,6 +43,7 @@ jobs:
         id: init
         run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         env:
+          TF_WORKSPACE: default
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
@@ -104,6 +105,7 @@ jobs:
           sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
+          TF_WORKSPACE: management
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT }}
@@ -113,6 +115,7 @@ jobs:
         id: init
         run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         env:
+          TF_WORKSPACE: management
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
