@@ -38,7 +38,7 @@ jobs:
 
       - name: "Terraform Init"
         id: init
-        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        run: terraform init -reconfigure >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         env:
           TF_VAR_assume_role: gha_aws_concourse
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
