@@ -32,6 +32,10 @@ done
 
 update-ca-trust
 
+touch /var/spool/cron/root
+echo "*/3 * * * * /home/root/healthcheck.sh" >> /var/spool/cron/root
+chmod 644 /var/spool/cron/root
+
 if [[ "$(rpm -qf /sbin/init)" == upstart* ]];
 then
     initctl start concourse-web
