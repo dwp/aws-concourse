@@ -126,6 +126,11 @@ locals {
     {}
   )
 
+  healthcheck_file = templatefile(
+    "${path.module}/templates/healthcheck.sh",
+    {}
+  )
+
 }
 
 data "template_cloudinit_config" "web_bootstrap" {
@@ -180,6 +185,11 @@ write_files:
     owner: root:root
     path: /root/teams/utility/team.yml
     permissions: '0600'
+  - encoding: b64
+    content: ${base64encode(local.healthcheck_file)}
+    owner: root:root
+    path: /home/root/healthcheck.sh
+    permissions: '0700'
 EOF
   }
 
