@@ -22,6 +22,10 @@ output "aws_vpc" {
   value = module.vpc.outputs.aws_vpc
 }
 
+output "no_proxy_list" {
+  value = module.vpc.outputs.aws_vpc
+}
+
 output "subnets_private" {
   value = module.vpc.outputs.aws_subnets_private
 }
