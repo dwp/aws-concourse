@@ -52,10 +52,10 @@ module "concourse_web" {
   enterprise_github_certs = local.enterprise_github_certs
 
   web = {
-    instance_type        = "t3.xlarge"
+    instance_type         = "t3.xlarge"
     max_instance_lifetime = 60 * 60 * 24 * 7
-    count                = 1
-    environment_override = {}
+    count                 = 1
+    environment_override  = {}
   }
 }
 
