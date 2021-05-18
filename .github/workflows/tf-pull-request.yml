@@ -49,7 +49,7 @@ jobs:
 
       - name: "Terraform Plan"
         id: plan
-        run: terraform plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        run: terraform plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.json
         continue-on-error: false
         env:
           TF_WORKSPACE: default
