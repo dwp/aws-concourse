@@ -62,18 +62,16 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-2
-
-      - name: "Terraform Plan"
-        id: plan
-        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
-        continue-on-error: false
+      
+      - name: Deactivate AWS Credentials
+        if: failure()
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
         env:
-          TF_WORKSPACE: default
-          TF_INPUT: false
-          TF_VAR_assume_role: gha_aws_concourse
+          AWS_REGION: eu-west-2
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-2
 
       - uses: actions/upload-artifact@v2
         if: failure()
@@ -126,18 +124,6 @@ jobs:
         run: |
           terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
           terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
-        continue-on-error: false
-        env:
-          TF_WORKSPACE: management
-          TF_INPUT: false
-          TF_VAR_assume_role: gha_aws_concourse
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-2
-
-      - name: "Terraform Plan"
-        id: plan
-        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         continue-on-error: false
         env:
           TF_WORKSPACE: management
