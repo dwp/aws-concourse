@@ -69,7 +69,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
 
       - uses: actions/upload-artifact@v2
-        if: failure()
+        if: ${{ always() }}
         with:
           name: mgmt-dev-workflow-log
           path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
