@@ -58,5 +58,8 @@ resource "aws_rds_cluster_instance" "cluster" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      identifier_prefix,
+    ]
   }
 }
