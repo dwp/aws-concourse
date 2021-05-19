@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - "terraform/**"
+  workflow_dispatch: {}
 defaults:
   run:
     working-directory: terraform/deploy/
