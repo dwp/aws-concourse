@@ -6,6 +6,7 @@ on:
     paths:
       - "terraform/**"
       - ".github/workflows/**"
+  workflow_dispatch: {}
 defaults:
   run:
     working-directory: terraform/deploy/
