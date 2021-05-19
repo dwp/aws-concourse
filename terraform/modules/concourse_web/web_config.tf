@@ -99,8 +99,6 @@ locals {
       no_proxy                              = var.proxy.no_proxy
       enterprise_github_certs               = join(" ", var.enterprise_github_certs)
       name                                  = local.name
-      concourse_user                        = var.concourse_web_config.concourse_user
-      concourse_password                    = var.concourse_web_config.concourse_password
       database_user                         = var.concourse_web_config.database_username
       database_password                     = var.concourse_web_config.database_password
       enterprise_github_oauth_client_id     = var.concourse_web_config.enterprise_github_oauth_client_id
