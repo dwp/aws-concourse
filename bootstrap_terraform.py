@@ -51,8 +51,6 @@ def main():
         dataworks_secret['SecretBinary'])["database_password"]
     config_data['concourse_user'] = json.loads(
         dataworks_secret['SecretBinary'])["concourse_user"]
-    config_data['concourse_password'] = json.loads(
-        dataworks_secret['SecretBinary'])["concourse_password"]
     config_data['enterprise_github_oauth_client_id'] = json.loads(
         dataworks_secret['SecretBinary'])["enterprise_github_oauth_client_id"]
     config_data['enterprise_github_oauth_client_secret'] = json.loads(

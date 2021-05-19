@@ -23,145 +23,37 @@ meta:
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
 
-    reboot-worker-nodes:
-      task: reboot-worker-nodes
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((dataworks.docker_awscli_repository))
-            version: ((dataworks.docker_awscli_version))
-            tag: ((dataworks.docker_awscli_version))
-        params:
-          AWS_DEFAULT_REGION: ((dataworks.aws_region))
-          CONCOURSE_USERNAME: ((dataworks-secrets.concourse_user))
-          CONCOURSE_PASSWORD: ((dataworks-secrets.concourse_password))
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              source /assume-role
-              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
-              tar -xvf fly.tgz
-              chmod +x fly
-              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
-              ./fly --target concourse workers
-              for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
-              do
-                ./fly --target concourse land-worker --worker $worker
-              done
+   reboot-worker-nodes:
+    task: reboot-worker-nodes
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: ((dataworks.docker_awscli_repository))
+          version: ((dataworks.docker_awscli_version))
+          tag: ((dataworks.docker_awscli_version))
+      params:
+        AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        CONCOURSE_USERNAME: ((dataworks-secrets.concourse_user))
+        CONCOURSE_PASSWORD: ((dataworks-secrets.concourse_password))
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            source /assume-role
+            curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
+            tar -xvf fly.tgz
+            chmod +x fly
+            ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
+            ./fly --target concourse workers
+            for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
+            do
+              ./fly --target concourse land-worker --worker $worker
+            done
 
-    create-users:
-      task: create-users
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((dataworks.docker_awscli_repository))
-            version: ((dataworks.docker_awscli_version))
-            tag: ((dataworks.docker_awscli_version))
-        params:
-          AWS_DEFAULT_REGION: ((dataworks.aws_region))
-          COGNITO_USER_POOL: concourse
-          COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
-          NOTIFY: true
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              source /assume-role
-              COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
-              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
-              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
-              for COGNAME in $(cat users.json| jq -r '.Users[] | select(.disabled | test("false")) | .username');
-              do
-                COGEMAIL=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .email');
-                COGPHONE=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .phone');
-                COGGROUPS=$(cat users.json| jq -r --arg COGNAME "$COGNAME" '.Users[] | select(.username | test($COGNAME)) | .groups[]');
-                if [[ -z $(grep ${COGNAME} user.parse) ]]; then
-                    aws cognito-idp admin-create-user \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME \
-                    --user-attributes Name=email,Value=$COGEMAIL Name=phone_number,Value=$COGPHONE Name=phone_number_verified,Value=true Name=email_verified,Value=true \
-                    --desired-delivery-mediums EMAIL
-                fi
-                for COGGROUP in $COGGROUPS; do
-                  aws cognito-idp admin-add-user-to-group \
-                  --user-pool-id $COGNITO_USER_POOL \
-                  --username $COGNAME \
-                  --group-name $COGGROUP
-                done
-              done
-
-    delete-users:
-      task: delete-users
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((dataworks.docker_awscli_repository))
-            version: ((dataworks.docker_awscli_version))
-            tag: ((dataworks.docker_awscli_version))
-        params:
-          AWS_DEFAULT_REGION: ((dataworks.aws_region))
-          COGNITO_USER_POOL: concourse
-          COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              source /assume-role
-              COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
-              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
-              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
-              for COGNAME in $(cat users.json| jq -r '.Users[] | select(.disabled | test("true")) | .username');
-              do
-                if [[ ! -z $(grep ${COGNAME} user.parse) ]]; then
-                    aws cognito-idp admin-delete-user \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME
-                fi
-              done
-
-    admin-reset-password:
-      task: admin-reset-password
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ((dataworks.docker_awscli_repository))
-            version: ((dataworks.docker_awscli_version))
-            tag: ((dataworks.docker_awscli_version))
-        params:
-          AWS_DEFAULT_REGION: ((dataworks.aws_region))
-          COGNITO_USER_POOL: concourse
-          COGNITO_USERS_SECRET: /concourse/dataworks/concourse-cognito
-        run:
-          path: sh
-          args:
-            - -exc
-            - |
-              source /assume-role
-              COGNITO_USER_POOL=$(aws cognito-idp list-user-pools --max-results 20 | jq -r --arg COGNITO_USER_POOL "$COGNITO_USER_POOL" '.UserPools[] | select(.Name | test($COGNITO_USER_POOL)) | .Id')
-              aws secretsmanager get-secret-value --secret-id $COGNITO_USERS_SECRET --query SecretBinary --output text | base64 -d >> users.json
-              aws cognito-idp list-users --user-pool-id $COGNITO_USER_POOL | jq -r '.Users[] | .Username' >> user.parse
-              for COGNAME in $(cat users.json| jq -r '.Users[] | select(.reset | test("true")) | .username');
-              do
-                if [[ ! -z $(grep ${COGNAME} user.parse) ]]; then
-                    aws cognito-idp admin-reset-user-password \
-                    --user-pool-id $COGNITO_USER_POOL \
-                    --username $COGNAME
-                fi
-              done
-
-    admin-activate-creds:
+   admin-activate-creds:
       task: admin-activate-creds
       config:
         platform: linux

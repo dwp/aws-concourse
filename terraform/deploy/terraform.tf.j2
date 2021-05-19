@@ -29,6 +29,20 @@ data "terraform_remote_state" "internet_egress" {
   }
 }
 
+data "terraform_remote_state" "dataworks_cognito" {
+  backend   = "s3"
+  workspace = terraform.workspace
+
+  config = {
+    bucket         = "{{state_file_bucket}}"
+    key            = "terraform/dataworks/dataworks-cognito.tfstate"
+    region         = "{{state_file_region}}"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:{{state_file_region}}:{{state_file_account}}:key/{{state_file_kms_key}}"
+    dynamodb_table = "remote_state_locks"
+  }
+}
+
 data "terraform_remote_state" "internet_ingress" {
   backend   = "s3"
   workspace = terraform.workspace

@@ -39,11 +39,11 @@ module "concourse_web" {
   ssm_name_prefix       = var.name
   github_cidr_block     = var.github_vpc.cidr_block
   s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
-  cognito_client_secret = module.cognito.outputs.app_client.client_secret
-  cognito_client_id     = module.cognito.outputs.app_client.id
-  cognito_domain        = module.cognito.outputs.user_pool_domain
-  cognito_issuer        = module.cognito.outputs.issuer
-  cognito_name          = module.cognito.outputs.name
+  cognito_client_secret = data.terraform_remote_state.dataworks_cognito.outputs.cognito.app_client.client_secret #module.cognito.outputs.app_client.client_secret
+  cognito_client_id     = data.terraform_remote_state.dataworks_cognito.outputs.cognito.app_client.id            # module.cognito.outputs.app_client.id
+  cognito_domain        = data.terraform_remote_state.dataworks_cognito.outputs.cognito.user_pool_domain         #module.cognito.outputs.user_pool_domain
+  cognito_issuer        = data.terraform_remote_state.dataworks_cognito.outputs.cognito.issuer                   #module.cognito.outputs.issuer
+  cognito_name          = data.terraform_remote_state.dataworks_cognito.outputs.cognito.name                     #module.cognito.outputs.name
   proxy = {
     http_proxy  = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
     https_proxy = "http://${module.vpc.outputs.internet_proxy_endpoint}:3128"
@@ -187,17 +187,4 @@ module "waf" {
   cloudwatch_log_group  = "/${var.name}/waf"
   github_metadata       = local.github_metadata
   tags                  = local.tags
-}
-
-module "cognito" {
-  source = "../modules/cognito"
-
-  clients = [
-    "dataworks",
-    "admins",
-  ]
-
-  root_dns_names = values(local.root_dns_name)
-  domain         = local.cognito_domain
-  loadbalancer   = module.concourse_lb.outputs
 }
