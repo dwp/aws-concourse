@@ -1,5 +1,5 @@
 terraform {
-  required_version = "{{terraform_12_version}}"
+  required_version = "{{terraform_13_version}}"
   required_providers {
     random = "~> 2.0"
     tls    = "~> 2.0"
@@ -80,7 +80,7 @@ variable "region" {
 }
 
 provider "aws" {
-  version = "~> 3.25.0"
+  version = "~> 3.42.0"
   region  = var.region
 
   assume_role {
@@ -89,7 +89,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 3.25.0"
+  version = "~> 3.42.0"
   region  = "{{provider_region}}"
   alias   = "ssh_bastion"
 
@@ -108,21 +108,17 @@ data "http" "github" {
   url = "https://api.github.com/meta"
 }
 
-locals {
-  github_metadata = jsondecode(data.http.github.body)
-}
-
 data "aws_secretsmanager_secret_version" "internet_ingress" {
   secret_id = "/concourse/dataworks/internet-ingress"
 }
 
 locals {
+  github_metadata = jsondecode(data.http.github.body)
+
   account = { {% for key, value in accounts.items() %}
     {{key}} = "{{value}}"{% endfor %}
   }
-}
 
-locals {
   name = "aws-concourse"
 
   parent_domain_name = {
@@ -169,5 +165,4 @@ locals {
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
   ]
-
 }

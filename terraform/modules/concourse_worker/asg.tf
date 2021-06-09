@@ -93,7 +93,7 @@ resource "aws_launch_template" "worker" {
   lifecycle {
     create_before_destroy = true
     ignore_changes = [
-    name_prefix,
+      name_prefix,
     ]
   }
 
