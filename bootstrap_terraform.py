@@ -24,27 +24,28 @@ def main():
         secrets_manager = secrets_session.client(
             'secretsmanager', region_name=os.environ['AWS_REGION'])
     else:
-        ssm = boto3.client('ssm')
         secrets_manager = secrets_session.client('secretsmanager')
 
     try:
-        parameter = ssm.get_parameter(
-            Name='terraform_bootstrap_config', WithDecryption=False)
         dataworks_secret = secrets_manager.get_secret_value(
             SecretId="/concourse/dataworks/dataworks-secrets")
+        terraform_secret = secrets_manager.get_secret_value(
+            SecretId="/concourse/dataworks/terraform")
         concourse_secret = secrets_manager.get_secret_value(
             SecretId="/concourse/dataworks/dataworks")
     except botocore.exceptions.ClientError as e:
         error_message = e.response["Error"]["Message"]
         if "The security token included in the request is invalid" in error_message:
             print(
-                "ERROR: Invalid security token used when calling AWS SSM. Have you run `aws-sts` recently?")
+                "ERROR: Invalid security token used when calling AWS Secrets Manager. Have you run `aws-sts` recently?")
         else:
-            print("ERROR: Problem calling AWS SSM: {}".format(error_message))
+            print("ERROR: Problem calling AWS Secrets Manager: {}".format(error_message))
         sys.exit(1)
 
     config_data = yaml.load(
-        parameter['Parameter']['Value'], Loader=yaml.FullLoader)
+        terraform_secret['SecretBinary'], Loader=yaml.FullLoader)
+    config_data['terraform'] = json.loads(
+        terraform_secret['SecretBinary'])["terraform"]
     config_data['database_username'] = json.loads(
         dataworks_secret['SecretBinary'])["database_user"]
     config_data['database_password'] = json.loads(
@@ -67,6 +68,7 @@ def main():
         dataworks_secret['SecretBinary'])["tsa_host_pub_key"]
     config_data['enterprise_github_url'] = json.loads(
         concourse_secret['SecretBinary'])["enterprise_github_url"]
+
     with open('terraform/deploy/terraform.tf.j2') as in_template:
         template = jinja2.Template(in_template.read())
     with open('terraform/deploy/terraform.tf', 'w+') as terraform_tf:
@@ -75,6 +77,7 @@ def main():
         template = jinja2.Template(in_template.read())
     with open('terraform/deploy/terraform.tfvars', 'w+') as terraform_tfvars:
         terraform_tfvars.write(template.render(config_data))
+
     print("Terraform config successfully created")
 
 
