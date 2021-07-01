@@ -70,3 +70,13 @@ variable "costcode" {
   type    = string
   default = ""
 }
+
+variable "concourse_username" {
+  type = string
+  description = "The uesrname for concourse login"
+}
+
+variable "concourse_password" {
+  type = string
+  description = "The password for concourse login"
+}

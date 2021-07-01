@@ -188,3 +188,11 @@ module "waf" {
   github_metadata       = local.github_metadata
   tags                  = local.tags
 }
+
+module "teams" {
+  source = "../modules/teams"
+
+  concourse_url = "ci.${var.parent_domain_name}"
+  concourse_password = var.concourse_password
+  concourse_username = var.concourse_username
+}
