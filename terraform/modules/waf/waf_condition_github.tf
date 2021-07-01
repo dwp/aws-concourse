@@ -18,7 +18,7 @@ resource "aws_wafregional_rule" "detect_github_access" {
 
   predicate {
     data_id = aws_wafregional_ipset.github_com_ipset.id
-    negated = true
+    negated = false
     type    = "IPMatch"
   }
 }
