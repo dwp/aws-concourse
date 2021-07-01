@@ -13,11 +13,11 @@ resource "aws_wafregional_web_acl" "acl" {
 
   rule {
     action {
-      type = "BLOCK"
+      type = "ALLOW"
     }
 
     priority = 1
-    rule_id  = aws_wafregional_rule.non_gb.id
+    rule_id  = aws_wafregional_rule.detect_github_access.id
     type     = "REGULAR"
   }
 
@@ -27,6 +27,16 @@ resource "aws_wafregional_web_acl" "acl" {
     }
 
     priority = 2
+    rule_id  = aws_wafregional_rule.non_gb.id
+    type     = "REGULAR"
+  }
+
+  rule {
+    action {
+      type = "BLOCK"
+    }
+
+    priority = 3
     rule_id  = aws_wafregional_rule.restrict_sizes.id
     type     = "REGULAR"
   }
@@ -36,7 +46,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 4
+    priority = 5
     rule_id  = aws_wafregional_rule.detect_bad_auth_tokens.id
     type     = "REGULAR"
   }
@@ -46,7 +56,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 5
+    priority = 6
     rule_id  = aws_wafregional_rule.mitigate_sqli.id
     type     = "REGULAR"
   }
@@ -56,7 +66,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 6
+    priority = 7
     rule_id  = aws_wafregional_rule.mitigate_xss.id
     type     = "REGULAR"
   }
@@ -66,7 +76,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 7
+    priority = 8
     rule_id  = aws_wafregional_rule.detect_rfi_lfi_traversal.id
     type     = "REGULAR"
   }
@@ -87,7 +97,7 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "BLOCK"
     }
 
-    priority = 8
+    priority = 9
     rule_id  = aws_wafregional_rule.detect_ssi.id
     type     = "REGULAR"
   }
@@ -97,18 +107,8 @@ resource "aws_wafregional_web_acl" "acl" {
       type = "ALLOW"
     }
 
-    priority = 9
-    rule_id  = aws_wafregional_rule.detect_admin_access.id
-    type     = "REGULAR"
-  }
-
-  rule {
-    action {
-      type = "ALLOW"
-    }
-
     priority = 10
-    rule_id  = aws_wafregional_rule.detect_github_access.id
+    rule_id  = aws_wafregional_rule.detect_admin_access.id
     type     = "REGULAR"
   }
 }
