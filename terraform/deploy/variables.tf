@@ -36,6 +36,12 @@ variable "parent_domain_name" {
   type        = string
 }
 
+variable "concourse_url" {
+  description = "The url for concourse"
+  type        = string
+  default     = "https://ci.dataworks.dwp.gov.uk/"
+}
+
 variable "whitelist_cidr_blocks" {
   description = "list of allowed cidr blocks"
   type        = list(string)
@@ -72,11 +78,11 @@ variable "costcode" {
 }
 
 variable "concourse_username" {
-  type = string
+  type        = string
   description = "The uesrname for concourse login"
 }
 
 variable "concourse_password" {
-  type = string
+  type        = string
   description = "The password for concourse login"
 }

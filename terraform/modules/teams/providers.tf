@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     concourse = {
-      source = "terraform-provider-concourse/concourse"
+      source  = "terraform-provider-concourse/concourse"
       version = "7.2.1"
     }
   }

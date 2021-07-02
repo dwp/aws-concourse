@@ -192,7 +192,7 @@ module "waf" {
 module "teams" {
   source = "../modules/teams"
 
-  concourse_url = "ci.${var.parent_domain_name}"
+  concourse_url      = "${var.concourse_url}"
   concourse_password = var.concourse_password
   concourse_username = var.concourse_username
 }
