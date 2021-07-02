@@ -8,3 +8,6 @@ groups:
   - name: credentials
     jobs:
       - admin-activate-creds
+  - name: update-pipeline
+    jobs:
+      - update-pipeline

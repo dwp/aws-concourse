@@ -6,3 +6,14 @@ resources:
       uri: https://github.com/dwp/aws-concourse.git
     check_every: 15m
     webhook_token: ((dataworks.concourse_github_webhook_token))
+
+  - name: aws-concourse-update-pipeline
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/dwp/aws-concourse.git
+      paths:
+        - ci/*
+        - aviator.yml
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+    check_every: 720h 
