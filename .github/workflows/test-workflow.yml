@@ -1,0 +1,177 @@
+name: "Test workflow"
+on:
+  push:
+    branches:
+      - DW-6154_manage_concourse_teams_with_tf
+    paths:
+      - "terraform/**"
+      - ".github/workflows/**"
+  workflow_dispatch: {}
+defaults:
+  run:
+    working-directory: terraform/deploy/
+
+jobs:
+  management-dev:
+    name: "Terraform Apply Mangement-Dev"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ secrets.TERRAFORM_13_VERSION }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        id: deps
+        run: pip install Jinja2 PyYAML boto3
+
+      - name: "Bootstrap"
+        id: bootstrap
+        run: |
+          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
+        working-directory: .
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        env:
+          TF_WORKSPACE: default
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Apply"
+        id: apply
+        run: |
+          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: default
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+      
+      - name: "Terraform Plan"
+        id: plan
+        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: default
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+          TF_VAR_concourse_username: ${{ secrets.CONCOURSE_USERNAME }}
+          TF_VAR_concourse_password: ${{ secrets.CONCOURSE_PASSWORD }}
+      
+      - name: Deactivate AWS Credentials
+        if: failure()
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
+        env:
+          AWS_REGION: eu-west-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mgmt-dev-workflow-log
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+
+  management:
+    name: "Terraform Apply Mangement"
+    runs-on: ubuntu-latest
+    needs: management-dev
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ secrets.TERRAFORM_13_VERSION }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        id: deps
+        run: pip install Jinja2 PyYAML boto3
+
+      - name: "Bootstrap"
+        id: bootstrap
+        run: |
+          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
+        working-directory: .
+        env:
+          TF_WORKSPACE: management
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        env:
+          TF_WORKSPACE: management
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Apply"
+        id: apply
+        run: |
+          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: management
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Plan"
+        id: plan
+        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: management
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+      
+      - name: Deactivate AWS Credentials
+        if: ${{ always() }}
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
+        env:
+          AWS_REGION: eu-west-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mgmt-workflow-log
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
