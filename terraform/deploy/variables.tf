@@ -39,7 +39,7 @@ variable "parent_domain_name" {
 variable "concourse_url" {
   description = "The url for concourse"
   type        = string
-  default     = "https://ci.dataworks.dwp.gov.uk/"
+  default     = "https://ci.dataworks.dwp.gov.uk"
 }
 
 variable "whitelist_cidr_blocks" {
