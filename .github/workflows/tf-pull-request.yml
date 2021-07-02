@@ -12,6 +12,8 @@ jobs:
   pull-request:
     name: "Terraform Pull Request"
     runs-on: ubuntu-latest
+    env:
+      TF_LOG: "ERROR"
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1

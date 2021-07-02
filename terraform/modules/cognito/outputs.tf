@@ -7,4 +7,5 @@ output outputs {
     user_pool_main_domain = aws_cognito_user_pool_domain.main
     issuer                = "https://cognito-idp.${local.region}.amazonaws.com/${aws_cognito_user_pool.concourse.id}"
   }
+  sensitive = true
 }
