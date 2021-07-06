@@ -29,3 +29,7 @@ sed -i '/CONCOURSE_USER/d' /etc/systemd/system/concourse-web.env
 sed -i '/CONCOURSE_PASSWORD/d' /etc/systemd/system/concourse-web.env
 sed -i '/CONCOURSE_ADD_LOCAL_USER/d' /etc/systemd/system/concourse-web.env
 sed -i '/CONCOURSE_MAIN_TEAM_LOCAL_USER/d' /etc/systemd/system/concourse-web.env
+
+# Now that the local user is gone, open up the node
+iptables -D INPUT -p tcp --dport 8080 -j DROP
+iptables -D INPUT -p tcp --dport 8080 -s 127.0.0.1 -j ACCEPT
