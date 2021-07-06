@@ -2,6 +2,10 @@
 
 set -euxo pipefail
 
+# Block external access to Concourse util correctly configured
+iptables -I INPUT -p tcp --dport 8080 -j DROP
+iptables -I INPUT -p tcp --dport 8080 -s 127.0.0.1 -j ACCEPT
+
 export AWS_DEFAULT_REGION=${aws_default_region}
 TOKEN=$(curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token")
 export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id)
