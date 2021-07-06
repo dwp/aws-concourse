@@ -99,6 +99,8 @@ locals {
       no_proxy                              = var.proxy.no_proxy
       enterprise_github_certs               = join(" ", var.enterprise_github_certs)
       name                                  = local.name
+      concourse_user                        = var.concourse_web_config.concourse_user
+      concourse_password                    = var.concourse_web_config.concourse_password
       database_user                         = var.concourse_web_config.database_username
       database_password                     = var.concourse_web_config.database_password
       enterprise_github_oauth_client_id     = var.concourse_web_config.enterprise_github_oauth_client_id
@@ -106,6 +108,16 @@ locals {
       session_signing_key                   = var.concourse_web_config.session_signing_key
       tsa_host_key                          = var.concourse_web_config.tsa_host_key
       authorized_worker_keys                = var.concourse_web_config.authorized_worker_keys
+    }
+  )
+
+  teams = templatefile(
+    "${path.module}/templates/teams.sh",
+    {
+      aws_default_region = data.aws_region.current.name
+      target             = "aws-concourse"
+      concourse_user     = var.concourse_web_config.concourse_user
+      concourse_password = var.concourse_web_config.concourse_password
     }
   )
 
@@ -169,6 +181,11 @@ write_files:
     path: /etc/systemd/system/concourse-web.service
     permissions: '0644'
   - encoding: b64
+    content: ${base64encode(local.teams)}
+    owner: root:root
+    path: /root/teams.sh
+    permissions: '0700'
+  - encoding: b64
     content: ${base64encode(local.dataworks)}
     owner: root:root
     path: /root/teams/dataworks/team.yml
@@ -194,6 +211,11 @@ EOF
   part {
     content_type = "text/x-shellscript"
     content      = local.web_bootstrap_file
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = local.teams
   }
 
   part {

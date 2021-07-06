@@ -16,6 +16,7 @@ variable "concourse_web_config" {
     database_password                     = string,
     enterprise_github_url                 = string,
     concourse_user                        = string,
+    concourse_password                    = string,
     enterprise_github_oauth_client_id     = string,
     enterprise_github_oauth_client_secret = string,
     session_signing_key                   = string,
