@@ -8,6 +8,10 @@ groups:
   - name: credentials
     jobs:
       - admin-activate-creds
+  - name: ami-id-update
+    jobs:
+      - ami-id-update-mgmt-dev
+      - ami-id-update-mgmt
   - name: update-pipeline
     jobs:
       - update-pipeline

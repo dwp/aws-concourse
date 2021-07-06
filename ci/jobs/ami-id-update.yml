@@ -1,0 +1,17 @@
+jobs:
+  - name: ami-id-update-mgmt-dev
+    plan:
+      - get: untested-al2-concourse-ami
+        trigger: false
+      - .: (( inject meta.plan.update-ami-secrets ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
+  - name: ami-id-update-mgmt
+    plan:
+      - get: dw-al2-concourse-ami
+        trigger: false
+      - .: (( inject meta.plan.update-ami-secrets ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
