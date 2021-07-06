@@ -31,4 +31,6 @@ locals {
   }
 
   kali_users = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_users"]
+
+  concourse_url = terraform.workspace == "default" ? "https://ci.wip.${var.parent_domain_name}" : "https://ci.${var.parent_domain_name}"
 }
