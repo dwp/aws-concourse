@@ -8,7 +8,7 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: ((dataworks.terraform_repository))
+            repository: "hashicorp/terraform"
             tag: ((dataworks.terraform_13_version))
         params:
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
