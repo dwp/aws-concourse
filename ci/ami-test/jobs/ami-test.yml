@@ -1,7 +1,10 @@
 jobs:
   - name: ami-test
     plan:
+    - get: meta
+      resource: meta-dev
     - get: untested-al2-concourse-ami
+      trigger: true
     - config:
         image_resource:
           source:

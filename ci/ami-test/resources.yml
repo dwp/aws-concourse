@@ -12,3 +12,6 @@ resources:
         state: available
         name: untested-dw-al2-concourse-ami-*
         architecture: x86_64
+        
+  - name: meta-dev
+    type: meta
