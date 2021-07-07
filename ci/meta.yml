@@ -1,6 +1,6 @@
 meta:
   plan:
-   reboot-web-nodes:
+    reboot-web-nodes:
       task: reboot-web-nodes
       config:
         platform: linux
@@ -23,37 +23,37 @@ meta:
                 aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
               done
 
-   reboot-worker-nodes:
-    task: reboot-worker-nodes
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: ((dataworks.docker_awscli_repository))
-          version: ((dataworks.docker_awscli_version))
-          tag: ((dataworks.docker_awscli_version))
-      params:
-        AWS_DEFAULT_REGION: ((dataworks.aws_region))
-        CONCOURSE_USERNAME: ((dataworks-secrets.concourse_user))
-        CONCOURSE_PASSWORD: ((dataworks-secrets.concourse_password))
-      run:
-        path: sh
-        args:
-          - -exc
-          - |
-            source /assume-role
-            curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
-            tar -xvf fly.tgz
-            chmod +x fly
-            ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
-            ./fly --target concourse workers
-            for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
-            do
-              ./fly --target concourse land-worker --worker $worker
-            done
+    reboot-worker-nodes:
+      task: reboot-worker-nodes
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          CONCOURSE_USERNAME: ((dataworks-secrets.concourse_user))
+          CONCOURSE_PASSWORD: ((dataworks-secrets.concourse_password))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              source /assume-role
+              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
+              tar -xvf fly.tgz
+              chmod +x fly
+              ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
+              ./fly --target concourse workers
+              for worker in $(./fly --target concourse workers  --json | jq -r .[].name);
+              do
+                ./fly --target concourse land-worker --worker $worker
+              done
 
-   admin-activate-creds:
+    admin-activate-creds:
       task: admin-activate-creds
       config:
         platform: linux
@@ -74,53 +74,53 @@ meta:
               source /assume-role
               aws iam update-access-key --access-key-id $GHA_ACCESS_KEY_ID --status Active --user-name gha-aws-concourse
 
-   update-ami-secrets:
-     task: update-ami-secrets
-     config:
-       platform: linux
-       image_resource:
-         type: docker-image
-         source:
-           repository: ((dataworks.docker_awscli_repository))
-           version: ((dataworks.docker_awscli_version))
-           tag: ((dataworks.docker_awscli_version))
-       params:
-         AWS_DEFAULT_REGION: ((dataworks.aws_region))
-       run:
-         path: sh
-         args:
-           - -exc
-           - |
-             source /assume-role
+    update-ami-secrets:
+      task: update-ami-secrets
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              source /assume-role
 
-             if [[ -d "untested-al2-concourse-ami" ]]; then
-                 CONCOURSE_AMI_MGMT_DEV=\"$(cat untested-al2-concourse-ami/id)\"
-             else
-               echo "No untested-al2-concourse-ami id available"
-             fi
+              if [[ -d "untested-al2-concourse-ami" ]]; then
+                  CONCOURSE_AMI_MGMT_DEV=\"$(cat untested-al2-concourse-ami/id)\"
+              else
+                echo "No untested-al2-concourse-ami id available"
+              fi
 
-             if
-               [[ -d "dw-al2-concourse-ami" ]]; then
-                 CONCOURSE_AMI=\"$(cat dw-al2-concourse-ami/id)\"
-             else
-               echo "No dw-al2-concourse-ami id available"
-             fi
+              if
+                [[ -d "dw-al2-concourse-ami" ]]; then
+                  CONCOURSE_AMI=\"$(cat dw-al2-concourse-ami/id)\"
+              else
+                echo "No dw-al2-concourse-ami id available"
+              fi
 
-             if [[ -z "$CONCOURSE_AMI_MGMT_DEV" && -z "$CONCOURSE_AMI" ]]; then
-                 echo "No available AMI IDs...Exiting"
-                 exit 1
-             fi
+              if [[ -z "$CONCOURSE_AMI_MGMT_DEV" && -z "$CONCOURSE_AMI" ]]; then
+                  echo "No available AMI IDs...Exiting"
+                  exit 1
+              fi
 
-             echo $(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/ami-ids --query SecretBinary --output text | base64 -d) > ami-ids.json
+              echo $(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/ami-ids --query SecretBinary --output text | base64 -d) > ami-ids.json
 
-             if [[ ! -z "$CONCOURSE_AMI_MGMT_DEV" ]]; then
-                 OLD_CONCOURSE_AMI_MGMT_DEV=$(cat ami-ids.json | jq '.concourse_ami_mgmt_dev')
-                 sed -i "s/$OLD_CONCOURSE_AMI_MGMT_DEV/$CONCOURSE_AMI_MGMT_DEV/" ami-ids.json
-             fi
-             
-             if [[ ! -z "$CONCOURSE_AMI" ]]; then
-               OLD_CONCOURSE_AMI=$(cat ami-ids.json | jq '.concourse_ami')
-               sed -i "s/$OLD_CONCOURSE_AMI/$CONCOURSE_AMI/" ami-ids.json
-             fi
+              if [[ ! -z "$CONCOURSE_AMI_MGMT_DEV" ]]; then
+                  OLD_CONCOURSE_AMI_MGMT_DEV=$(cat ami-ids.json | jq '.concourse_ami_mgmt_dev')
+                  sed -i "s/$OLD_CONCOURSE_AMI_MGMT_DEV/$CONCOURSE_AMI_MGMT_DEV/" ami-ids.json
+              fi
+              
+              if [[ ! -z "$CONCOURSE_AMI" ]]; then
+                OLD_CONCOURSE_AMI=$(cat ami-ids.json | jq '.concourse_ami')
+                sed -i "s/$OLD_CONCOURSE_AMI/$CONCOURSE_AMI/" ami-ids.json
+              fi
 
-             aws secretsmanager put-secret-value  --secret-id /concourse/dataworks/ami-ids --secret-binary fileb://ami-ids.json
+              aws secretsmanager put-secret-value  --secret-id /concourse/dataworks/ami-ids --secret-binary fileb://ami-ids.json

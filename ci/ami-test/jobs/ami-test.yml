@@ -1,0 +1,29 @@
+jobs:
+  - name: ami-test
+    plan:
+    - get: untested-al2-concourse-ami
+    - config:
+        image_resource:
+          source:
+            repository: busybox
+          type: registry-image
+        platform: linux
+        run:
+          args:
+          - hello world
+          path: echo
+      task: simple-task
+    on_failure:
+      do:
+        - .: (( inject meta.plan.ami-test-results ))
+          task: ami-test-result-fail
+          config:
+            params:
+              RESULT: FAILED
+    on_success:
+      do:
+        - .: (( inject meta.plan.ami-test-results ))
+          task: ami-test-result-success
+          config:
+              params:
+                RESULT: SUCCESS

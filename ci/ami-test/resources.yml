@@ -1,0 +1,14 @@
+resources:
+
+  - name: untested-al2-concourse-ami
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: untested-dw-al2-concourse-ami-*
+        architecture: x86_64
