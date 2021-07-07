@@ -5,6 +5,9 @@ whitelist_cidr_blocks    = [{% set doiranges = doi["cidr_blocks"].split(',') %}
   {% endfor %}"{{ucfs["team_cidr_block"]}}"
 ]
 
+concourse_ami = "{{concourse_ami}}"
+concourse_ami_mgmt_dev = "{{concourse_ami_mgmt_dev}}"
+
 concourse_web_config = {
   database_username = "{{database_username}}"
   database_password = "{{database_password}}"
