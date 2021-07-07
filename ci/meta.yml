@@ -93,11 +93,11 @@ meta:
            - |
              source /assume-role
 
-             if [[ -d "untested-concourse-ami" ]]; then
-                 CONCOURSE_AMI_MGMT_DEV=$(cat untested-concourse-ami/id)
+             if [[ -d "untested-al2-concourse-ami" ]]; then
+                 CONCOURSE_AMI_MGMT_DEV=$(cat untested-al2-concourse-ami/id)
              else
-               echo "No untested-concourse-ami id available"
-             done
+               echo "No untested-al2-concourse-ami id available"
+             fi
 
              if
                [[ -d "dw-al2-concourse-ami" ]]; then
@@ -109,18 +109,18 @@ meta:
              if [[ -z "$CONCOURSE_AMI_MGMT_DEV" && -z "$CONCOURSE_AMI" ]]; then
                  echo "No available AMI IDs...Exiting"
                  exit 1
-             done
+             fi
 
-             echo $(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/ami-ids --query SecretBinary --output text | base64 -D) > ami-ids.json
+             echo $(aws secretsmanager get-secret-value --secret-id /concourse/dataworks/ami-ids --query SecretBinary --output text | base64 -d) > ami-ids.json
 
              if [[ ! -z "$CONCOURSE_AMI_MGMT_DEV" ]]; then
-                 OLD_CONCOURSE_AMI_MGMT_DEV=$(cat ami-ids.json | jq '.concourse_ami')
-                 sed -i 's/$OLD_CONCOURSE_AMI_MGMT_DEV/$CONCOURSE_AMI_MGMT_DEV' ami-ids.json
-             done
+                 OLD_CONCOURSE_AMI_MGMT_DEV=$(cat ami-ids.json | jq '.concourse_ami_mgmt_dev')
+                 sed -i "s/$OLD_CONCOURSE_AMI_MGMT_DEV/$CONCOURSE_AMI_MGMT_DEV/" ami-ids.json
+             fi
              
              if [[ ! -z "$CONCOURSE_AMI" ]]; then
                OLD_CONCOURSE_AMI=$(cat ami-ids.json | jq '.concourse_ami')
-               sed -i 's/$OLD_CONCOURSE_AMI/$CONCOURSE_AMI' ami-ids.json
-             done
+               sed -i "s/$OLD_CONCOURSE_AMI/$CONCOURSE_AMI/" ami-ids.json
+             fi
 
              aws secretsmanager put-secret-value  --secret-id /concourse/dataworks/ami-ids --secret-binary fileb://ami-ids.json

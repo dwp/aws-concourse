@@ -33,6 +33,8 @@ def main():
             SecretId="/concourse/dataworks/terraform")
         concourse_secret = secrets_manager.get_secret_value(
             SecretId="/concourse/dataworks/dataworks")
+        ami_ids = secrets_manager.get_secret_value(
+            SecretId="/concourse/dataworks/ami-ids")
     except botocore.exceptions.ClientError as e:
         error_message = e.response["Error"]["Message"]
         if "The security token included in the request is invalid" in error_message:
@@ -47,6 +49,10 @@ def main():
         terraform_secret['SecretBinary'], Loader=yaml.FullLoader)
     config_data['terraform'] = json.loads(
         terraform_secret['SecretBinary'])["terraform"]
+    config_data['concourse_ami'] = json.loads(
+        ami_ids['SecretBinary'])["concourse_ami"]
+    config_data['concourse_ami_mgmt_dev'] = json.loads(
+        ami_ids['SecretBinary'])["concourse_ami_mgmt_dev"]
     config_data['database_username'] = json.loads(
         dataworks_secret['SecretBinary'])["database_user"]
     config_data['database_password'] = json.loads(

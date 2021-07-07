@@ -47,6 +47,16 @@ variable "ami_filter_name" {
   default = "name"
 }
 
+variable "concourse_ami" {
+  type    = string
+  default = ""
+}
+
+variable "concourse_ami_mgmt_dev" {
+  type    = string
+  default = ""
+}
+
 variable "concourse_no_proxy" {
   type    = string
   default = "169.254.169.254,169.254.169.123,.amazonaws.com"
