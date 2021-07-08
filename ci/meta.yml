@@ -148,5 +148,6 @@ meta:
               curl \
               -X POST \
               -H "Accept: application/vnd.github.v3+json" \
+              -H "authorization: Bearer $GITHUB_TOKEN" \
               https://api.github.com/repos/dwp/aws-concourse/actions/workflows/ami-test-apply/dispatches \
               -d '{"ref":"ref"}'
