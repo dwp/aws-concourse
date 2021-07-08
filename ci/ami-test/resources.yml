@@ -15,3 +15,11 @@ resources:
         
   - name: meta-dev
     type: meta
+
+  - name: ami-test-release
+    type: github-release
+    source:
+      owner: dwp
+      repository: aws-concourse
+    check_every: 5m
+    webhook_token: ((dataworks.concourse_github_webhook_token))
