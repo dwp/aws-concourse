@@ -7,6 +7,8 @@ defaults:
 
 jobs:
   management-dev:
+  outputs:
+      publish-version: ${{ steps.get-publish-version.outputs.publish-version }}
     name: "Terraform Apply Mangement-Dev"
     runs-on: ubuntu-latest
     env:
@@ -108,12 +110,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
 
-  get-publish-version:
-    runs-on: ubuntu-latest
-    outputs:
-      publish-version: ${{ steps.get-publish-version.outputs.publish-version }}
-    steps:
       - name: Prepare SemVer
+        if: success()
         id: prepare-semver
         run: |
           LATEST_VERSION=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
@@ -121,21 +119,24 @@ jobs:
           [  -z "$LATEST_VERSION" ] && LATEST_VERSION="0.0.0"
           echo ::set-output name=latest_version_out::$LATEST_VERSION
           echo ::set-output name=semver_increment::"p"
+
       - name: Increment SemVer
+        if: success()
         id: semver
         uses: matt-FFFFFF/simple-semver@v0.1.0
         with:
           semver-input: ${{ steps.prepare-semver.outputs.latest_version_out }}
           increment: ${{ steps.prepare-semver.outputs.semver_increment }}
+
       - name: Get publish version
+        if: success()
         id: get-publish-version
         run: echo "::set-output name=publish-version::${{ steps.semver.outputs.semver }}"
 
-  publish-github-release:
-    runs-on: ubuntu-latest
-    needs: [get-publish-version]
-    steps:
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Publish github release
+        if: success()
+        needs: [get-publish-version]
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ needs.get-publish-version.outputs.publish-version }}
