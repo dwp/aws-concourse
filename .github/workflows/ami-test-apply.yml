@@ -7,10 +7,10 @@ defaults:
 
 jobs:
   management-dev:
-  outputs:
-      publish-version: ${{ steps.get-publish-version.outputs.publish-version }}
     name: "Terraform Apply Mangement-Dev"
     runs-on: ubuntu-latest
+    outputs:
+      publish-version: ${{ steps.get-publish-version.outputs.publish-version }}
     env:
       TF_LOG: "ERROR"
     steps:
