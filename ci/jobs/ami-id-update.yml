@@ -2,7 +2,7 @@ jobs:
   - name: ami-id-update-mgmt-dev
     plan:
       - get: untested-al2-concourse-ami
-        trigger: false
+        trigger: true
       - .: (( inject meta.plan.update-ami-secrets ))
         config:
           params:
