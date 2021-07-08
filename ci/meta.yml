@@ -124,3 +124,29 @@ meta:
               fi
 
               aws secretsmanager put-secret-value  --secret-id /concourse/dataworks/ami-ids --secret-binary fileb://ami-ids.json
+
+    workflow-dispatch:
+      task: workflow-dispatch
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          GIT_USERNAME: ((dataworks.concourse_github_username))
+          GIT_EMAIL: ((dataworks.concourse_github_email))
+          GITHUB_TOKEN: ((dataworks-secrets.concourse_github_pat))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              curl \
+              -X POST \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/dwp/aws-concourse/actions/workflows/ami-test-apply/dispatches \
+              -d '{"ref":"ref"}'

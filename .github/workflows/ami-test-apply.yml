@@ -1,0 +1,115 @@
+name: "AMI build and test"
+on:
+  workflow_dispatch: {}
+defaults:
+  run:
+    working-directory: terraform/deploy/
+
+jobs:
+  management-dev:
+    name: "Terraform Apply Mangement-Dev"
+    runs-on: ubuntu-latest
+    env:
+      TF_LOG: "ERROR"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ secrets.TERRAFORM_13_VERSION }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        id: deps
+        run: pip install Jinja2 PyYAML boto3
+
+      - name: "Bootstrap"
+        id: bootstrap
+        run: |
+          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
+        working-directory: .
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        env:
+          TF_WORKSPACE: default
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+
+      - name: "Terraform Apply"
+        id: apply
+        run: |
+          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: default
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+      
+      - name: "Terraform Plan"
+        id: plan
+        run: terraform plan -detailed-exitcode >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        continue-on-error: false
+        env:
+          TF_WORKSPACE: default
+          TF_INPUT: false
+          TF_VAR_assume_role: gha_aws_concourse
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-2
+      
+      - name: "Cycle Instances"
+        id: cycle
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
+        env:
+          AWS_REGION: eu-west-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+      
+      - name: Deactivate AWS Credentials
+        if: failure()
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
+        env:
+          AWS_REGION: eu-west-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+
+      - uses: actions/upload-artifact@v2
+        if: success()
+        with:
+          name: deploy-success
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mgmt-dev-workflow-log
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+     
+      - name: Deactivate AWS Credentials
+        if: ${{ always() }}
+        uses: docker://amazon/aws-cli
+        with:
+          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
+        env:
+          AWS_REGION: eu-west-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
