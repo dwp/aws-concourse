@@ -138,7 +138,6 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ needs.get-publish-version.outputs.publish-version }}"
           prerelease: false
           title: "AMI test result ${{ needs.get-publish-version.outputs.publish-version }}"
           files: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt
