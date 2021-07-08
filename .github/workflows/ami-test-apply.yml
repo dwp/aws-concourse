@@ -13,6 +13,7 @@ jobs:
       publish-version: ${{ steps.get-publish-version.outputs.publish-version }}
     env:
       TF_LOG: "ERROR"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -135,11 +136,8 @@ jobs:
 
       - name: Publish github release
         if: success()
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "AMI test result ${{ needs.get-publish-version.outputs.publish-version }}"
-          files: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt
-      
+          tag_name: "${{ needs.get-publish-version.outputs.publish-version }}"
+          name: "AMI test result ${{ needs.get-publish-version.outputs.publish-version }}"
+          files: "${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt"
