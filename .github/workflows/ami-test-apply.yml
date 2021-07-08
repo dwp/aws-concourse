@@ -72,16 +72,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-2
       
-      - name: "Cycle Instances"
-        id: cycle
-        uses: docker://amazon/aws-cli
-        with:
-          args: iam update-access-key --access-key-id ${{ secrets.ACTIONS_ACCESS_KEY_ID }} --status Inactive --user-name gha-aws-concourse
-        env:
-          AWS_REGION: eu-west-2
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
-      
       - name: Deactivate AWS Credentials
         if: failure()
         uses: docker://amazon/aws-cli
@@ -93,16 +83,20 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
 
       - uses: actions/upload-artifact@v2
-        if: success()
-        with:
-          name: deploy-success
-          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success
-
-      - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: mgmt-dev-workflow-log
           path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+
+      - uses: actions/checkout@v2
+        if: success()
+      - run: echo SUCCESS > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt
+
+      - uses: actions/upload-artifact@v2
+        if: success()
+        with:
+          name: deploy-success
+          path: ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt
      
       - name: Deactivate AWS Credentials
         if: ${{ always() }}

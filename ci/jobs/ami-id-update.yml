@@ -3,6 +3,10 @@ jobs:
     plan:
       - get: untested-al2-concourse-ami
         trigger: true
+      - .: (( inject meta.plan.admin-activate-creds ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
       - .: (( inject meta.plan.update-ami-secrets ))
         config:
           params:
