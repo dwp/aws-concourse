@@ -134,10 +134,16 @@ jobs:
         id: get-publish-version
         run: echo "::set-output name=publish-version::${{ steps.semver.outputs.semver }}"
 
-      - name: Publish github release
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create GitHub Release
         if: success()
-        uses: softprops/action-gh-release@v1
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "${{ needs.get-publish-version.outputs.publish-version }}"
-          name: "AMI test result ${{ needs.get-publish-version.outputs.publish-version }}"
-          files: "${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}-success.txt"
+          tag_name: ${{ needs.get-publish-version.outputs.publish-version }}
+          release_name: Release ${{ needs.get-publish-version.outputs.publish-version }}
+          draft: false
+          prerelease: false
