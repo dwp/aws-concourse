@@ -94,8 +94,7 @@ jobs:
 
           for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* | jq -r '.Reservations[].Instances[].InstanceId');
           do
-            #aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
-            echo $INSTANCE_ID
+            aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy --no-should-respect-grace-period
           done
         shell: bash
         env:
