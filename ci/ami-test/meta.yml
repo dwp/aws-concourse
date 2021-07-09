@@ -1,6 +1,5 @@
 meta:
   plan:
-    
     ami-test-results:
       task: ami-test-result
       config:
@@ -40,3 +39,33 @@ meta:
         inputs:
           - name: meta
           - name: untested-al2-concourse-ami
+
+    ami-id-compare:
+      task: ami-id-compare
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              AMI_ID=$(cat untested-al2-concourse-ami/id)
+
+              source /assume-role
+              for CURRENT_AMI_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* Name=instance-state-name,Values=running | jq -r '.Reservations[].Instances[].ImageId');
+              do
+                if [[ $AMI_ID != $CURRENT_AMI_ID ]]; then
+                  exit 1
+                  echo "AMI ID's do not match, exiting..."
+                else
+                  echo "Running AMI ID matches the new resource"
+                fi
+              done
