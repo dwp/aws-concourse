@@ -102,7 +102,7 @@ jobs:
           export AWS_SESSION_TOKEN=$(echo $AWS_STS | jq .Credentials.SessionToken -r)
           set -x
 
-          for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* | jq -r '.Reservations[].Instances[].InstanceId');
+          for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* Name=instance-state-name,Values=running | jq -r '.Reservations[].Instances[].InstanceId');
           do
             aws ec2 terminate-instances --instance-ids $INSTANCE_ID
           done
