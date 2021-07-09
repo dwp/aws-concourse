@@ -82,6 +82,14 @@ jobs:
         if: success()
         id: cycle-nodes
         run: |
+          set +x
+          DURATION=${ASSUME_DURATION:=900}
+          AWS_STS=$(aws sts assume-role --role-arn ${AWS_SECRETS_ROLE} --role-session-name awscli-$(date +%m%d%y%H%M%S) --duration-seconds ${DURATION})
+          export AWS_SECRET_ACCESS_KEY=$(echo $AWS_STS | jq .Credentials.SecretAccessKey -r)
+          export AWS_ACCESS_KEY_ID=$(echo $AWS_STS | jq .Credentials.AccessKeyId -r)
+          export AWS_SESSION_TOKEN=$(echo $AWS_STS | jq .Credentials.SessionToken -r)
+          set -x
+
           for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* | jq -r '.Reservations[].Instances[].InstanceId');
           do
             #aws autoscaling set-instance-health --instance-id $INSTANCE_ID --health-status Unhealthy
@@ -89,8 +97,6 @@ jobs:
           done
         shell: bash
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
           AWS_SECRETS_ROLE: ${{ secrets.AWS_GHA_ROLE_MGMT_DEV }}
           AWS_DEFAULT_REGION: eu-west-2
       
