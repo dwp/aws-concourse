@@ -1,32 +1,29 @@
 jobs:
   - name: ami-test
     plan:
-    - get: meta
-      resource: meta-dev
-    - get: untested-al2-concourse-ami
-      trigger: true
-    - config:
-        image_resource:
-          source:
-            repository: busybox
-          type: registry-image
-        platform: linux
-        run:
-          args:
-          - hello world
-          path: echo
-      task: simple-task
-    on_failure:
-      do:
-        - .: (( inject meta.plan.ami-test-results ))
-          task: ami-test-result-fail
-          config:
-            params:
-              RESULT: FAILED
-    on_success:
-      do:
-        - .: (( inject meta.plan.ami-test-results ))
-          task: ami-test-result-success
-          config:
-              params:
-                RESULT: SUCCESS
+      - get: meta
+        resource: meta-dev
+      - get: ami-test-release
+        trigger: true
+      - get: untested-al2-concourse-ami
+        trigger: false
+      - .: (( inject meta.plan.ami-id-compare ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
+          inputs:
+            - name: untested-al2-concourse-ami
+        on_failure:
+          do:
+            - .: (( inject meta.plan.ami-test-results ))
+              task: ami-test-result-fail
+              config:
+                params:
+                  RESULT: FAILED
+        on_success:
+          do:
+            - .: (( inject meta.plan.ami-test-results ))
+              task: ami-test-result-success
+              config:
+                  params:
+                    RESULT: SUCCESS
