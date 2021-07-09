@@ -22,6 +22,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
+      - uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
 
       - name: "Install dependencies"
         id: deps
@@ -78,9 +81,6 @@ jobs:
       - name: "Cycle nodes"
         if: success()
         id: cycle nodes
-        uses: unfor19/install-aws-cli-action@v1
-        with:
-          version: 2
         run: |
           for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* | jq -r '.Reservations[].Instances[].InstanceId');
           do
