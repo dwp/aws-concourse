@@ -3,8 +3,10 @@ jobs:
     plan:
     - get: meta
       resource: meta-dev
-    - get: untested-al2-concourse-ami
+    - get: ami-test-release
       trigger: true
+    - get: untested-al2-concourse-ami
+      trigger: false
     - config:
         image_resource:
           source:
