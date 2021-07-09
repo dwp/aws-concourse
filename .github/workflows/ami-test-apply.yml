@@ -77,7 +77,6 @@ jobs:
       
       - name: "Cycle nodes"
         if: success()
-        uses: actions/checkout@v2
         id: cycle nodes
         uses: unfor19/install-aws-cli-action@v1
         with:
