@@ -22,9 +22,11 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - uses: unfor19/install-aws-cli-action@v1
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
-          version: 2
+          aws-access-key-id: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
 
       - name: "Install dependencies"
         id: deps
