@@ -80,7 +80,7 @@ jobs:
       
       - name: "Cycle nodes"
         if: success()
-        id: cycle nodes
+        id: cycle-nodes
         run: |
           for INSTANCE_ID in $(aws ec2 describe-instances --filters Name=tag:Name,Values=ci-concourse-* | jq -r '.Reservations[].Instances[].InstanceId');
           do
