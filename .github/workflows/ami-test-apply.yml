@@ -121,6 +121,15 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTIONS_SECRET_ACCESS_KEY }}
 
+      - name: "Redact Logs AMI Test"
+        if: failure()
+        id: redact-logs-ami-test
+        run: |
+              sed -i 's/$ACC_MGMT_DEV/REDACTED/g' ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        shell: bash
+        env:
+          ACC_MGMT_DEV: ${{ secrets.AWS_GHA_ACC_MGMT_DEV }}
+
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
