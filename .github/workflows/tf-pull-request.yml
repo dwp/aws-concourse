@@ -75,7 +75,7 @@ jobs:
         if: failure()
         id: redact-logs-mgmt-pr
         run: |
-              sed -i 's/$ACC_MGMT/REDACTED/g' ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+              sed -i "s/$ACC_MGMT/REDACTED/g" ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
         shell: bash
         env:
           ACC_MGMT: ${{ secrets.AWS_GHA_ACC_MGMT }}
