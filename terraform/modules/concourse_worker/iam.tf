@@ -114,3 +114,26 @@ resource "aws_iam_role_policy_attachment" "concourse_tag_ec2" {
   policy_arn = aws_iam_policy.concourse_tag_ec2.arn
   role       = data.aws_iam_role.worker.id
 }
+
+data "aws_iam_policy_document" "concourse_ecr" {
+  statement {
+    actions = [
+      "ecr:Describe*",
+      "ecr:Get*",
+      "ecr:List*",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "concourse_ecr" {
+  name        = "${local.name}ECR"
+  description = "Allow Concourse Worker's to use ECR"
+  policy      = data.aws_iam_policy_document.concourse_ecr.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_ecr" {
+  policy_arn = aws_iam_policy.concourse_ecr.arn
+  role       = data.aws_iam_role.worker.id
+}
