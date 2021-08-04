@@ -43,7 +43,8 @@ meta:
             - -exc
             - |
               source /assume-role
-              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v7.2.0/fly-7.2.0-linux-amd64.tgz"
+              CONCOURSE_VERSION=$(curl $CONCOURSE_URI/api/v1/info | jq '.version')
+              curl -Lk -o fly.tgz "https://github.com/concourse/concourse/releases/download/v${CONCOURSE_VERSION}/fly-${CONCOURSE_VERSION}-linux-amd64.tgz"
               tar -xvf fly.tgz
               chmod +x fly
               ./fly --target concourse login --team-name main --concourse-url $CONCOURSE_URI -k -u $CONCOURSE_USERNAME -p $CONCOURSE_PASSWORD
