@@ -165,4 +165,6 @@ locals {
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
   ]
+
+  ap_service_name = "{{ap.service}}"
 }

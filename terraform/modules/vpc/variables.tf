@@ -46,3 +46,8 @@ variable "vpc_endpoint_source_sg_ids" {
   description = "Security group IDs of consumers of VPC endpoint services"
   type        = list(string)
 }
+
+variable "ap_service_name" {
+  description = "AP Service Name"
+  type        = string
+}
