@@ -9,7 +9,7 @@ module "concourse_lb" {
   parent_domain_name     = local.parent_domain_name[local.environment]
   vpc                    = module.vpc.outputs
   wafregional_web_acl_id = module.waf.wafregional_web_acl_id
-  whitelist_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
+  whitelist_cidr_blocks  = local.whitelist_cidr_blocks
   logging_bucket         = data.terraform_remote_state.security-tools.outputs.logstore_bucket.id
 }
 
@@ -163,7 +163,7 @@ module "vpc" {
   name                        = var.name
   tags                        = local.tags
   vpc_cidr_block              = local.cidr_block[local.environment].ci-cd-vpc
-  whitelist_cidr_blocks       = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
+  whitelist_cidr_blocks       = local.whitelist_cidr_blocks
   internet_proxy_fqdn         = module.vpc.outputs.internet_proxy_endpoint
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
