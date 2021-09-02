@@ -115,6 +115,10 @@ data "aws_secretsmanager_secret_version" "internet_ingress" {
 locals {
   github_metadata = jsondecode(data.http.github.body)
 
+  full_cidr_blocks  = concat(var.whitelist_cidr_blocks, local.github_metadata.hooks)
+
+  whitelist_cidr_blocks = [ for v in local.full_cidr_blocks : v if replace(v, ":", "") == v ]
+
   account = { {% for key, value in accounts.items() %}
     {{key}} = "{{value}}"{% endfor %}
   }
