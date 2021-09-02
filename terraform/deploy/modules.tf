@@ -186,6 +186,6 @@ module "waf" {
   whitelist_cidr_blocks = var.whitelist_cidr_blocks
   log_bucket            = data.terraform_remote_state.security-tools.outputs.logstore_bucket.arn
   cloudwatch_log_group  = "/${var.name}/waf"
-  github_metadata       = local.github_metadata
+  github_metadata       = local.github_hooks
   tags                  = local.tags
 }

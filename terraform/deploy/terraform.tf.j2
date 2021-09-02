@@ -119,6 +119,8 @@ locals {
 
   whitelist_cidr_blocks = [ for v in local.full_cidr_blocks : v if replace(v, ":", "") == v ]
 
+  github_hooks = [for v in local.github_metadata.hooks : v if replace(v, ":", "") == v]
+
   account = { {% for key, value in accounts.items() %}
     {{key}} = "{{value}}"{% endfor %}
   }
