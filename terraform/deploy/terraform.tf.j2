@@ -172,5 +172,6 @@ locals {
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
   ]
 
-  ap_service_name = "{{ap.service}}"
+  ap_api_name = "{{ap.api_name}}"
+  ap_api_vpce = "{{ap.api_vpce}}"
 }

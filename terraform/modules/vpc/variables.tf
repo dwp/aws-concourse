@@ -47,7 +47,12 @@ variable "vpc_endpoint_source_sg_ids" {
   type        = list(string)
 }
 
-variable "ap_service_name" {
-  description = "AP Service Name"
+variable "ap_api_name" {
+  description = "AP API Name"
+  type        = string
+}
+
+variable "ap_api_vpce" {
+  description = "AP VPCE Name"
   type        = string
 }

@@ -167,7 +167,8 @@ module "vpc" {
   internet_proxy_fqdn         = module.vpc.outputs.internet_proxy_endpoint
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
-  ap_service_name             = local.ap_service_name
+  ap_api_name             = local.ap_api_name
+  ap_api_vpce             = local.ap_api_vpce
 }
 
 module "concourse_waf_log_group" {
