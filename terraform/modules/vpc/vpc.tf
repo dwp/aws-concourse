@@ -39,14 +39,7 @@ module "vpc" {
     "sqs",
     "ssm",
     "ssmmessages",
-  ]
-
-  custom_vpce_services = [
-    {
-      key          = var.ap_api_name
-      service_name = var.ap_api_vpce
-      port         = 443
-    }
+    var.api_service_name
   ]
 
   common_tags = merge(var.tags, { Name = var.name })
