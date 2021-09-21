@@ -22,10 +22,10 @@ resources:
     type: ami
     check_every: 5m
     source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      aws_role_arn: arn:aws:iam::((aws_account.management)):role/ci
       region: ((dataworks.aws_region))
       filters:
-        owner-id: ((dataworks.aws_management_acc))
+        owner-id: ((aws_account.management))
         is-public: false
         state: available
         name: untested-dw-al2-concourse-ami-*
@@ -35,10 +35,10 @@ resources:
     type: ami
     check_every: 5m
     source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      aws_role_arn: arn:aws:iam::((aws_account.management)):role/ci
       region: ((dataworks.aws_region))
       filters:
-        owner-id: ((dataworks.aws_management_acc))
+        owner-id: ((aws_account.management))
         is-public: false
         state: available
         name: dw-al2-concourse-ami-*
