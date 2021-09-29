@@ -57,8 +57,18 @@ jobs:
       - name: "Terraform Apply"
         id: apply
         run: |
-          terraform plan -out terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
-          terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          exit_status=0
+          terraform plan -detailed-exitcode -out terraform.plan || exit_status=$? >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          if [ $exit_status -eq 0 ]; then
+              echo "No changes, not applying"
+              exit 1
+          elif [ $exit_status -eq 1 ]; then
+              echo "Terraform plan failed"
+              exit 1
+          elif [ $exit_status -eq 2 ]; then
+              terraform apply -auto-approve terraform.plan >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+              touch ../terraform-success/success
+          fi
         continue-on-error: false
         env:
           TF_WORKSPACE: default
