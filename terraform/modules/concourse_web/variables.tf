@@ -107,8 +107,10 @@ variable "github_cidr_block" {
 
 variable "s3_prefix_list_id" {
   type    = string
-  default = ""
+  default = "pl-7ca54015"
 }
+
+
 
 variable "enterprise_github_certs" {
   type        = list(string)

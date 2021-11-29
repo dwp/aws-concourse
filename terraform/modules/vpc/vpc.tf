@@ -38,8 +38,7 @@ module "vpc" {
     "sns",
     "sqs",
     "ssm",
-    "ssmmessages",
-    var.api_service_name
+    "ssmmessages"
   ]
 
   common_tags = merge(var.tags, { Name = var.name })
