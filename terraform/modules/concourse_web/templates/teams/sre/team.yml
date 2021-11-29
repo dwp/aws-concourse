@@ -1,0 +1,5 @@
+roles:
+  - name: pipeline-operator
+    oidc:
+      groups: ["dataworks"]
+
