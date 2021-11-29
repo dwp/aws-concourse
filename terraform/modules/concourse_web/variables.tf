@@ -110,8 +110,6 @@ variable "s3_prefix_list_id" {
   default = ""
 }
 
-
-
 variable "enterprise_github_certs" {
   type        = list(string)
   description = "A list of certificates that make up the full CA chain that sign the Enterprise GitHub TlS certificates"
