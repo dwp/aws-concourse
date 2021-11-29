@@ -199,7 +199,7 @@ write_files:
   - encoding: b64
     content: ${base64encode(local.sre)}
     owner: root:root
-    path: /root/teams/dataworks/team.yml
+    path: /root/teams/sre/team.yml
     permissions: '0600'
   - encoding: b64
     content: ${base64encode(local.identity)}
