@@ -137,11 +137,6 @@ locals {
     {}
   )
 
-  sre = templatefile(
-    "${path.module}/templates/teams/sre/team.yml",
-    {}
-  )
-
   healthcheck_file = templatefile(
     "${path.module}/templates/healthcheck.sh",
     {}
@@ -197,11 +192,6 @@ write_files:
     path: /root/teams/dataworks/team.yml
     permissions: '0600'
   - encoding: b64
-    content: ${base64encode(local.sre)}
-    owner: root:root
-    path: /root/teams/sre/team.yml
-    permissions: '0600'
-  - encoding: b64
     content: ${base64encode(local.identity)}
     owner: root:root
     path: /root/teams/identity/team.yml
@@ -237,11 +227,6 @@ EOF
   part {
     content_type = "text/plain"
     content      = local.dataworks
-  }
-
-  part {
-    content_type = "text/plain"
-    content      = local.sre
   }
 
   part {
