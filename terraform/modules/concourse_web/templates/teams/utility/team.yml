@@ -5,6 +5,8 @@ roles:
   - name: viewer
     github:
       teams: ["dip:devops"]
+    oicd:
+      groups: ["sre"]
   - name: owner
     oidc:
       groups: ["admins"]
