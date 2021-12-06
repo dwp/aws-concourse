@@ -4,8 +4,6 @@ roles:
       teams: ["dip:devops"]
     oidc:
       groups: ["sre"]
-    oicd:
-      groups: ["sre"]
   - name: owner
     oidc:
       groups: ["admins"]
