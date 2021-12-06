@@ -1,0 +1,12 @@
+roles:
+  - name: viewer
+    github:
+      teams: ["dip:devops"]
+    oidc:
+      groups: ["sre"]
+  - name: owner
+    oidc:
+      groups: ["admins"]
+  - name: pipeline-operator
+    oidc:
+      groups: ["sre"]
