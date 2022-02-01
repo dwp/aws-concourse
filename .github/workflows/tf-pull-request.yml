@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: ${{ secrets.TERRAFORM_13_VERSION }}
+          terraform_version: ${{ secrets.TERRAFORM_14_VERSION }}
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
@@ -30,7 +30,7 @@ jobs:
       - name: "Bootstrap"
         id: bootstrap
         run: |
-          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          python bootstrap_terraform.py
           sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
@@ -42,7 +42,7 @@ jobs:
 
       - name: "Terraform Init"
         id: init
-        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        run: terraform init 
         env:
           TF_WORKSPACE: management
           TF_VAR_assume_role: gha_aws_concourse

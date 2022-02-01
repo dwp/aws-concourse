@@ -1,4 +1,4 @@
-resource aws_cognito_user_pool_client app_client {
+resource "aws_cognito_user_pool_client" "app_client" {
 
   name                                 = local.name
   user_pool_id                         = aws_cognito_user_pool.concourse.id

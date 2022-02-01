@@ -1,4 +1,4 @@
-resource aws_cognito_user_pool concourse {
+resource "aws_cognito_user_pool" "concourse" {
   name                     = local.name
   auto_verified_attributes = ["email"]
   mfa_configuration        = "OPTIONAL"

@@ -1,8 +1,18 @@
 terraform {
-  required_version = "{{terraform.terraform_13_version}}"
+  required_version = "{{terraform.terraform_14_version}}"
+
   required_providers {
-    random = "~> 2.0"
-    tls    = "~> 2.0"
+    random = {
+      version = "~> 2.0"
+    }
+
+    tls    = {
+      version = "~> 2.0"
+    }
+
+    aws = {
+      version = "~> 3.42.0"
+    }
   }
 
   backend "s3" {
@@ -80,7 +90,6 @@ variable "region" {
 }
 
 provider "aws" {
-  version = "~> 3.42.0"
   region  = var.region
 
   assume_role {
@@ -89,7 +98,6 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 3.42.0"
   region  = "{{terraform.provider_region}}"
   alias   = "ssh_bastion"
 
