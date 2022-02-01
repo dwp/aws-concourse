@@ -1,4 +1,4 @@
-output outputs {
+output "outputs" {
   value = {
     name                  = aws_cognito_user_pool_client.app_client.name
     app_client            = aws_cognito_user_pool_client.app_client

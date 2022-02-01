@@ -1,4 +1,4 @@
-resource aws_cognito_user_group groups {
+resource "aws_cognito_user_group" "groups" {
   for_each = toset(var.clients)
 
   name         = each.value

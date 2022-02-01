@@ -138,8 +138,8 @@ locals {
   )
 
   sre = templatefile(
-  "${path.module}/templates/teams/sre/team.yml",
-  {}
+    "${path.module}/templates/teams/sre/team.yml",
+    {}
   )
 
   healthcheck_file = templatefile(
