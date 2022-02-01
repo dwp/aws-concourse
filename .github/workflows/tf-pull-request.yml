@@ -42,7 +42,7 @@ jobs:
 
       - name: "Terraform Init"
         id: init
-        run: terraform init >> ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+        run: terraform init 
         env:
           TF_WORKSPACE: management
           TF_VAR_assume_role: gha_aws_concourse
