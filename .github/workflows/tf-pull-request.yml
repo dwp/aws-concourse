@@ -30,7 +30,7 @@ jobs:
       - name: "Bootstrap"
         id: bootstrap
         run: |
-          python bootstrap_terraform.py > ${{ github.workspace }}/${{ github.run_id }}-${{ github.run_number }}.log
+          python bootstrap_terraform.py
           sed -i '/^assume_role/ d' terraform/deploy/terraform.tfvars
         working-directory: .
         env:
