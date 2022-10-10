@@ -146,7 +146,7 @@ module "database" {
     instance_type           = "db.t3.medium"
     db_count                = length(data.aws_availability_zones.available.zone_ids)
     engine                  = "aurora-postgresql"
-    engine_version          = "10.11"
+    engine_version          = "10.18"
     backup_retention_period = 14
     preferred_backup_window = "01:00-03:00"
   }
