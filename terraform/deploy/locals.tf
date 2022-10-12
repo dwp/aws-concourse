@@ -36,7 +36,7 @@ locals {
   }
 
   concourse_worker_node_inst_count = {
-  management-dev = 3
+  management-dev = 2
   management     = 3
   }
 
