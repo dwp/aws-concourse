@@ -30,5 +30,10 @@ locals {
     management     = false
   }
 
+  concourse_worker_node = {
+    management-dev = "m5a.4xlarge"
+    management     = "c4.8xlarge"
+  }
+
   kali_users = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_users"]
 }

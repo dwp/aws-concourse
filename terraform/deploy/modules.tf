@@ -118,7 +118,7 @@ module "concourse_worker" {
   enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
-    instance_type        = "c4.8xlarge"
+    instance_type        = local.concourse_worker_node[local.environment]
     count                = 3
     environment_override = {}
   }
