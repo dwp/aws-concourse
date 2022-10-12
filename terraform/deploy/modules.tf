@@ -118,8 +118,8 @@ module "concourse_worker" {
   enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
-    instance_type        = local.concourse_worker_node[local.environment]
-    count                = 3
+    instance_type        = local.concourse_worker_node_inst_type[local.environment]
+    count                = local.concourse_worker_node_inst_count[local.environment]
     environment_override = {}
   }
 }
