@@ -47,4 +47,5 @@ Post-termination, new Concourse nodes will start on the new AMI, allowing the ex
 
 This successful test result will allow the [validate-concourse-ami](https://ci.dataworks.dwp.gov.uk/teams/dataworks/pipelines/ami-builder/jobs/validate-concourse-ami) job to now pass, creating the [dw-al2-concourse-ami](https://ci.dataworks.dwp.gov.uk/teams/dataworks/pipelines/ami-builder/jobs/dw-al2-concourse-ami) which can be deployed to Management.
 
+## Rebooting Worker Nodes/Terminating Instances
 Should AWS instances need to be refreshed/replaced then the [reboot-worker-nodes](https://ci.dataworks.dwp.gov.uk/teams/dataworks/pipelines/concourse-admin?group=reboot-worker-nodes) pipeline should be utilised which will 'Land' the Worker nodes (stop any jobs being sent to them) and then the ASG will replace the instances.
