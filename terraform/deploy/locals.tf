@@ -40,5 +40,15 @@ locals {
   management     = 3
   }
 
+  concourse_worker_asg_night_inst_count = {
+  management-dev = 0
+  management     = 3
+  }
+
+  concourse_worker_asg_day_inst_count = {
+  management-dev = 3
+  management     = 3
+  }
+
   kali_users = jsondecode(data.aws_secretsmanager_secret_version.internet_ingress.secret_binary)["ssh_bastion_users"]
 }
