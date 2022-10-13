@@ -118,10 +118,25 @@ module "concourse_worker" {
   enterprise_github_certs = local.enterprise_github_certs
 
   worker = {
-    instance_type        = "c4.8xlarge"
-    count                = 3
+    instance_type        = local.concourse_worker_node_inst_type[local.environment]
+    count                = local.concourse_worker_node_inst_count[local.environment]
     environment_override = {}
   }
+
+  asg_night = {
+    min_size         = local.concourse_worker_asg_night_inst_count[local.environment]
+    max_size         = local.concourse_worker_asg_night_inst_count[local.environment]
+    desired_capacity = local.concourse_worker_asg_night_inst_count[local.environment]
+    time             = "0 19 * * 1-5"
+  }
+
+  asg_day = {
+    min_size         = local.concourse_worker_asg_day_inst_count[local.environment]
+    max_size         = local.concourse_worker_asg_day_inst_count[local.environment]
+    desired_capacity = local.concourse_worker_asg_day_inst_count[local.environment]
+    time             = "0 7 * * 1-5"
+  }
+
 }
 
 module "concourse_worker_log_group" {
