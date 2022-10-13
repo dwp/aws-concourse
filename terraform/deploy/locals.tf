@@ -36,12 +36,12 @@ locals {
   }
 
   concourse_worker_node_inst_count = {
-    management-dev = 3
+    management-dev = 2
     management     = 3
   }
 
   concourse_worker_asg_night_inst_count = {
-    management-dev = 3
+    management-dev = 0
     management     = 3
   }
 
