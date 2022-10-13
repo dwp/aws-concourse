@@ -41,7 +41,7 @@ locals {
   }
 
   concourse_worker_asg_night_inst_count = {
-  management-dev = 0
+  management-dev = 3
   management     = 3
   }
 
