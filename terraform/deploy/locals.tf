@@ -32,7 +32,7 @@ locals {
 
   concourse_worker_node_inst_type = {
     management-dev = "m5a.4xlarge"
-    management     = "c4.8xlarge"
+    management     = "r5a.2xlarge"
   }
 
   concourse_worker_node_inst_count = {
