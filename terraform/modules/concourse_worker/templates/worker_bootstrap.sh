@@ -9,6 +9,14 @@ export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254
 export AWS_AZ=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254.169.254/latest/dynamic/instance-identity/document|grep availabilityZone|awk -F\" '{print $4}')
 export HOSTNAME=${name}-$AWS_AZ-$UUID
 
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -F
+
+lvextend -l 100%FREE /dev/rootvg/rootvol
+xfs_growfs /dev/mapper/rootvg-rootvol
+
 hostnamectl set-hostname $HOSTNAME
 aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Name,Value=$HOSTNAME
 
