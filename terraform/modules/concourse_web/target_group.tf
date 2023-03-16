@@ -12,7 +12,7 @@ resource "aws_lb_target_group" "web_http" {
 
   stickiness {
     enabled = false
-    type    = "lb_cookie"
+    type    = "source_ip"
   }
 
   tags = merge(var.tags, { Name = local.name })
@@ -41,7 +41,7 @@ resource "aws_lb_target_group" "web_ssh" {
   # https://github.com/terraform-providers/terraform-provider-aws/issues/9093
   stickiness {
     enabled = false
-    type    = "lb_cookie"
+    type    = "source_ip"
   }
 
   tags = merge(var.tags, { Name = local.name })
@@ -60,7 +60,7 @@ resource "aws_lb_target_group" "int_web_http" {
 
   stickiness {
     enabled = false
-    type    = "lb_cookie"
+    type    = "source_ip"
   }
 
   tags = merge(var.tags, { Name = local.name })
