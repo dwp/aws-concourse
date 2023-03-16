@@ -12,7 +12,7 @@ resource "aws_lb_target_group" "web_http" {
 
   stickiness {
     enabled = false
-    type    = "source_ip"
+    type    = "lb_cookie"
   }
 
   tags = merge(var.tags, { Name = local.name })
