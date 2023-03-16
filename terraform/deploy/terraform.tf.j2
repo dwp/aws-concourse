@@ -11,7 +11,7 @@ terraform {
     }
 
     aws = {
-      version = "~> 3.42.0"
+      version = "~> 4.53.0"
     }
   }
 
@@ -95,6 +95,15 @@ provider "aws" {
   assume_role {
     role_arn = "arn:aws:iam::${lookup(local.account, local.environment)}:role/${var.assume_role}"
   }
+
+  default_tags {
+    tags = {
+      Application      = "DataWorks"                              # As per our definition on ServiceNow
+      Function         = "Data and Analytics"                     # As per our definition on ServiceNow
+      Environment      = local.hcs_environment[local.environment] # Set up locals as per Tagging doc requirements https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+      Business-Project = "PRJ0022507"                             # This seems to replace costcode as per the doc https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+    }
+  }
 }
 
 provider "aws" {
@@ -103,6 +112,15 @@ provider "aws" {
 
   assume_role {
     role_arn = "arn:aws:iam::${lookup(local.account, local.environment)}:role/${var.assume_role}"
+  }
+
+  default_tags {
+    tags = {
+      Application      = "DataWorks"                              # As per our definition on ServiceNow
+      Function         = "Data and Analytics"                     # As per our definition on ServiceNow
+      Environment      = local.hcs_environment[local.environment] # Set up locals as per Tagging doc requirements https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+      Business-Project = "PRJ0022507"                             # This seems to replace costcode as per the doc https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+    }
   }
 }
 
@@ -142,15 +160,25 @@ locals {
 
   environment = terraform.workspace == "default" ? "management-dev" : terraform.workspace
 
+  # Configured as per Tagging doc requirements https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+  # Also required as per Tenable documentation https://engineering.dwp.gov.uk/products/gold-images/agents/tenable/
+  hcs_environment = {
+    development    = "Dev"
+    qa             = "Test"
+    integration    = "Stage"
+    preprod        = "Stage"
+    production     = "Production"
+    management     = "SP_Tooling"
+    management-dev = "DT_Tooling"
+  }
+
   tags = {
-  {% for key, value in common_tags.items() %}
-    {{key}} = "{{value}}"{% endfor %}
-    Name         = "concourse"
-    Environment  = local.environment
-    Project      = "ci"
-    Application  = "aws-concourse"
-    Persistence  = "Ignore"
-    AutoShutdown = "False"
+    Name              = "concourse"
+    DWX_Environment   = local.environment
+    Project           = "ci"
+    DWX_Application   = "aws-concourse"
+    Persistence       = "Ignore"
+    AutoShutdown      = "False"
   }
 
   root_dns_name = {
