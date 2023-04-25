@@ -42,11 +42,6 @@ locals {
       CONCOURSE_MAIN_TEAM_OIDC_USER  = var.concourse_web_config.concourse_user
       CONCOURSE_MAIN_TEAM_OIDC_GROUP = "admins"
 
-      # possible fix for login error: Failed to authenticate: missing "email_verified" claim
-      # when disabled, the OpenID Connector will not query the UserInfo
-      # endpoint for additional claims, e.g. groups
-      CONCOURSE_OIDC_DISABLE_GET_USER_INFO = "true"
-
       # UC GitHub Auth
       CONCOURSE_GITHUB_HOST = var.concourse_web_config.enterprise_github_url
 
