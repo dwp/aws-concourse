@@ -156,6 +156,15 @@ data "aws_secretsmanager_secret_version" "internet_ingress" {
   secret_id = "/concourse/dataworks/internet-ingress"
 }
 
+data "aws_ec2_managed_prefix_list" "list" {
+  name = "dwp-*-aws-cidrs-*"
+}
+
+data "aws_secretsmanager_secret_version" "terraform_secrets" {
+  provider  = aws.management_dns
+  secret_id = "/concourse/dataworks/terraform"
+}
+
 locals {
   github_metadata = jsondecode(data.http.github.body)
 
@@ -235,14 +244,5 @@ locals {
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_ca.pem",
     "s3://dw-${local.environment}-public-certificates/ca_certificates/ucfs/ucd_clientca.pem"
   ]
-
-data "aws_ec2_managed_prefix_list" "list" {
-  name = "dwp-*-aws-cidrs-*"
-}
-
-data "aws_secretsmanager_secret_version" "terraform_secrets" {
-  provider  = aws.management_dns
-  secret_id = "/concourse/dataworks/terraform"
-}
 
 }
