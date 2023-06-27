@@ -67,7 +67,7 @@ set +e
         fi
 
         platform_detect
-        if [[ -z "${linuxPlatform}" ]] || [[ -z "${isRPM}" ]]; then
+        if [[ -z "$linuxPlatform" ]] || [[ -z "$isRPM" ]]; then
             echo Unsupported platform is detected
             exit 1
         fi
@@ -76,7 +76,7 @@ set +e
         if [[ $isRPM == 1 ]]; then package='agent.rpm'
             else package='agent.deb'
         fi
-        curl -H 'Agent-Version-Control: on' -L "$MANAGERURL"/software/agent/"${runningPlatform}""${majorVersion}"/"${archType}"/$package?tenantID="${15}" -o /tmp/$package -x "$PROXY_ADDR_PORT"
+        curl -H 'Agent-Version-Control: on' -L "$MANAGERURL"/software/agent/"$runningPlatform""$majorVersion"/"$archType"/$package?tenantID="${15}" -o /tmp/$package -x "$PROXY_ADDR_PORT"
         sleep 5
 
         echo Installing agent package...
@@ -91,7 +91,7 @@ set +e
             echo Failed to download the agent package. Please make sure the package is imported in the Workload Security Manager
             exit 1
         fi
-        if [[ ${rc} != 0 ]]; then
+        if [[ $rc != 0 ]]; then
             echo Failed to install the agent package
             exit 1
         fi

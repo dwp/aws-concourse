@@ -206,3 +206,8 @@ variable "tanium_prefix" {
   type        = list(string)
 }
 
+/* variable "linuxPlatform" {
+  description = "Linux Platform"
+  type        = string
+  default     = ""
+} */

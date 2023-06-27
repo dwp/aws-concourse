@@ -71,6 +71,7 @@ locals {
       tenantid                = var.tenantid
       token                   = var.token
       policyid                = var.policyid
+      /* linuxPlatform           = var.linuxPlatform */
     }
   )
 
