@@ -109,6 +109,22 @@ locals {
       session_signing_key                   = var.concourse_web_config.session_signing_key
       tsa_host_key                          = var.concourse_web_config.tsa_host_key
       authorized_worker_keys                = var.concourse_web_config.authorized_worker_keys
+      proxy_host                            = var.proxy_host
+      proxy_port                            = var.proxy_port
+      hcs_environment                       = local.hcs_environment[local.environment]
+      install_tenable                       = var.install_tenable
+      install_trend                         = var.install_trend
+      install_tanium                        = var.install_tanium
+      tanium_server_1                       = var.tanium_server_1
+      tanium_server_2                       = var.tanium_server_2
+      tanium_env                            = var.tanium_env
+      tanium_port                           = var.tanium_port_1
+      tanium_log_level                      = var.tanium_log_level
+      tenant                                = var.tenant
+      tenantid                              = var.tenantid
+      token                                 = var.token
+      policyid                              = var.policyid
+
     }
   )
 
@@ -144,6 +160,11 @@ locals {
 
   healthcheck_file = templatefile(
     "${path.module}/templates/healthcheck.sh",
+    {}
+  )
+
+  config_hcs_file = templatefile(
+    "${path.module}/templates/config_hcs.sh",
     {}
   )
 
@@ -216,6 +237,11 @@ write_files:
     owner: root:root
     path: /home/root/healthcheck.sh
     permissions: '0700'
+  - encoding: b64
+    content: ${base64encode(local.config_hcs_file)}
+    owner: root:root
+    path: /opt/concourse/config_hcs.sh
+    permissions: '0755'
 EOF
   }
 
