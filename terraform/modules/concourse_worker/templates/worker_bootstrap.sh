@@ -18,7 +18,6 @@ lvextend -l 100%FREE /dev/rootvg/rootvol
 xfs_growfs /dev/mapper/rootvg-rootvol
 
 echo "Setup hcs pre-requisites"
-mkdir -p /opt/concourse
 mkdir -p /var/log/concourse
 chmod u+x /opt/concourse/config_hcs.sh
 /opt/concourse/config_hcs.sh "${hcs_environment}" "${proxy_host}" "${proxy_port}" "${tanium_server_1}" "${tanium_server_2}" "${tanium_env}" "${tanium_port}" "${tanium_log_level}" "${install_tenable}" "${install_trend}" "${install_tanium}" "${tenantid}" "${token}" "${policyid}" "${tenant}"
