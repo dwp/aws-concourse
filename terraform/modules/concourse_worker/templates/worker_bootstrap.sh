@@ -26,11 +26,11 @@ S3_CONCOURSE_CONFIG_HCS="s3://${s3_scripts_bucket}/${s3_script_concourse_config_
 $(which aws) s3 cp "$S3_CONCOURSE_CONFIG_HCS" /home/root/config_hcs.sh
 
 echo "Setup hcs pre-requisites"
-# Commented out section below as this mount breaks concourse
-{% comment %} # Enables missing mount and restarts NessusAgent for Concourse only
-sudo sed -i -e '$a/dev/mapper/rootvg-optvol /opt xfs nodev 0 0' /etc/fstab
-sudo mount -a {% endcomment %}
-{% comment %} sudo systemctl restart nessusagent {% endcomment %}
+## Commented out section below as this mount breaks concourse
+# Enables missing mount and restarts NessusAgent for Concourse only
+# sudo sed -i -e '$a/dev/mapper/rootvg-optvol /opt xfs nodev 0 0' /etc/fstab
+# sudo mount -a
+# sudo systemctl restart nessusagent
 mkdir -p /var/log/concourse
 chmod u+x /home/root/config_hcs.sh
 /home/root/config_hcs.sh "${hcs_environment}" "${proxy_host}" "${proxy_port}" "${tanium_server_1}" "${tanium_server_2}" "${tanium_env}" "${tanium_port}" "${tanium_log_level}" "${install_tenable}" "${install_trend}" "${install_tanium}" "${tenantid}" "${token}" "${policyid}" "${tenant}"
