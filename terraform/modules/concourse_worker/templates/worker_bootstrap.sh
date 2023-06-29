@@ -26,7 +26,7 @@ S3_CONCOURSE_CONFIG_HCS="s3://${s3_scripts_bucket}/${s3_script_concourse_config_
 $(which aws) s3 cp "$S3_CONCOURSE_CONFIG_HCS" /home/root/config_hcs.sh
 
 echo "Setup hcs pre-requisites"
-## Commented out section below as this mount breaks concourse
+## Commented out as no longer required
 # Enables missing mount and restarts NessusAgent for Concourse only
 # sudo sed -i -e '$a/dev/mapper/rootvg-optvol /opt xfs nodev 0 0' /etc/fstab
 # sudo mount -a

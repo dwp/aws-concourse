@@ -10,7 +10,7 @@ locals {
   service_env_vars = merge(
     {
       CONCOURSE_EPHEMERAL = true
-      CONCOURSE_WORK_DIR  = "/opt/concourse"
+      CONCOURSE_WORK_DIR  = "/concourse/worker"
 
       CONCOURSE_TSA_HOST                  = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
       CONCOURSE_TSA_PUBLIC_KEY            = "/etc/concourse/tsa_host_key.pub"
