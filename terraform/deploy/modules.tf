@@ -51,23 +51,23 @@ module "concourse_web" {
   }
   enterprise_github_certs = local.enterprise_github_certs
 
-  proxy_host              = module.vpc.outputs.internet_proxy_endpoint
-  install_tenable         = local.tenable_install[local.environment]
-  install_trend           = local.trend_install[local.environment]
-  install_tanium          = local.tanium_install[local.environment]
-  tanium_server_1         = local.tanium1
-  tanium_server_2         = local.tanium2
-  tanium_env              = local.tanium_env[local.environment]
-  tanium_log_level        = local.tanium_log_level[local.environment]
-  tenant                  = local.tenant
-  tenantid                = local.tenantid
-  token                   = local.token
-  policyid                = local.policy_id[local.environment]
-  tanium_prefix           = local.tanium_prefix[local.environment]
-  config_bucket_id        = data.terraform_remote_state.management.outputs.config_bucket.id
-  config_bucket_arn       = data.terraform_remote_state.management.outputs.config_bucket.arn
-  config_bucket_cmk_arn   = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
-  s3_scripts_bucket       = data.terraform_remote_state.management.outputs.config_bucket.id
+  proxy_host            = module.vpc.outputs.internet_proxy_endpoint
+  install_tenable       = local.tenable_install[local.environment]
+  install_trend         = local.trend_install[local.environment]
+  install_tanium        = local.tanium_install[local.environment]
+  tanium_server_1       = local.tanium1
+  tanium_server_2       = local.tanium2
+  tanium_env            = local.tanium_env[local.environment]
+  tanium_log_level      = local.tanium_log_level[local.environment]
+  tenant                = local.tenant
+  tenantid              = local.tenantid
+  token                 = local.token
+  policyid              = local.policy_id[local.environment]
+  tanium_prefix         = local.tanium_prefix[local.environment]
+  config_bucket_id      = data.terraform_remote_state.management.outputs.config_bucket.id
+  config_bucket_arn     = data.terraform_remote_state.management.outputs.config_bucket.arn
+  config_bucket_cmk_arn = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
+  s3_scripts_bucket     = data.terraform_remote_state.management.outputs.config_bucket.id
 
   web = {
     instance_type         = "t3.xlarge"
@@ -135,23 +135,23 @@ module "concourse_worker" {
   }
   enterprise_github_certs = local.enterprise_github_certs
 
-  proxy_host              = module.vpc.outputs.internet_proxy_endpoint
-  install_tenable         = local.tenable_install[local.environment]
-  install_trend           = local.trend_install[local.environment]
-  install_tanium          = local.tanium_install[local.environment]
-  tanium_server_1         = local.tanium1
-  tanium_server_2         = local.tanium2
-  tanium_env              = local.tanium_env[local.environment]
-  tanium_log_level        = local.tanium_log_level[local.environment]
-  tenant                  = local.tenant
-  tenantid                = local.tenantid
-  token                   = local.token
-  policyid                = local.policy_id[local.environment]
-  tanium_prefix           = local.tanium_prefix[local.environment]
-  config_bucket_id        = data.terraform_remote_state.management.outputs.config_bucket.id
-  config_bucket_arn       = data.terraform_remote_state.management.outputs.config_bucket.arn
-  config_bucket_cmk_arn   = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
-  s3_scripts_bucket       = data.terraform_remote_state.management.outputs.config_bucket.id
+  proxy_host            = module.vpc.outputs.internet_proxy_endpoint
+  install_tenable       = local.tenable_install[local.environment]
+  install_trend         = local.trend_install[local.environment]
+  install_tanium        = local.tanium_install[local.environment]
+  tanium_server_1       = local.tanium1
+  tanium_server_2       = local.tanium2
+  tanium_env            = local.tanium_env[local.environment]
+  tanium_log_level      = local.tanium_log_level[local.environment]
+  tenant                = local.tenant
+  tenantid              = local.tenantid
+  token                 = local.token
+  policyid              = local.policy_id[local.environment]
+  tanium_prefix         = local.tanium_prefix[local.environment]
+  config_bucket_id      = data.terraform_remote_state.management.outputs.config_bucket.id
+  config_bucket_arn     = data.terraform_remote_state.management.outputs.config_bucket.arn
+  config_bucket_cmk_arn = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
+  s3_scripts_bucket     = data.terraform_remote_state.management.outputs.config_bucket.id
 
   worker = {
     instance_type        = local.concourse_worker_node_inst_type[local.environment]

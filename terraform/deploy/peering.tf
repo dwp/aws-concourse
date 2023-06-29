@@ -10,7 +10,7 @@ resource "aws_vpc_peering_connection" "ucfs_github" {
   }
 
   requester {
-    allow_remote_vpc_dns_resolution  = true
+    allow_remote_vpc_dns_resolution = true
   }
 
   lifecycle {
