@@ -137,3 +137,50 @@ resource "aws_iam_role_policy_attachment" "concourse_ecr" {
   policy_arn = aws_iam_policy.concourse_ecr.arn
   role       = data.aws_iam_role.worker.id
 }
+
+data "aws_iam_policy_document" "concourse_config" {
+
+  statement {
+    effect = "Allow"
+    sid    = "AllowAccessToConfigBucket"
+
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketLocation",
+    ]
+
+    resources = [var.config_bucket_arn]
+  }
+
+  statement {
+    effect = "Allow"
+    sid    = "AllowAccessToConfigBucketObjects"
+
+    actions   = ["s3:GetObject"]
+    resources = ["${var.config_bucket_arn}/*"]
+  }
+
+  statement {
+    sid    = "AllowKMSDecryptionOfS3BucketObj"
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+    ]
+
+    resources = [var.config_bucket_cmk_arn]
+  }
+
+}
+
+resource "aws_iam_policy" "concourse_config" {
+  name        = "${local.name}Config"
+  description = "Allow Concourse workers to access config bucket"
+  policy      = data.aws_iam_policy_document.concourse_config.json
+}
+
+resource "aws_iam_role_policy_attachment" "concourse_config" {
+  policy_arn = aws_iam_policy.concourse_config.arn
+  role       = data.aws_iam_role.worker.id
+}

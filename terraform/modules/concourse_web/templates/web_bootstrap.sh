@@ -18,10 +18,22 @@ export INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token:$TOKEN" -s http://169.254
 UUID=$(dbus-uuidgen | cut -c 1-8)
 export HOSTNAME=${name}-$UUID
 
+# Force LC update when any of these files are changed
+echo "${s3_script_hash_concourse_config_hcs}" > /dev/null
+
+echo "Downloading startup scripts"
+S3_CONCOURSE_CONFIG_HCS="s3://${s3_scripts_bucket}/${s3_script_concourse_config_hcs}"
+
+$(which aws) s3 cp "$S3_CONCOURSE_CONFIG_HCS" /home/root/config_hcs.sh
+
 echo "Setup hcs pre-requisites"
+# Enables missing mount and restarts NessusAgent for Concourse only
+sudo sed -i -e '$a/dev/mapper/rootvg-optvol /opt xfs nodev 0 0' /etc/fstab
+sudo mount -a
+sudo systemctl restart nessusagent
 mkdir -p /var/log/concourse
-chmod u+x /opt/concourse/config_hcs.sh
-/opt/concourse/config_hcs.sh "${hcs_environment}" "${proxy_host}" "${proxy_port}" "${tanium_server_1}" "${tanium_server_2}" "${tanium_env}" "${tanium_port}" "${tanium_log_level}" "${install_tenable}" "${install_trend}" "${install_tanium}" "${tenantid}" "${token}" "${policyid}" "${tenant}"
+chmod u+x /home/root/config_hcs.sh
+/home/root/config_hcs.sh "${hcs_environment}" "${proxy_host}" "${proxy_port}" "${tanium_server_1}" "${tanium_server_2}" "${tanium_env}" "${tanium_port}" "${tanium_log_level}" "${install_tenable}" "${install_trend}" "${install_tanium}" "${tenantid}" "${token}" "${policyid}" "${tenant}"
 
 
 hostnamectl set-hostname $HOSTNAME

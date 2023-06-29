@@ -192,8 +192,22 @@ variable "tanium_prefix" {
   type        = list(string)
 }
 
-/* variable "linuxPlatform" {
-  description = "Linux Platform"
+variable "config_bucket_id" {
+  description = "Config bucket ID"
   type        = string
-  default     = ""
-} */
+}
+
+variable "config_bucket_arn" {
+  description = "Config bucket arn"
+  type        = string
+}
+
+variable "config_bucket_cmk_arn" {
+  description = "Config bucket cmk arn"
+  type        = string
+}
+
+variable "s3_scripts_bucket" {
+  description = "S3 Scripts bucket"
+  type        = string
+}

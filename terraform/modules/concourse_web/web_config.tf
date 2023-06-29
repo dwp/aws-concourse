@@ -124,8 +124,9 @@ locals {
       tenantid                              = var.tenantid
       token                                 = var.token
       policyid                              = var.policyid
-      /* linuxPlatform                         = var.linuxPlatform */
-
+      s3_scripts_bucket                     = var.s3_scripts_bucket
+      s3_script_concourse_config_hcs        = aws_s3_object.concourse_config_hcs_script.id
+      s3_script_hash_concourse_config_hcs   = md5(data.local_file.concourse_config_hcs_script.content)
     }
   )
 
@@ -161,11 +162,6 @@ locals {
 
   healthcheck_file = templatefile(
     "${path.module}/templates/healthcheck.sh",
-    {}
-  )
-
-  config_hcs_file = templatefile(
-    "${path.module}/templates/config_hcs.sh",
     {}
   )
 
@@ -238,11 +234,6 @@ write_files:
     owner: root:root
     path: /home/root/healthcheck.sh
     permissions: '0700'
-  - encoding: b64
-    content: ${base64encode(local.config_hcs_file)}
-    owner: root:root
-    path: /opt/concourse/config_hcs.sh
-    permissions: '0755'
 EOF
   }
 

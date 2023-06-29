@@ -4,9 +4,9 @@ set +e
 
 (
 
-    install_tenable="$9"
-    install_trend="${10}"
-    install_tanium="${11}"
+    install_tenable=$9
+    install_trend=${10}
+    install_tanium=${11}
 
 
     echo "Populate tags required for HCS..."
@@ -14,14 +14,14 @@ set +e
     source /etc/environment
     
     export TECHNICALSERVICE="DataWorks"
-    export ENVIRONMENT="$1"
+    export ENVIRONMENT=$1
     echo "$TECHNICALSERVICE"
     echo "$ENVIRONMENT"
 
 
     if [ "$install_tenable" = true ]; then
         echo "Configuring tenable agent"
-        sudo /opt/nessus_agent/sbin/nessuscli agent link --key="$TENABLE_LINKING_KEY" --cloud --groups="$TECHNICALSERVICE"_"$ENVIRONMENT",TVAT --proxy-host="$2" --proxy-port="$3"
+        sudo /opt/nessus_agent/sbin/nessuscli agent link --key="$TENABLE_LINKING_KEY" --cloud --groups="$TECHNICALSERVICE"_"$ENVIRONMENT",TVAT --proxy-host=$2 --proxy-port=$3
     else
         echo "Flag set to skip Tenable installation"
     fi
@@ -113,11 +113,11 @@ set +e
         echo "Installing and configuring Tanium"
         sudo rpm -Uvh /opt/agents/tanium/TaniumClient-*
         echo "set ServerNameList $4,$5"
-        sudo /opt/Tanium/TaniumClient/TaniumClient config set ServerNameList "$4,$5"
+        sudo /opt/Tanium/TaniumClient/TaniumClient config set ServerNameList $4,$5
         echo "set LogVerbosityLevel $8"
-        sudo /opt/Tanium/TaniumClient/TaniumClient config set LogVerbosityLevel "$8"
+        sudo /opt/Tanium/TaniumClient/TaniumClient config set LogVerbosityLevel $8
         echo "set ServerPort $7"
-        sudo /opt/Tanium/TaniumClient/TaniumClient config set ServerPort "$7"
+        sudo /opt/Tanium/TaniumClient/TaniumClient config set ServerPort $7
         echo "set environment tanium-init.dat.$6 "
         sudo cp "/opt/Tanium/TaniumClient/tanium-init.dat.$6" /opt/Tanium/TaniumClient/tanium-init.dat
         sudo mkdir /opt/Tanium/TaniumClient/Tools

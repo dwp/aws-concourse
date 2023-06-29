@@ -64,6 +64,10 @@ module "concourse_web" {
   token                   = local.token
   policyid                = local.policy_id[local.environment]
   tanium_prefix           = local.tanium_prefix[local.environment]
+  config_bucket_id        = data.terraform_remote_state.management.outputs.config_bucket.id
+  config_bucket_arn       = data.terraform_remote_state.management.outputs.config_bucket.arn
+  config_bucket_cmk_arn   = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
+  s3_scripts_bucket       = data.terraform_remote_state.management.outputs.config_bucket.id
 
   web = {
     instance_type         = "t3.xlarge"
@@ -144,6 +148,10 @@ module "concourse_worker" {
   token                   = local.token
   policyid                = local.policy_id[local.environment]
   tanium_prefix           = local.tanium_prefix[local.environment]
+  config_bucket_id        = data.terraform_remote_state.management.outputs.config_bucket.id
+  config_bucket_arn       = data.terraform_remote_state.management.outputs.config_bucket.arn
+  config_bucket_cmk_arn   = data.terraform_remote_state.management.outputs.config_bucket_cmk.arn
+  s3_scripts_bucket       = data.terraform_remote_state.management.outputs.config_bucket.id
 
   worker = {
     instance_type        = local.concourse_worker_node_inst_type[local.environment]
