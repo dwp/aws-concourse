@@ -58,8 +58,8 @@ locals {
     integration    = "true"
     preprod        = "true"
     production     = "true"
-    management-dev = "true"
-    management     = "true"
+    management-dev = "false" # Conflicting install with Concourse due to necessity to unmount /opt
+    management     = "false" # Conflicting install with Concourse due to necessity to unmount /opt
   }
 
   trend_install = {
