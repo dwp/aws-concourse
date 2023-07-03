@@ -10,7 +10,7 @@ locals {
   service_env_vars = merge(
     {
       CONCOURSE_EPHEMERAL = true
-      CONCOURSE_WORK_DIR  = "/opt/concourse"
+      CONCOURSE_WORK_DIR  = "/concourse/worker"
 
       CONCOURSE_TSA_HOST                  = "${var.internal_loadbalancer.fqdn}:${local.service_port}"
       CONCOURSE_TSA_PUBLIC_KEY            = "/etc/concourse/tsa_host_key.pub"
@@ -48,14 +48,32 @@ locals {
   worker_bootstrap_file = templatefile(
     "${path.module}/templates/worker_bootstrap.sh",
     {
-      aws_default_region      = data.aws_region.current.name
-      http_proxy              = var.proxy.http_proxy
-      https_proxy             = var.proxy.https_proxy
-      no_proxy                = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
-      enterprise_github_certs = join(" ", var.enterprise_github_certs)
-      name                    = local.name
-      tsa_host_pub_key        = var.concourse_worker_config.tsa_host_pub_key
-      worker_key              = var.concourse_worker_config.worker_key
+      aws_default_region                  = data.aws_region.current.name
+      http_proxy                          = var.proxy.http_proxy
+      https_proxy                         = var.proxy.https_proxy
+      no_proxy                            = "${var.proxy.no_proxy},${var.internal_loadbalancer.fqdn}"
+      enterprise_github_certs             = join(" ", var.enterprise_github_certs)
+      name                                = local.name
+      tsa_host_pub_key                    = var.concourse_worker_config.tsa_host_pub_key
+      worker_key                          = var.concourse_worker_config.worker_key
+      proxy_host                          = var.proxy_host
+      proxy_port                          = var.proxy_port
+      hcs_environment                     = local.hcs_environment[local.environment]
+      install_tenable                     = var.install_tenable
+      install_trend                       = var.install_trend
+      install_tanium                      = var.install_tanium
+      tanium_server_1                     = var.tanium_server_1
+      tanium_server_2                     = var.tanium_server_2
+      tanium_env                          = var.tanium_env
+      tanium_port                         = var.tanium_port_1
+      tanium_log_level                    = var.tanium_log_level
+      tenant                              = var.tenant
+      tenantid                            = var.tenantid
+      token                               = var.token
+      policyid                            = var.policyid
+      s3_scripts_bucket                   = var.s3_scripts_bucket
+      s3_script_concourse_config_hcs      = aws_s3_object.concourse_config_hcs_script.id
+      s3_script_hash_concourse_config_hcs = md5(data.local_file.concourse_config_hcs_script.content)
     }
   )
 
@@ -121,4 +139,5 @@ EOF
     content_type = "text/x-shellscript"
     content      = local.logger_bootstrap_file
   }
+
 }

@@ -16,6 +16,11 @@
                         "file_path": "/var/log/concourse.log",
                         "log_group_name": "${cloudwatch_log_group}",
                         "log_stream_name": "concourse-{instance_id}"
+                    },
+                    {
+                        "file_path": "/var/log/concourse/config_hcs.log",
+                        "log_group_name": "${cloudwatch_log_group}",
+                        "log_stream_name": "config-hcs-{instance_id}"
                     }
                 ]
             }

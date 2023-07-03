@@ -81,6 +81,20 @@ data "terraform_remote_state" "security-tools" {
   }
 }
 
+data "terraform_remote_state" "management" {
+  backend   = "s3"
+  workspace = local.management_infra_account[local.environment]
+
+  config = {
+    bucket         = "{{terraform.state_file_bucket}}"
+    key            = "terraform/dataworks/management.tfstate"
+    region         = "{{terraform.state_file_region}}"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:{{terraform.state_file_region}}:{{terraform.state_file_account}}:key/{{terraform.state_file_kms_key}}"
+    dynamodb_table = "remote_state_locks"
+  }
+}
+
 variable "assume_role" {
   default = "ci"
 }
@@ -124,6 +138,24 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias   = "management_dns"
+  region  = var.region
+
+  default_tags {
+    tags = {
+      Application      = "DataWorks"                              # As per our definition on ServiceNow
+      Function         = "Data and Analytics"                     # As per our definition on ServiceNow
+      Environment      = local.hcs_environment[local.environment] # Set up locals as per Tagging doc requirements https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+      Business-Project = "PRJ0022507"                             # This seems to replace costcode as per the doc https://engineering.dwp.gov.uk/policies/hcs-cloud-hosting-policies/resource-identification-tagging/
+    }
+  }
+
+  assume_role {
+    role_arn = "arn:aws:iam::${local.account[local.management_account[local.environment]]}:role/${var.assume_role}"
+  }
+}
+
 // Get AWS Account ID for credentials in use
 data "aws_caller_identity" "current" {}
 
@@ -138,6 +170,15 @@ data "aws_secretsmanager_secret_version" "internet_ingress" {
   secret_id = "/concourse/dataworks/internet-ingress"
 }
 
+data "aws_ec2_managed_prefix_list" "list" {
+  name = "dwp-*-aws-cidrs-*"
+}
+
+data "aws_secretsmanager_secret_version" "terraform_secrets" {
+  provider  = aws.management_dns
+  secret_id = "/concourse/dataworks/terraform"
+}
+
 locals {
   github_metadata = jsondecode(data.http.github.body)
 
@@ -149,6 +190,26 @@ locals {
 
   account = { {% for key, value in accounts.items() %}
     {{key}} = "{{value}}"{% endfor %}
+  }
+
+  management_infra_account = {
+    development    = "default"
+    qa             = "default"
+    integration    = "default"
+    management-dev = "default"
+    preprod        = "management"
+    production     = "management"
+    management     = "management"
+  }
+
+  management_account = {
+    development    = "management-dev"
+    qa             = "management-dev"
+    integration    = "management-dev"
+    management-dev = "management-dev"
+    preprod        = "management"
+    production     = "management"
+    management     = "management"
   }
 
   name = "aws-concourse"

@@ -88,3 +88,43 @@ resource "aws_security_group_rule" "worker_ec2_packer_ssh" {
   self              = true
   security_group_id = aws_security_group.worker.id
 }
+
+resource "aws_security_group_rule" "concourse_worker_outbound_tanium_1" {
+  description       = "Concourse worker outbound port 1 to Tanium"
+  type              = "egress"
+  from_port         = var.tanium_port_1
+  to_port           = var.tanium_port_1
+  protocol          = "tcp"
+  prefix_list_ids   = var.tanium_prefix
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "concourse_worker_outbound_tanium_2" {
+  description       = "Concourse worker outbound port 2 to Tanium"
+  type              = "egress"
+  from_port         = var.tanium_port_2
+  to_port           = var.tanium_port_2
+  protocol          = "tcp"
+  prefix_list_ids   = var.tanium_prefix
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "concourse_worker_inbound_tanium_1" {
+  description       = "Concourse worker inbound port 1 from Tanium"
+  type              = "ingress"
+  from_port         = var.tanium_port_1
+  to_port           = var.tanium_port_1
+  protocol          = "tcp"
+  prefix_list_ids   = var.tanium_prefix
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "concourse_worker_inbound_tanium_2" {
+  description       = "Concourse worker inbound port 2 from Tanium"
+  type              = "ingress"
+  from_port         = var.tanium_port_2
+  to_port           = var.tanium_port_2
+  protocol          = "tcp"
+  prefix_list_ids   = var.tanium_prefix
+  security_group_id = aws_security_group.worker.id
+}
