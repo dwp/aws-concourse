@@ -218,6 +218,7 @@ module "vpc" {
   internet_proxy_fqdn         = module.vpc.outputs.internet_proxy_endpoint
   internet_proxy_service_name = data.terraform_remote_state.internet_egress.outputs.internet_proxy_service.service_name
   vpc_endpoint_source_sg_ids  = [module.concourse_web.outputs.security_group.id, module.concourse_worker.outputs.security_group.id]
+  tanium_service_name         = local.tanium_service_name[local.environment]
 }
 
 module "concourse_waf_log_group" {

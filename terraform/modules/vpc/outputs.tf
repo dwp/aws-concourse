@@ -8,6 +8,7 @@ output "outputs" {
     aws_vpc                 = module.vpc.vpc
     internet_egress_sg      = aws_security_group.internet_proxy_endpoint
     internet_proxy_endpoint = aws_vpc_endpoint.internet_proxy.dns_entry[0].dns_name
+    tanium_service_endpoint = aws_vpc_endpoint.tanium_service_endpoint.dns_entry[0].dns_name
     s3_prefix_list_id       = module.vpc.prefix_list_ids.s3
     dynamodb_prefix_list_id = module.vpc.prefix_list_ids.dynamodb
     route_tables_private    = aws_route_table.private

@@ -88,6 +88,25 @@ locals {
   tanium1 = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium[local.environment].server_1
   tanium2 = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium[local.environment].server_2
 
+  tanium_service_name = {
+    development    = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.non_prod
+    qa             = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.prod
+    integration    = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.prod
+    preprod        = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.prod
+    production     = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.prod
+    management-dev = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.non_prod
+    management     = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_name.prod
+  }
+
+  tanium_service_id = {
+    development    = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.non_prod
+    qa             = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.prod
+    integration    = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.prod
+    preprod        = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.prod
+    production     = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.prod
+    management-dev = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.non_prod
+    management     = jsondecode(data.aws_secretsmanager_secret_version.terraform_secrets.secret_binary).tanium.service_id.prod
+  }
   ## Tanium Env Config
   tanium_env = {
     development    = "pre-prod"
