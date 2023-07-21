@@ -225,3 +225,8 @@ variable "s3_scripts_bucket" {
   description = "S3 Scripts bucket"
   type        = string
 }
+
+variable "tanium_service_endpoint_id" {
+  description = "Tanium Service Endpoint id"
+  type        = string
+}

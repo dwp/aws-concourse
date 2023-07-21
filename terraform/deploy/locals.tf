@@ -58,7 +58,7 @@ locals {
     integration    = "true"
     preprod        = "true"
     production     = "true"
-    management-dev = "true" 
+    management-dev = "true"
     management     = "true"
   }
 

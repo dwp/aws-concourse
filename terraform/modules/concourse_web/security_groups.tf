@@ -147,7 +147,7 @@ resource "aws_security_group_rule" "concourse_web_outbound_tanium_1" {
   to_port                  = var.tanium_port_1
   protocol                 = "tcp"
   security_group_id        = aws_security_group.web.id
-  source_security_group_id = aws_security_group.tanium_service_endpoint.id
+  source_security_group_id = var.tanium_service_endpoint_id
 }
 
 resource "aws_security_group_rule" "concourse_web_outbound_tanium_2" {
@@ -157,7 +157,7 @@ resource "aws_security_group_rule" "concourse_web_outbound_tanium_2" {
   to_port                  = var.tanium_port_2
   protocol                 = "tcp"
   security_group_id        = aws_security_group.web.id
-  source_security_group_id = aws_security_group.tanium_service_endpoint.id
+  source_security_group_id = var.tanium_service_endpoint_id
 }
 
 resource "aws_security_group_rule" "concourse_web_inbound_tanium_1" {
@@ -167,7 +167,7 @@ resource "aws_security_group_rule" "concourse_web_inbound_tanium_1" {
   to_port                  = var.tanium_port_1
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.web.id
-  security_group_id        = aws_security_group.tanium_service_endpoint.id
+  security_group_id        = var.tanium_service_endpoint_id
 }
 
 resource "aws_security_group_rule" "concourse_web_inbound_tanium_2" {
@@ -177,5 +177,5 @@ resource "aws_security_group_rule" "concourse_web_inbound_tanium_2" {
   to_port                  = var.tanium_port_2
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.web.id
-  security_group_id        = aws_security_group.tanium_service_endpoint.id
+  security_group_id        = var.tanium_service_endpoint_id
 }

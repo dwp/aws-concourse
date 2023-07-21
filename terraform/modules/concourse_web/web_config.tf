@@ -115,7 +115,7 @@ locals {
       install_tenable                       = var.install_tenable
       install_trend                         = var.install_trend
       install_tanium                        = var.install_tanium
-      tanium_server_1                       = module.vpc.outputs.tanium_service_endpoint
+      tanium_server_1                       = var.tanium_server_1
       tanium_server_2                       = var.tanium_server_2
       tanium_env                            = var.tanium_env
       tanium_port                           = var.tanium_port_1
