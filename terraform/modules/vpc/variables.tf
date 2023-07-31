@@ -42,6 +42,11 @@ variable "internet_proxy_service_name" {
   type        = string
 }
 
+variable "tanium_service_name" {
+  description = "Tanium VPC Endpoint Service name to connect to"
+  type        = string
+}
+
 variable "vpc_endpoint_source_sg_ids" {
   description = "Security group IDs of consumers of VPC endpoint services"
   type        = list(string)
