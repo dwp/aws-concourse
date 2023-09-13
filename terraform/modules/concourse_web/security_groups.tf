@@ -99,16 +99,6 @@ resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
   cidr_blocks       = [var.github_cidr_block]
 }
 
-resource "aws_security_group_rule" "web_gitlab_inbound_https" {
-  description       = "web inbound gitlab https connectivity for webhooks"
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.web.id
-  to_port           = 443
-  type              = "ingress"
-  cidr_blocks       = ["34.74.90.64/28","34.74.226.0/24"]
-}
-
 resource "aws_security_group_rule" "web_outbound_s3_https" {
   security_group_id = aws_security_group.web.id
   description       = "s3 outbound https connectivity"
