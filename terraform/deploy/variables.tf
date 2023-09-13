@@ -81,3 +81,8 @@ variable "costcode" {
   type    = string
   default = ""
 }
+
+variable "gitlab_cidr_block" {
+  type    = string
+  default = "34.74.90.64/28, 34.74.226.0/24"
+}

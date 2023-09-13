@@ -19,6 +19,26 @@ resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   cidr_blocks       = [var.github_cidr_block]
 }
 
+resource "aws_security_group_rule" "worker_gitlab_outbound_https" {
+  description       = "worker outbound https connectivity"
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.worker.id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = [var.gitlab_cidr_block]
+}
+
+resource "aws_security_group_rule" "worker_gitlab_inbound_https" {
+  description       = "worker inbound https connectivity"
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.worker.id
+  to_port           = 443
+  type              = "ingress"
+  cidr_blocks       = [var.gitlab_cidr_block]
+}
+
 resource "aws_security_group_rule" "worker_lb_out_ssh" {
   description       = "outbound traffic to web nodes from worker nodes via lb"
   from_port         = 2222

@@ -99,6 +99,16 @@ resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
   cidr_blocks       = [var.github_cidr_block]
 }
 
+resource "aws_security_group_rule" "web_gitlab_inbound_https" {
+  description       = "web inbound gitlab https connectivity"
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.web.id
+  to_port           = 443
+  type              = "ingress"
+  cidr_blocks       = [var.gitlab_cidr_block]
+}
+
 resource "aws_security_group_rule" "web_outbound_s3_https" {
   security_group_id = aws_security_group.web.id
   description       = "s3 outbound https connectivity"
@@ -138,6 +148,16 @@ resource "aws_security_group_rule" "worker_ucfs_github_outbound_https" {
   to_port           = 443
   type              = "egress"
   cidr_blocks       = [var.github_cidr_block]
+}
+
+resource "aws_security_group_rule" "worker_giltab_outbound_https" {
+  description       = "web outbound gitlab connectivity"
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.web.id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = [var.gitlab_cidr_block]
 }
 
 resource "aws_security_group_rule" "concourse_web_outbound_tanium_1" {

@@ -38,6 +38,7 @@ module "concourse_web" {
   vpc                   = module.vpc.outputs
   ssm_name_prefix       = var.name
   github_cidr_block     = var.github_vpc.cidr_block
+  gitlab_cidr_block     = var.gitlab_cidr_block
   s3_prefix_list_id     = module.vpc.outputs.s3_prefix_list_id
   cognito_client_secret = data.terraform_remote_state.dataworks_cognito.outputs.cognito.app_client.client_secret #module.cognito.outputs.app_client.client_secret
   cognito_client_id     = data.terraform_remote_state.dataworks_cognito.outputs.cognito.app_client.id            # module.cognito.outputs.app_client.id
@@ -125,6 +126,7 @@ module "concourse_worker" {
   vpc                     = module.vpc.outputs
   ssm_name_prefix         = var.name
   github_cidr_block       = var.github_vpc.cidr_block
+  gitlab_cidr_block       = var.gitlab_cidr_block
   s3_prefix_list_id       = module.vpc.outputs.s3_prefix_list_id
   dynamodb_prefix_list_id = module.vpc.outputs.dynamodb_prefix_list_id
   concourse_web           = module.concourse_web.outputs
