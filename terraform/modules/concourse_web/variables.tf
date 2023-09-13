@@ -106,7 +106,7 @@ variable "github_cidr_block" {
 }
 
 variable "gitlab_cidr_block" {
-  type    = string
+  type    = list(string)
   default = ""
 }
 
