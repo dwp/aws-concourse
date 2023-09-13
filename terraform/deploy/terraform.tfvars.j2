@@ -3,6 +3,7 @@ parent_domain_name    = "{{dataworks_domain_name}}"
 whitelist_cidr_blocks    = [{% set doiranges = doi["cidr_blocks"].split(',') %}
   {% for cidr in doiranges %}"{{ cidr }}",
   {% endfor %}{% set sreranges = sre["cidr_blocks"].split(',') %}{% for cidr in sreranges %}"{{ cidr }}",
+  {% endfor %}{% set gitlabranges = gitlab["cidr_blocks"].split(',') %}{% for cidr in gitlabranges %}"{{ cidr }}",
   {% endfor %}"{{ucfs["team_cidr_block"]}}"
 ]
 
