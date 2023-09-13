@@ -107,7 +107,7 @@ variable "github_cidr_block" {
 
 variable "gitlab_cidr_block" {
   type    = list(string)
-  default = ""
+  default = [""]
 }
 
 variable "s3_prefix_list_id" {
