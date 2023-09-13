@@ -100,7 +100,7 @@ resource "aws_security_group_rule" "web_ucfs_github_inbound_https" {
 }
 
 resource "aws_security_group_rule" "web_gitlab_inbound_https" {
-  description       = "web inbound gitlab https connectivity for webhoks"
+  description       = "web inbound gitlab https connectivity for webhooks"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.web.id
