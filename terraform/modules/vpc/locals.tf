@@ -10,4 +10,5 @@ locals {
       cidr   = pair[1]
     }
   ]
+
 }
