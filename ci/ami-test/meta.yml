@@ -34,7 +34,7 @@ meta:
               echo "$AMI_ID $RESULT" > "$PIPELINE.test"
 
               git add "$PIPELINE.test"
-              git commit -m "Updating $PIPELINE AMI test on ${DATE}"
+              git commit -m "test(ami): updating $PIPELINE AMI test on ${DATE}"
               git push https://oauth2:${GITLAB_TOKEN}@gitlab.com/dwp/dataworks/aws/deployments/no-layer/ami-builder-configs
         inputs:
           - name: meta
