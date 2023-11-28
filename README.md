@@ -1,3 +1,5 @@
+# DO NOT USE THIS REPO - MIGRATED TO GITLAB
+
 # AWS Concourse
 
 An AWS based Concourse platform
